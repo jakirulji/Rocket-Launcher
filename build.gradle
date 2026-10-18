@@ -19,6 +19,20 @@ plugins {
     alias(libs.plugins.diffplug.spotless)
 }
 
+/*
+ * The custom launcher artwork is kept in icon/ as the original source file.
+ * Copy it into Android's generated resource input before resource processing.
+ */
+tasks.register("prepareRocketLauncherIcon", Copy) {
+    from("$rootDir/icon/Rocket_Launcher_icon.png")
+    into("$rootDir/res/drawable-nodpi")
+    rename { "rocket_launcher_icon.png" }
+}
+
+tasks.matching { it.name == "preBuild" }.configureEach {
+    dependsOn("prepareRocketLauncherIcon")
+}
+
 allprojects {
     plugins.withType(AndroidBasePlugin).configureEach {
         android {
