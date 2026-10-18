@@ -1,3 +1,4 @@
+<!-- Modified for Rocket Launcher: this file replaces the upstream Lawnchair README with project-specific documentation. -->
 # Rocket Launcher
 
 Rocket Launcher is an independently maintained Android launcher project based
