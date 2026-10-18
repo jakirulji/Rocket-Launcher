@@ -28,3 +28,9 @@ dependency metadata for their applicable terms.
 Project name and branding:
   “Rocket Launcher” is the name used for this derivative. Lawnchair names,
   logos, and other trademarks are not granted by the Apache License.
+
+Additional bundled component identified in the source tree:
+
+- Calculator data/algorithm component: MIT License, Copyright (c) 2018 Keelar.
+  The applicable MIT permission and warranty text is retained at
+  lawnchair/src/app/lawnchair/search/algorithms/data/calculator/LICENSE.
