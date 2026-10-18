@@ -1,0 +1,30 @@
+Rocket Launcher — Third-Party Notices
+======================================
+
+Rocket Launcher is an independently maintained derivative of the Lawnchair 16
+codebase. It is not an official Lawnchair release and is not affiliated with,
+endorsed by, or sponsored by the Lawnchair project.
+
+Upstream project:
+  Lawnchair
+  https://github.com/LawnchairLauncher/lawnchair
+  https://github.com/LawnchairLauncher/lawnchair/tree/16-dev
+
+The upstream codebase is based on Android Open Source Project (AOSP) Launcher3
+and includes AOSP-derived components. Copyright and attribution notices in
+upstream source files are retained where applicable.
+
+License:
+  The upstream Lawnchair code is licensed under the Apache License, Version 2.0.
+  See LICENSE.txt for the full license text. The license permits redistribution
+  and modification subject to its conditions, including retaining applicable
+  notices and marking modified files with notices of changes.
+
+Rocket Launcher-specific modifications may have their own copyright notices.
+This notice does not replace or alter the licenses that apply to individual
+files or bundled third-party dependencies. Check the relevant source files and
+dependency metadata for their applicable terms.
+
+Project name and branding:
+  “Rocket Launcher” is the name used for this derivative. Lawnchair names,
+  logos, and other trademarks are not granted by the Apache License.
