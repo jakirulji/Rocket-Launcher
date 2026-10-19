@@ -139,6 +139,21 @@ fun PreferencesDashboard(
                 isSelected = currentRoute is General,
             )
 
+            // Digital Wellbeing belongs on the actual Compose Home Settings dashboard.
+            PreferenceCategory(
+                label = stringResource(R.string.digital_wellbeing_title),
+                description = stringResource(R.string.digital_wellbeing_summary),
+                iconResource = R.drawable.ic_general,
+                onNavigate = {
+                    context.startActivity(
+                        Intent(
+                            context,
+                            com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity::class.java,
+                        ),
+                    )
+                },
+            )
+
             PreferenceCategory(
                 label = stringResource(R.string.home_screen_label),
                 description = stringResource(R.string.home_screen_description),
