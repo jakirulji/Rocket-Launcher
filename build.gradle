@@ -229,7 +229,13 @@ android {
             storeFile rootProject.file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
-    } catch (Exception ignored) {
+    } catch (Exception signingConfigError) {
+        if (System.getenv("CI") == "true") {
+            throw new GradleException(
+                "CI release signing is required. Configure the same KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD GitHub Actions secrets used by Daily_Tracker; refusing to silently sign with the debug key.",
+                signingConfigError
+            )
+        }
         releaseSigning = signingConfigs.debug
     }
 
