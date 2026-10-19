@@ -15,10 +15,18 @@ and includes AOSP-derived components. Copyright and attribution notices in
 upstream source files are retained where applicable.
 
 License:
-  The upstream Lawnchair code is licensed under the Apache License, Version 2.0.
-  See LICENSE.txt for the full license text. The license permits redistribution
-  and modification subject to its conditions, including retaining applicable
-  notices and marking modified files with notices of changes.
+  The inherited Lawnchair/AOSP-derived code retains its applicable Apache
+  License 2.0 terms and notices. See LICENSE.txt. The Apache license permits
+  redistribution and modification subject to its conditions, including retaining
+  applicable notices and marking modified files with notices of changes.
+
+Dragon Launcher Digital Wellbeing:
+  https://github.com/Elnix90/Dragon-Launcher
+  The Digital Wellbeing feature planned for integration is licensed under GNU
+  GPL version 3. See COPYING and THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md.
+  Preserve original source/asset notices, identify adaptations, and meet GPLv3
+  source and notice obligations when distributing a covered combined build.
+  This attribution does not imply endorsement by Dragon Launcher’s authors.
 
 Rocket Launcher-specific modifications may have their own copyright notices.
 This notice does not replace or alter the licenses that apply to individual
