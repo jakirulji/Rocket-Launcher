@@ -18,6 +18,8 @@
 
 package com.android.launcher3;
 
+import com.android.launcher3.wellbeing.DigitalWellbeing;
+
 import static android.content.pm.ActivityInfo.CONFIG_UI_MODE;
 import static android.view.WindowInsetsAnimation.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE;
 import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
@@ -2152,6 +2154,13 @@ public class Launcher extends StatefulActivity<LauncherState>
                 mOnDeferredActivityLaunchCallback = null;
             }
             return result;
+        }
+
+        // Adaptation of Dragon Launcher Digital Wellbeing: pause selected apps before launch.
+        // Keep the original launch intent intact; the pause Activity launches it directly after
+        // the user completes the breathing countdown.
+        if (DigitalWellbeing.tryInterceptLaunch(this, intent)) {
+            return new RunnableList();
         }
 
         RunnableList result = super.startActivitySafely(v, intent, item);
