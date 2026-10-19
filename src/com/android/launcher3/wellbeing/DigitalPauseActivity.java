@@ -46,8 +46,7 @@ public class DigitalPauseActivity extends Activity {
             remainingSeconds--;
             if (remainingSeconds <= 0) {
                 remainingSeconds = 0;
-                countdownView.setText("You're ready");
-                openButton.setEnabled(true);
+                showConfirmationScreen();
                 return;
             }
             countdownView.setText(String.format(Locale.getDefault(), "%d", remainingSeconds));
@@ -56,6 +55,7 @@ public class DigitalPauseActivity extends Activity {
     };
     private Button openButton;
     private TextView lotusView;
+    private boolean confirmationShown = false;
     private ObjectAnimator breathingAnimation;
     private ObjectAnimator breathingYAnimation;
 
@@ -165,6 +165,108 @@ public class DigitalPauseActivity extends Activity {
         backParams.topMargin = dp(8);
         root.addView(backButton, backParams);
         setContentView(root);
+    }
+
+    /**
+     * Dragon Launcher-style second step: after the breathing countdown, show a
+     * focused confirmation card with a clear choice to leave or continue.
+     */
+    private void showConfirmationScreen() {
+        if (confirmationShown || isFinishing() || dailyLimitReached) return;
+        confirmationShown = true;
+        handler.removeCallbacks(ticker);
+        remainingSeconds = 0;
+
+        int bgTop = Color.rgb(15, 27, 42);
+        int bgBottom = Color.rgb(27, 57, 68);
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setGravity(Gravity.CENTER);
+        root.setPadding(dp(22), dp(28), dp(22), dp(24));
+        root.setBackground(new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM, new int[]{bgTop, bgBottom}));
+
+        TextView appName = new TextView(this);
+        appName.setText(getAppLabel(targetPackage).toUpperCase(Locale.getDefault()));
+        appName.setTextColor(Color.rgb(0, 206, 201));
+        appName.setTextSize(12);
+        appName.setLetterSpacing(0.16f);
+        appName.setGravity(Gravity.CENTER);
+        root.addView(appName, matchWrap());
+
+        TextView lotus = new TextView(this);
+        lotus.setText("✿");
+        lotus.setTextColor(Color.rgb(164, 102, 255));
+        lotus.setTextSize(52);
+        lotus.setGravity(Gravity.CENTER);
+        lotus.setShadowLayer(dp(18), 0, 0, Color.rgb(104, 72, 220));
+        LinearLayout.LayoutParams lotusParams = matchWrap();
+        lotusParams.topMargin = dp(12);
+        root.addView(lotus, lotusParams);
+
+        TextView question = new TextView(this);
+        question.setText("Do you really need to open this app?");
+        question.setTextColor(Color.rgb(241, 244, 248));
+        question.setTextSize(20);
+        question.setTypeface(Typeface.DEFAULT, Typeface.MEDIUM);
+        question.setGravity(Gravity.CENTER);
+        question.setPadding(dp(8), dp(4), dp(8), dp(18));
+        root.addView(question, matchWrap());
+
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(16), dp(16), dp(16), dp(16));
+        GradientDrawable cardBg = new GradientDrawable();
+        cardBg.setColor(Color.argb(34, 230, 240, 255));
+        cardBg.setCornerRadius(dp(18));
+        cardBg.setStroke(dp(1), Color.argb(35, 220, 235, 255));
+        card.setBackground(cardBg);
+
+        TextView usageTitle = new TextView(this);
+        usageTitle.setText("Take a moment before you continue");
+        usageTitle.setTextColor(Color.rgb(221, 229, 237));
+        usageTitle.setTextSize(14);
+        usageTitle.setGravity(Gravity.CENTER);
+        card.addView(usageTitle, matchWrap());
+
+        TextView usageDetail = new TextView(this);
+        usageDetail.setText("Your attention is precious. Choose what feels right for you.");
+        usageDetail.setTextColor(Color.rgb(179, 192, 204));
+        usageDetail.setTextSize(12);
+        usageDetail.setGravity(Gravity.CENTER);
+        usageDetail.setPadding(0, dp(10), 0, 0);
+        card.addView(usageDetail, matchWrap());
+        root.addView(card, matchWrap());
+
+        Button passButton = new Button(this);
+        passButton.setText("No, I'll pass");
+        passButton.setAllCaps(false);
+        passButton.setTextColor(Color.WHITE);
+        passButton.setBackground(roundButton(Color.rgb(123, 83, 239)));
+        passButton.setOnClickListener(v -> finish());
+        LinearLayout.LayoutParams passParams = matchWrap();
+        passParams.topMargin = dp(20);
+        root.addView(passButton, passParams);
+
+        TextView continueButton = new TextView(this);
+        continueButton.setText("Yes, open anyway…");
+        continueButton.setTextColor(Color.rgb(204, 213, 222));
+        continueButton.setTextSize(13);
+        continueButton.setGravity(Gravity.CENTER);
+        continueButton.setPadding(dp(12), dp(16), dp(12), dp(10));
+        continueButton.setOnClickListener(v -> launchOriginal());
+        root.addView(continueButton, matchWrap());
+
+        setContentView(root);
+        // Keep the real usage-access based usage value when the feature is enabled.
+        updateUsage();
+    }
+
+    private GradientDrawable roundButton(int color) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(color);
+        drawable.setCornerRadius(dp(28));
+        return drawable;
     }
 
     /**
