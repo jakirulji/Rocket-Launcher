@@ -4,6 +4,8 @@
  */
 package com.android.launcher3.wellbeing;
 
+import com.android.launcher3.R;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
