@@ -11,6 +11,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +37,8 @@ public class DigitalWellbeingSettingsActivity extends Activity {
     private CheckBox guiltMode;
     private TextView durationLabel;
     private SeekBar duration;
+    private TextView limitLabel;
+    private SeekBar dailyLimit;
     private LinearLayout appList;
     private final Set<String> selectedApps = new HashSet<>();
 
@@ -87,6 +92,35 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         });
         root.addView(duration);
         updateDurationLabel(duration.getProgress() + 3);
+
+        limitLabel = text("", 15, Color.WHITE, true);
+        limitLabel.setPadding(0, dp(18), 0, dp(4));
+        root.addView(limitLabel);
+        dailyLimit = new SeekBar(this);
+        dailyLimit.setMax(240);
+        dailyLimit.setProgress(Math.max(0, Math.min(240,
+                prefs.getInt(DigitalWellbeing.KEY_DAILY_LIMIT_MINUTES, 0))));
+        dailyLimit.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar bar, int value, boolean fromUser) {
+                updateDailyLimitLabel(value);
+            }
+            public void onStartTrackingTouch(SeekBar bar) {}
+            public void onStopTrackingTouch(SeekBar bar) {}
+        });
+        root.addView(dailyLimit);
+        updateDailyLimitLabel(dailyLimit.getProgress());
+
+        Button usagePermission = new Button(this);
+        usagePermission.setText(R.string.dw_usage_permission);
+        usagePermission.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS,
+                        Uri.parse("package:" + getPackageName())));
+            } catch (RuntimeException e) {
+                startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            }
+        });
+        root.addView(usagePermission);
 
         TextView appTitle = text(getString(R.string.dw_select_apps), 18, Color.WHITE, true);
         appTitle.setPadding(0, dp(22), 0, dp(8));
@@ -152,6 +186,11 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         durationLabel.setText(getString(R.string.dw_pause_duration, seconds));
     }
 
+    private void updateDailyLimitLabel(int minutes) {
+        limitLabel.setText(minutes == 0 ? getString(R.string.dw_daily_limit_off)
+                : getString(R.string.dw_daily_limit, minutes));
+    }
+
     private void saveAndClose() {
         if (enabled.isChecked() && selectedApps.isEmpty()) {
             Toast.makeText(this, R.string.dw_no_apps_selected, Toast.LENGTH_LONG).show();
@@ -161,6 +200,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
                 .putBoolean(DigitalWellbeing.KEY_ENABLED, enabled.isChecked())
                 .putBoolean(DigitalWellbeing.KEY_GUILT_MODE, guiltMode.isChecked())
                 .putInt(DigitalWellbeing.KEY_PAUSE_SECONDS, duration.getProgress() + 3)
+                .putInt(DigitalWellbeing.KEY_DAILY_LIMIT_MINUTES, dailyLimit.getProgress())
                 .putStringSet(DigitalWellbeing.KEY_PAUSED_APPS, new HashSet<>(selectedApps))
                 .apply();
         finish();
