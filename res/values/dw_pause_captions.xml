@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Local bilingual Digital Wellbeing pause captions. No network access required. -->
+    <string-array name="dw_pause_captions">
+        <item>Pause. Think. Then choose.</item>
+        <item>Did you open this app with a purpose, or just out of habit?</item>
+        <item>Your attention belongs to you—not the algorithm.</item>
+        <item>One more scroll, or one step closer to your goal?</item>
+        <item>You can always come back. Your time will not.</item>
+        <item>Is this the best use of your next ten minutes?</item>
+        <item>Your future is built by what you do today.</item>
+        <item>Take a breath. You are in control.</item>
+        <item>Make progress, not just screen time.</item>
+        <item>Choose what matters, not just what is easy.</item>
+        <item>Time passes whether you scroll or grow.</item>
+        <item>Your dreams deserve more than your leftover time.</item>
+        <item>Don't let a habit make your decisions for you.</item>
+        <item>Small choices create powerful habits.</item>
+        <item>Rest your mind. Reclaim your attention.</item>
+        <item>Be stronger than the urge to scroll.</item>
+        <item>What were you about to do before opening this app?</item>
+        <item>Your goals are waiting. Give them five minutes first.</item>
+        <item>Your focus is precious. Protect it.</item>
+        <item>Every minute is a chance to begin again.</item>
+        <item>Scroll less. Live more.</item>
+        <item>Your real life is happening beyond this screen.</item>
+        <item>Give your attention to something that gives back.</item>
+        <item>Do you want to spend time here—or spend time well?</item>
+        <item>Your plans matter more than the next post.</item>
+        <item>Let this pause be a choice, not an obstacle.</item>
+        <item>You don't need to answer every urge.</item>
+        <item>Put your time where your values are.</item>
+        <item>One mindful choice can change the rest of your day.</item>
+        <item>Your next action is yours to choose.</item>
+        <item>Before you continue, remember why you picked up your phone.</item>
+        <item>Be present for the life you are building.</item>
+        <item>Don't trade your evening for an endless feed.</item>
+        <item>Your attention is a resource. Spend it wisely.</item>
+        <item>Five focused minutes can be worth more than fifty scrolls.</item>
+        <item>Are you looking for something—or avoiding something?</item>
+        <item>Give your mind a moment of quiet.</item>
+        <item>Your goals won't scroll themselves into reality.</item>
+        <item>Choose intention over autopilot.</item>
+        <item>Not every free moment needs a screen.</item>
+        <item>Take control of your time, one choice at a time.</item>
+        <item>Close the app if it no longer serves your purpose.</item>
+        <item>Let your next click reflect your priorities.</item>
+        <item>Your future self will appreciate this pause.</item>
+        <item>Be curious about your urge, not controlled by it.</item>
+        <item>Life is more than what fits on a screen.</item>
+        <item>Protect the time you promised yourself.</item>
+        <item>Make room for focus, rest, and real connection.</item>
+        <item>Pause the feed. Return to your priorities.</item>
+        <item>You are capable of choosing differently.</item>
+        <item>একটু থামো। ভাবো। তারপর সিদ্ধান্ত নাও।</item>
+        <item>অভ্যাসে অ্যাপ খুলেছ, নাকি সত্যিই কোনো কাজ আছে?</item>
+        <item>তোমার মনোযোগ তোমার—অ্যালগরিদমের নয়।</item>
+        <item>আরেকবার স্ক্রল, নাকি লক্ষ্যের দিকে এক ধাপ?</item>
+        <item>পরে আবার আসতে পারবে, কিন্তু সময় ফিরবে না।</item>
+        <item>পরবর্তী দশ মিনিট কি এভাবেই কাটাতে চাও?</item>
+        <item>আজকের কাজই তোমার আগামীকাল গড়ে।</item>
+        <item>একটু শ্বাস নাও। নিয়ন্ত্রণ তোমার হাতেই।</item>
+        <item>শুধু স্ক্রিন টাইম নয়, নিজের উন্নতি বাড়াও।</item>
+        <item>যা সহজ শুধু তা নয়, যা জরুরি তা বেছে নাও।</item>
+        <item>স্ক্রল করো বা নিজেকে গড়ো—সময় চলে যাবেই।</item>
+        <item>তোমার স্বপ্নগুলো অবশিষ্ট সময়ের চেয়েও বেশি কিছু পাওয়ার যোগ্য।</item>
+        <item>অভ্যাসকে তোমার হয়ে সিদ্ধান্ত নিতে দিয়ো না।</item>
+        <item>ছোট ছোট সিদ্ধান্তই ভালো অভ্যাস তৈরি করে।</item>
+        <item>মনকে বিশ্রাম দাও, নিজের মনোযোগ ফিরিয়ে নাও।</item>
+        <item>স্ক্রল করার তাগিদের চেয়েও দৃঢ় হও।</item>
+        <item>এই অ্যাপ খোলার আগে কী করতে যাচ্ছিলে?</item>
+        <item>আগে নিজের লক্ষ্যে পাঁচ মিনিট দাও।</item>
+        <item>তোমার মনোযোগ মূল্যবান—এটাকে আগলে রাখো।</item>
+        <item>প্রতিটি মিনিট নতুন করে শুরু করার সুযোগ।</item>
+        <item>কম স্ক্রল করো, জীবনকে বেশি উপভোগ করো।</item>
+        <item>তোমার বাস্তব জীবন এই স্ক্রিনের বাইরেও চলছে।</item>
+        <item>যে কাজে মনোযোগ দিচ্ছ, তা যেন তোমাকে এগিয়ে নেয়।</item>
+        <item>এখানে সময় কাটাতে চাও, নাকি সময়কে কাজে লাগাতে চাও?</item>
+        <item>পরের পোস্টের চেয়ে তোমার পরিকল্পনা বেশি গুরুত্বপূর্ণ।</item>
+        <item>এই বিরতিটাকে বাধা নয়, সচেতন সিদ্ধান্ত হতে দাও।</item>
+        <item>প্রতিটি ইচ্ছার সঙ্গে সঙ্গে সাড়া দেওয়ার দরকার নেই।</item>
+        <item>তোমার মূল্যবোধের সঙ্গে মিলিয়ে সময় ব্যয় করো।</item>
+        <item>একটি সচেতন সিদ্ধান্ত তোমার দিনের বাকি অংশ বদলে দিতে পারে।</item>
+        <item>পরের কাজটি বেছে নেওয়ার অধিকার তোমারই।</item>
+        <item>চালিয়ে যাওয়ার আগে মনে করো, ফোনটি কেন তুলেছিলে।</item>
+        <item>যে জীবন গড়ছ, সেই জীবনের বর্তমান মুহূর্তে থাকো।</item>
+        <item>অসীম স্ক্রলের জন্য পুরো সন্ধ্যাটা হারিয়ো না।</item>
+        <item>মনোযোগও সম্পদ—বুদ্ধি করে খরচ করো।</item>
+        <item>পাঁচ মিনিট মন দিয়ে কাজ করা অনেক স্ক্রলের চেয়ে মূল্যবান।</item>
+        <item>কিছু খুঁজছ, নাকি কোনো কাজ এড়িয়ে যাচ্ছ?</item>
+        <item>মনকে একটু নীরবতা উপহার দাও।</item>
+        <item>স্ক্রল করে তোমার লক্ষ্য বাস্তব হবে না—কাজ শুরু করো।</item>
+        <item>অটোপাইলট নয়, সচেতন সিদ্ধান্ত বেছে নাও।</item>
+        <item>অবসর পেলেই স্ক্রিনে ডুবে যেতে হবে না।</item>
+        <item>একটি করে সিদ্ধান্ত নিয়ে নিজের সময়ের নিয়ন্ত্রণ নাও।</item>
+        <item>কাজে না লাগলে অ্যাপটি বন্ধ করে দিতে পারো।</item>
+        <item>পরের ট্যাপটি যেন তোমার অগ্রাধিকারকে প্রকাশ করে।</item>
+        <item>এই বিরতির জন্য তোমার ভবিষ্যতের তুমি কৃতজ্ঞ থাকবে।</item>
+        <item>ইচ্ছেটাকে বোঝার চেষ্টা করো, ইচ্ছের নিয়ন্ত্রণে থেকো না।</item>
+        <item>জীবন স্ক্রিনে দেখা জিনিসের চেয়েও অনেক বড়।</item>
+        <item>নিজেকে যে সময় দেওয়ার প্রতিশ্রুতি দিয়েছ, তা রক্ষা করো।</item>
+        <item>মনোযোগ, বিশ্রাম আর বাস্তব সম্পর্কের জন্য সময় রাখো।</item>
+        <item>ফিড থামাও, নিজের অগ্রাধিকারে ফিরে যাও।</item>
+        <item>তুমি চাইলে অন্য সিদ্ধান্তও নিতে পারো।</item>
+    </string-array>
+</resources>
