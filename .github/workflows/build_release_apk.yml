@@ -2,12 +2,14 @@ name: Build release APK
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 16-dev
 
 jobs:
   build-release-apk:
     runs-on: ubuntu-latest
-    if: endsWith(github.ref, '-alpha') || endsWith(github.ref, '-beta') || endsWith(github.ref, '-rc') || endsWith(github.ref, '-stable')
-    continue-on-error: true
+    if: github.ref == 'refs/heads/16-dev' || endsWith(github.ref, '-alpha') || endsWith(github.ref, '-beta') || endsWith(github.ref, '-rc') || endsWith(github.ref, '-stable')
     steps:
       - uses: actions/checkout@v7
         with:
