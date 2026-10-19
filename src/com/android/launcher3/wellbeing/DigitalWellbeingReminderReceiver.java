@@ -90,6 +90,18 @@ public class DigitalWellbeingReminderReceiver extends BroadcastReceiver {
     }
 
     private void showReminder(Context context, String packageName) {
+        String label = packageName;
+        try {
+            label = context.getPackageManager().getApplicationLabel(
+                    context.getPackageManager().getApplicationInfo(packageName, 0)).toString();
+        } catch (PackageManager.NameNotFoundException ignored) {}
+        if (DigitalWellbeing.preferences(context).getBoolean(
+                DigitalWellbeing.KEY_OVERLAY_REMINDERS, false)
+                && Build.VERSION.SDK_INT >= 23
+                && android.provider.Settings.canDrawOverlays(context)) {
+            DigitalWellbeingOverlayService.show(context, label);
+            return;
+        }
         NotificationManager manager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= 26) {
@@ -97,11 +109,6 @@ public class DigitalWellbeingReminderReceiver extends BroadcastReceiver {
                     context.getString(R.string.dw_reminder_channel),
                     NotificationManager.IMPORTANCE_DEFAULT));
         }
-        String label = packageName;
-        try {
-            label = context.getPackageManager().getApplicationLabel(
-                    context.getPackageManager().getApplicationInfo(packageName, 0)).toString();
-        } catch (PackageManager.NameNotFoundException ignored) {}
         Intent openSettings = new Intent(context, DigitalWellbeingSettingsActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, packageName.hashCode(),
                 openSettings, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
