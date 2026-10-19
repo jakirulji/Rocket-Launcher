@@ -6,6 +6,8 @@
 package com.android.launcher3.wellbeing;
 
 import android.app.Activity;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -49,6 +51,8 @@ public class DigitalPauseActivity extends Activity {
         }
     };
     private Button openButton;
+    private TextView lotusView;
+    private ObjectAnimator breathingAnimation;
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -82,13 +86,25 @@ public class DigitalPauseActivity extends Activity {
         appName.setGravity(Gravity.CENTER);
         root.addView(appName, matchWrap());
 
-        TextView lotus = new TextView(this);
-        lotus.setText("✿");
-        lotus.setTextColor(Color.rgb(108, 92, 231));
-        lotus.setTextSize(104);
-        lotus.setGravity(Gravity.CENTER);
-        lotus.setPadding(0, dp(18), 0, dp(10));
-        root.addView(lotus, matchWrap());
+        lotusView = new TextView(this);
+        lotusView.setText("✿");
+        lotusView.setContentDescription(getString(R.string.dw_breathing_visual));
+        lotusView.setTextColor(Color.rgb(108, 92, 231));
+        lotusView.setTextSize(104);
+        lotusView.setGravity(Gravity.CENTER);
+        lotusView.setPadding(0, dp(18), 0, dp(10));
+        root.addView(lotusView, matchWrap());
+        // A gentle breathing pulse makes the pause screen feel calm without blocking input.
+        breathingAnimation = ObjectAnimator.ofFloat(lotusView, View.SCALE_X, 1f, 1.10f, 1f);
+        breathingAnimation.setDuration(4200);
+        breathingAnimation.setRepeatCount(ValueAnimator.INFINITE);
+        breathingAnimation.setRepeatMode(ValueAnimator.RESTART);
+        breathingAnimation.start();
+        ObjectAnimator breathingY = ObjectAnimator.ofFloat(lotusView, View.SCALE_Y, 1f, 1.10f, 1f);
+        breathingY.setDuration(4200);
+        breathingY.setRepeatCount(ValueAnimator.INFINITE);
+        breathingY.setRepeatMode(ValueAnimator.RESTART);
+        breathingY.start();
 
         TextView title = new TextView(this);
         title.setText(R.string.dw_pause_title);
@@ -192,6 +208,7 @@ public class DigitalPauseActivity extends Activity {
 
     @Override protected void onDestroy() {
         handler.removeCallbacksAndMessages(null);
+        if (breathingAnimation != null) breathingAnimation.cancel();
         super.onDestroy();
     }
 
