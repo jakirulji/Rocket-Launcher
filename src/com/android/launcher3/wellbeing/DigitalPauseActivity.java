@@ -208,7 +208,7 @@ public class DigitalPauseActivity extends Activity {
         question.setText("Do you really need to open this app?");
         question.setTextColor(Color.rgb(241, 244, 248));
         question.setTextSize(20);
-        question.setTypeface(Typeface.DEFAULT, Typeface.MEDIUM);
+        question.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         question.setGravity(Gravity.CENTER);
         question.setPadding(dp(8), dp(4), dp(8), dp(18));
         root.addView(question, matchWrap());
