@@ -6,6 +6,7 @@
 package com.android.launcher3.wellbeing;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -94,6 +95,18 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         appList.setOrientation(LinearLayout.VERTICAL);
         root.addView(appList);
         populateApps();
+
+        Button license = new Button(this);
+        license.setText(R.string.dw_about_license);
+        license.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setTitle(R.string.dw_about_license)
+                .setMessage(R.string.dw_license_notice)
+                .setPositiveButton(android.R.string.ok, null)
+                .show());
+        LinearLayout.LayoutParams licenseParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        licenseParams.topMargin = dp(12);
+        root.addView(license, licenseParams);
 
         Button save = new Button(this);
         save.setText(R.string.dw_save);
