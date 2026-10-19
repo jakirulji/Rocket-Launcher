@@ -236,6 +236,7 @@ public class DigitalPauseActivity extends Activity {
         usageDetail.setGravity(Gravity.CENTER);
         usageDetail.setPadding(0, dp(10), 0, 0);
         card.addView(usageDetail, matchWrap());
+        usageView = usageDetail;
         root.addView(card, matchWrap());
 
         Button passButton = new Button(this);
@@ -291,7 +292,7 @@ public class DigitalPauseActivity extends Activity {
 
     private void updateUsage() {
         if (!DigitalWellbeing.preferences(this).getBoolean(DigitalWellbeing.KEY_GUILT_MODE, false)) {
-            usageView.setVisibility(View.GONE);
+            if (!confirmationShown) usageView.setVisibility(View.GONE);
             return;
         }
         if (!hasUsageAccess()) {
