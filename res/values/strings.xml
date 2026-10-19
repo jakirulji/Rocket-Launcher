@@ -571,6 +571,7 @@
     <string name="digital_wellbeing_title">Digital Wellbeing</string>
     <string name="digital_wellbeing_summary">Pause selected apps and take a mindful moment before opening them.</string>
     <string name="dw_pause_title">Take a mindful pause</string>
+    <string name="dw_breathing_visual">Breathing pause animation</string>
     <string name="dw_pause_message">Take a breath. You can still open this app when the pause is complete.</string>
     <string name="dw_countdown_label">Pause ends in</string>
     <string name="dw_open_anyway">Open app anyway</string>
