@@ -586,4 +586,6 @@
     <string name="dw_usage_time_today">Today's usage: %1$s</string>
     <string name="dw_no_apps_selected">Select one or more apps to pause.</string>
     <string name="dw_no_launch_intent">The original app could not be opened.</string>
+    <string name="dw_about_license">About &amp; license</string>
+    <string name="dw_license_notice">Digital Wellbeing for Rocket Launcher is an adaptation inspired by Dragon Launcher (https://github.com/Elnix90/Dragon-Launcher), licensed under GNU GPL version 3. This Rocket Launcher implementation has been modified and is not endorsed by the upstream authors. The feature is provided without warranty. The complete license text is available in the repository file COPYING, and source notices are listed in THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md.</string>
 </resources>
