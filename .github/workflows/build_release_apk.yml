@@ -41,10 +41,10 @@ jobs:
           from pathlib import Path
           p = Path("keystore.properties")
           p.write_text(
-              "storePassword=" + os.environ["KEYSTORE_PASSWORD"] + "\\n" +
-              "keyAlias=" + os.environ["KEY_ALIAS"] + "\\n" +
-              "keyPassword=" + os.environ["KEY_PASSWORD"] + "\\n" +
-              "storeFile=" + str(Path(os.environ["GITHUB_WORKSPACE"]) / "key.jks") + "\\n",
+              "storePassword=" + os.environ["KEYSTORE_PASSWORD"] + "\n" +
+              "keyAlias=" + os.environ["KEY_ALIAS"] + "\n" +
+              "keyPassword=" + os.environ["KEY_PASSWORD"] + "\n" +
+              "storeFile=" + str(Path(os.environ["GITHUB_WORKSPACE"]) / "key.jks") + "\n",
               encoding="utf-8",
           )
           PY
