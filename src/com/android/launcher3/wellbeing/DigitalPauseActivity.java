@@ -32,6 +32,7 @@ import java.util.Locale;
 public class DigitalPauseActivity extends Activity {
     private Intent originalIntent;
     private String targetPackage;
+    private boolean dailyLimitReached;
     private int remainingSeconds;
     private TextView countdownView;
     private TextView usageView;
@@ -59,12 +60,13 @@ public class DigitalPauseActivity extends Activity {
         super.onCreate(state);
         originalIntent = getIntent().getParcelableExtra(DigitalWellbeing.EXTRA_ORIGINAL_INTENT);
         targetPackage = getIntent().getStringExtra(DigitalWellbeing.EXTRA_TARGET_PACKAGE);
+        dailyLimitReached = getIntent().getBooleanExtra(DigitalWellbeing.EXTRA_LIMIT_REACHED, false);
         if (originalIntent == null) { finish(); return; }
         remainingSeconds = DigitalWellbeing.preferences(this)
                 .getInt(DigitalWellbeing.KEY_PAUSE_SECONDS, 10);
         remainingSeconds = Math.max(3, Math.min(60, remainingSeconds));
         buildScreen();
-        handler.postDelayed(ticker, 1000);
+        if (!dailyLimitReached) handler.postDelayed(ticker, 1000);
     }
 
     @Override protected void onResume() {
@@ -121,7 +123,8 @@ public class DigitalPauseActivity extends Activity {
         root.addView(title, matchWrap());
 
         TextView message = new TextView(this);
-        message.setText(R.string.dw_pause_message);
+        message.setText(dailyLimitReached ? R.string.dw_daily_limit_reached_message
+                : R.string.dw_pause_message);
         message.setTextColor(Color.rgb(210, 220, 225));
         message.setTextSize(15);
         message.setGravity(Gravity.CENTER);
@@ -129,7 +132,9 @@ public class DigitalPauseActivity extends Activity {
         root.addView(message, matchWrap());
 
         countdownView = new TextView(this);
-        countdownView.setText(String.valueOf(remainingSeconds));
+        countdownView.setText(dailyLimitReached ? getString(R.string.dw_limit_reached_short)
+                : String.valueOf(remainingSeconds));
+        if (dailyLimitReached) countdownView.setTextSize(24);
         countdownView.setTextColor(Color.WHITE);
         countdownView.setTextSize(54);
         countdownView.setGravity(Gravity.CENTER);
@@ -144,8 +149,9 @@ public class DigitalPauseActivity extends Activity {
         root.addView(usageView, matchWrap());
 
         openButton = new Button(this);
-        openButton.setText(R.string.dw_open_anyway);
-        openButton.setEnabled(remainingSeconds <= 0);
+        openButton.setText(dailyLimitReached ? R.string.dw_daily_limit_reached
+                : R.string.dw_open_anyway);
+        openButton.setEnabled(!dailyLimitReached && remainingSeconds <= 0);
         openButton.setOnClickListener(v -> launchOriginal());
         root.addView(openButton, matchWrap());
 
@@ -205,7 +211,7 @@ public class DigitalPauseActivity extends Activity {
     }
 
     private void launchOriginal() {
-        if (remainingSeconds > 0) return;
+        if (dailyLimitReached || remainingSeconds > 0) return;
         try { startActivity(originalIntent); }
         catch (RuntimeException e) { android.widget.Toast.makeText(this,
                 R.string.dw_no_launch_intent, android.widget.Toast.LENGTH_SHORT).show(); }
