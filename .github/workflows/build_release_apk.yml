@@ -21,16 +21,35 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
         with:
           cache-encryption-key: Da25KUVSE5jbGds2zXmfXw==
-      - name: Write sign info
-        if: github.repository_owner == 'LawnchairLauncher'
+      - name: Configure permanent release signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ ! -z "${{ secrets.KEYSTORE }}" ]; then
-            echo storePassword='${{ secrets.KEYSTORE_PASSWORD }}' >> keystore.properties
-            echo keyAlias='${{ secrets.KEY_ALIAS }}' >> keystore.properties
-            echo keyPassword='${{ secrets.KEY_PASSWORD }}' >> keystore.properties
-            echo storeFile='${{ github.workspace }}/key.jks' >> keystore.properties
-            echo ${{ secrets.KEYSTORE }} | base64 --decode > ${{ github.workspace }}/key.jks
-          fi
+          set -euo pipefail
+          for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::Missing GitHub Actions secret: $name. Copy the same signing secrets used by Daily_Tracker into Rocket-Launcher repository settings."
+              exit 1
+            fi
+          done
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$GITHUB_WORKSPACE/key.jks"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p = Path("keystore.properties")
+          p.write_text(
+              "storePassword=" + os.environ["KEYSTORE_PASSWORD"] + "\\n" +
+              "keyAlias=" + os.environ["KEY_ALIAS"] + "\\n" +
+              "keyPassword=" + os.environ["KEY_PASSWORD"] + "\\n" +
+              "storeFile=" + str(Path(os.environ["GITHUB_WORKSPACE"]) / "key.jks") + "\\n",
+              encoding="utf-8",
+          )
+          PY
+          keytool -list -keystore "$GITHUB_WORKSPACE/key.jks" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" >/dev/null
+          echo "Permanent release signing keystore verified."
       - name: Build release APK
         run: ./gradlew assembleLawnWithQuickstepGithubRelease bundleLawnWithQuickstepPlayRelease
       - name: Upload artifact
