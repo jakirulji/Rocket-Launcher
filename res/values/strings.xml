@@ -580,6 +580,11 @@
     <string name="dw_enable_pause">Enable app pause</string>
     <string name="dw_select_apps">Choose apps to pause</string>
     <string name="dw_pause_duration">Pause duration: %1$d seconds</string>
+    <string name="dw_daily_limit">Daily app limit: %1$d minutes</string>
+    <string name="dw_daily_limit_off">Daily app limit: Off</string>
+    <string name="dw_daily_limit_reached">Daily limit reached</string>
+    <string name="dw_limit_reached_short">Daily limit reached</string>
+    <string name="dw_daily_limit_reached_message">You have reached the configured daily usage limit for this app. You can return home; this limit resets at midnight. If Usage Access is disabled, enforcement cannot work.</string>
     <string name="dw_guilt_mode">Show usage time before opening</string>
     <string name="dw_choose_apps_title">Select apps</string>
     <string name="dw_save">Save</string>
