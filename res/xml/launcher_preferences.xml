@@ -18,15 +18,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        android:key="pref_digital_wellbeing"
-        android:title="@string/digital_wellbeing_title"
-        android:summary="@string/digital_wellbeing_summary">
-        <intent
-            android:targetPackage="com.launcher.rocket"
-            android:targetClass="com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity" />
-    </Preference>
-
     <com.android.launcher3.settings.NotificationDotsPreference
         android:key="pref_icon_badging"
         android:title="@string/notification_dots_title"
