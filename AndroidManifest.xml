@@ -32,6 +32,9 @@
     <permission android:name="${applicationId}.permission.START_WIDGET_PICKER_ACTIVITY"
         android:protectionLevel="signature|privileged" />
 
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:name="app.lawnchair.LawnchairApp"
         android:backupAgent="com.android.launcher3.LauncherBackupAgent"
@@ -91,5 +94,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.android.launcher3.wellbeing.DigitalPauseActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity"
+            android:exported="false"
+            android:label="@string/digital_wellbeing_title"
+            android:parentActivityName="app.lawnchair.LawnchairLauncher"
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>
