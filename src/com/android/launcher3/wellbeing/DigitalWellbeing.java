@@ -28,6 +28,7 @@ public final class DigitalWellbeing {
     static final String KEY_GUILT_MODE = "guilt_mode";
     static final String KEY_DAILY_LIMIT_MINUTES = "daily_limit_minutes";
     static final String KEY_REMINDER_INTERVAL_MINUTES = "reminder_interval_minutes";
+    static final String KEY_OVERLAY_REMINDERS = "overlay_reminders";
     static final String EXTRA_LIMIT_REACHED = "digital_wellbeing_limit_reached";
     static final String EXTRA_ORIGINAL_INTENT = "digital_wellbeing_original_intent";
     static final String EXTRA_TARGET_PACKAGE = "digital_wellbeing_target_package";
