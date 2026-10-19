@@ -5,6 +5,8 @@
  */
 package com.android.launcher3.wellbeing;
 
+import com.android.launcher3.R;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
