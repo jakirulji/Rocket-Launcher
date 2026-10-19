@@ -35,6 +35,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
     private android.content.SharedPreferences prefs;
     private CheckBox enabled;
     private CheckBox guiltMode;
+    private CheckBox overlayReminders;
     private TextView durationLabel;
     private SeekBar duration;
     private TextView limitLabel;
@@ -141,6 +142,29 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         root.addView(reminderInterval);
         updateReminderLabel(reminderInterval.getProgress());
 
+        overlayReminders = new CheckBox(this);
+        overlayReminders.setText(R.string.dw_overlay_reminders);
+        overlayReminders.setTextColor(Color.WHITE);
+        overlayReminders.setButtonTintList(android.content.res.ColorStateList.valueOf(Color.rgb(0, 206, 201)));
+        overlayReminders.setChecked(prefs.getBoolean(DigitalWellbeing.KEY_OVERLAY_REMINDERS, false));
+        root.addView(overlayReminders);
+
+        Button overlayPermission = new Button(this);
+        overlayPermission.setText(R.string.dw_overlay_permission);
+        overlayPermission.setOnClickListener(v -> {
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                Intent overlayIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                try { startActivity(overlayIntent); }
+                catch (RuntimeException e) {
+                    startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
+                }
+            } else {
+                Toast.makeText(this, R.string.dw_overlay_not_supported, Toast.LENGTH_SHORT).show();
+            }
+        });
+        root.addView(overlayPermission);
+
         TextView appTitle = text(getString(R.string.dw_select_apps), 18, Color.WHITE, true);
         appTitle.setPadding(0, dp(22), 0, dp(8));
         root.addView(appTitle);
@@ -227,6 +251,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
                 .putInt(DigitalWellbeing.KEY_PAUSE_SECONDS, duration.getProgress() + 3)
                 .putInt(DigitalWellbeing.KEY_DAILY_LIMIT_MINUTES, dailyLimit.getProgress())
                 .putInt(DigitalWellbeing.KEY_REMINDER_INTERVAL_MINUTES, reminderInterval.getProgress() * 15)
+                .putBoolean(DigitalWellbeing.KEY_OVERLAY_REMINDERS, overlayReminders.isChecked())
                 .putStringSet(DigitalWellbeing.KEY_PAUSED_APPS, new HashSet<>(selectedApps))
                 .apply();
         DigitalWellbeingReminderReceiver.schedule(this, reminderInterval.getProgress() * 15);
