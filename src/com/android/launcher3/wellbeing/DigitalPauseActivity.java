@@ -212,7 +212,12 @@ public class DigitalPauseActivity extends Activity {
 
     private void launchOriginal() {
         if (dailyLimitReached || remainingSeconds > 0) return;
-        try { startActivity(originalIntent); }
+        try {
+            // Start enforcement before launching the target so its foreground usage is counted
+            // from the beginning of this session.
+            DigitalWellbeingTimerService.startIfNeeded(this, targetPackage);
+            startActivity(originalIntent);
+        }
         catch (RuntimeException e) { android.widget.Toast.makeText(this,
                 R.string.dw_no_launch_intent, android.widget.Toast.LENGTH_SHORT).show(); }
         finish();
