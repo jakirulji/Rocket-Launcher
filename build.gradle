@@ -153,8 +153,8 @@ final def isReleaseBuild = ciBuild
         || ciRef.endsWith("-stable"))
 final def devReleaseName = ciBuild ? "Dev.(#${ciRunNumber})" : "Dev.(${buildCommit})"
 
-final def version = "16"
-final def releaseName = "Beta 1"
+final def version = "1"
+final def releaseName = "0"
 final def versionDisplayName = "${version}.${isReleaseBuild ? releaseName : devReleaseName}"
 final def majorVersion = versionDisplayName.split("\\.")[0]
 
@@ -168,10 +168,10 @@ android {
          * Lawnchair Launcher 16.0 Beta 1.0
          * see https://docs.lawnchair.app/developers/standards/development-workflow#versioning-scheme
          */
-        versionCode 16_00_02_01_00
-        versionName "${versionDisplayName}"
-        buildConfigField "String", "VERSION_DISPLAY_NAME", "\"${versionDisplayName}\""
-        buildConfigField "String", "MAJOR_VERSION", "\"${majorVersion}\""
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "String", "VERSION_DISPLAY_NAME", "\"1.0\""
+        buildConfigField "String", "MAJOR_VERSION", "\"1\""
         buildConfigField "String", "COMMIT_HASH", "\"${buildCommit}\""
         buildConfigField "boolean", "ENABLE_AUTO_INSTALLS_LAYOUT", "false"
 
@@ -241,7 +241,7 @@ android {
 
         debug {
             applicationIdSuffix ".debug"
-            resValue("string", "derived_app_name", "Lawnchair (Debug)")
+            resValue("string", "derived_app_name", "Rocket Launcher (Debug)")
 
             manifestPlaceholders.quickstepMinSdk = "0"
             manifestPlaceholders.quickstepMaxSdk = "100000"
@@ -250,7 +250,7 @@ android {
         }
 
         release {
-            resValue("string", "derived_app_name", "Lawnchair")
+            resValue("string", "derived_app_name", "Rocket Launcher")
             minifyEnabled true
             shrinkResources true
             pseudoLocalesEnabled false
@@ -281,7 +281,7 @@ android {
         }
 
         github {
-            applicationId 'app.lawnchair'
+            applicationId 'com.launcher.rocket'
             dimension "channel"
         }
 
@@ -363,7 +363,7 @@ androidComponents {
     onVariants(selector().all()) { variant ->
         def channel = variant.productFlavors.last().second
         variant.outputs.forEach { output ->
-            output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")
+            if (variant.name == "lawnWithQuickstepGithubRelease") {\n                output.outputFileName.set("Rocket Launcher.apk")\n            } else {\n                output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")\n            }
         }
 
         // Lawnchair-TODO: A better way to sync proto file to the IDE preventing missing or outdated result. Please remove if this is the best solution we have right now
