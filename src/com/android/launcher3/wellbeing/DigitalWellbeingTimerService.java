@@ -139,7 +139,7 @@ public class DigitalWellbeingTimerService extends Service {
         try {
             UsageStatsManager manager = (UsageStatsManager)
                     getSystemService(Context.USAGE_STATS_SERVICE);
-            UsageEvents events = manager.queryEvents(Math.max(startedAt, now - 10_000L), now);
+            UsageEvents events = manager.queryEvents(startedAt, now);
             UsageEvents.Event event = new UsageEvents.Event();
             String lastForeground = null;
             while (events != null && events.hasNextEvent()) {
