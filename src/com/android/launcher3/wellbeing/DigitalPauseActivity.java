@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class DigitalPauseActivity extends Activity {
     private Intent originalIntent;
@@ -125,8 +126,8 @@ public class DigitalPauseActivity extends Activity {
         root.addView(title, matchWrap());
 
         TextView message = new TextView(this);
-        message.setText(dailyLimitReached ? R.string.dw_daily_limit_reached_message
-                : R.string.dw_pause_message);
+        message.setText(dailyLimitReached ? getString(R.string.dw_daily_limit_reached_message)
+                : getRandomPauseCaption());
         message.setTextColor(Color.rgb(210, 220, 225));
         message.setTextSize(15);
         message.setGravity(Gravity.CENTER);
@@ -164,6 +165,26 @@ public class DigitalPauseActivity extends Activity {
         backParams.topMargin = dp(8);
         root.addView(backButton, backParams);
         setContentView(root);
+    }
+
+    /**
+     * Pick a local bilingual encouragement for each pause screen.
+     * Avoid repeating the immediately previous caption when possible.
+     */
+    private String getRandomPauseCaption() {
+        String[] captions = getResources().getStringArray(R.array.dw_pause_captions);
+        if (captions.length == 0) return getString(R.string.dw_pause_message);
+
+        android.content.SharedPreferences prefs = DigitalWellbeing.preferences(this);
+        int previous = prefs.getInt("dw_last_pause_caption_index", -1);
+        int selected = new Random().nextInt(captions.length);
+        if (captions.length > 1) {
+            while (selected == previous) {
+                selected = new Random().nextInt(captions.length);
+            }
+        }
+        prefs.edit().putInt("dw_last_pause_caption_index", selected).apply();
+        return captions[selected];
     }
 
     private void updateUsage() {
