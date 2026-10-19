@@ -64,7 +64,6 @@
         android:title="@string/digital_wellbeing_title"
         android:summary="@string/digital_wellbeing_summary">
         <intent
-            android:targetPackage="${applicationId}"
             android:targetClass="com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity" />
     </Preference>
 
