@@ -584,6 +584,9 @@
     <string name="dw_daily_limit_off">Daily app limit: Off</string>
     <string name="dw_reminders_off">Usage reminders: Off</string>
     <string name="dw_reminder_interval">Usage reminder interval: %1$d minutes</string>
+    <string name="dw_overlay_reminders">Use a floating reminder when possible</string>
+    <string name="dw_overlay_permission">Allow display over other apps</string>
+    <string name="dw_overlay_not_supported">Floating reminders are not supported on this Android version.</string>
     <string name="dw_reminder_channel">Digital Wellbeing reminders</string>
     <string name="dw_reminder_title">Take a mindful break</string>
     <string name="dw_reminder_message">You have been using %1$s for a while. Consider taking a short break.</string>
