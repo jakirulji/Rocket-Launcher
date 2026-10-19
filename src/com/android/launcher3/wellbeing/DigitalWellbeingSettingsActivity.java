@@ -39,6 +39,8 @@ public class DigitalWellbeingSettingsActivity extends Activity {
     private SeekBar duration;
     private TextView limitLabel;
     private SeekBar dailyLimit;
+    private TextView reminderLabel;
+    private SeekBar reminderInterval;
     private LinearLayout appList;
     private final Set<String> selectedApps = new HashSet<>();
 
@@ -122,6 +124,23 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         });
         root.addView(usagePermission);
 
+        reminderLabel = text("", 15, Color.WHITE, true);
+        reminderLabel.setPadding(0, dp(18), 0, dp(4));
+        root.addView(reminderLabel);
+        reminderInterval = new SeekBar(this);
+        reminderInterval.setMax(8);
+        int savedReminder = prefs.getInt(DigitalWellbeing.KEY_REMINDER_INTERVAL_MINUTES, 0);
+        reminderInterval.setProgress(savedReminder <= 0 ? 0 : Math.max(1, Math.min(8, savedReminder / 15)));
+        reminderInterval.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar bar, int value, boolean fromUser) {
+                updateReminderLabel(value);
+            }
+            public void onStartTrackingTouch(SeekBar bar) {}
+            public void onStopTrackingTouch(SeekBar bar) {}
+        });
+        root.addView(reminderInterval);
+        updateReminderLabel(reminderInterval.getProgress());
+
         TextView appTitle = text(getString(R.string.dw_select_apps), 18, Color.WHITE, true);
         appTitle.setPadding(0, dp(22), 0, dp(8));
         root.addView(appTitle);
@@ -191,6 +210,12 @@ public class DigitalWellbeingSettingsActivity extends Activity {
                 : getString(R.string.dw_daily_limit, minutes));
     }
 
+    private void updateReminderLabel(int step) {
+        int minutes = step * 15;
+        reminderLabel.setText(minutes == 0 ? getString(R.string.dw_reminders_off)
+                : getString(R.string.dw_reminder_interval, minutes));
+    }
+
     private void saveAndClose() {
         if (enabled.isChecked() && selectedApps.isEmpty()) {
             Toast.makeText(this, R.string.dw_no_apps_selected, Toast.LENGTH_LONG).show();
@@ -201,8 +226,10 @@ public class DigitalWellbeingSettingsActivity extends Activity {
                 .putBoolean(DigitalWellbeing.KEY_GUILT_MODE, guiltMode.isChecked())
                 .putInt(DigitalWellbeing.KEY_PAUSE_SECONDS, duration.getProgress() + 3)
                 .putInt(DigitalWellbeing.KEY_DAILY_LIMIT_MINUTES, dailyLimit.getProgress())
+                .putInt(DigitalWellbeing.KEY_REMINDER_INTERVAL_MINUTES, reminderInterval.getProgress() * 15)
                 .putStringSet(DigitalWellbeing.KEY_PAUSED_APPS, new HashSet<>(selectedApps))
                 .apply();
+        DigitalWellbeingReminderReceiver.schedule(this, reminderInterval.getProgress() * 15);
         finish();
     }
 
