@@ -81,6 +81,14 @@
         </activity>
 
 
+        <!-- Digital Wellbeing pause screen shown when a selected app is launched -->
+        <activity
+            android:name="com.android.launcher3.wellbeing.DigitalPauseActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
         <!-- Digital Wellbeing configuration opened from Home Settings -->
         <activity
             android:name="com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity"
