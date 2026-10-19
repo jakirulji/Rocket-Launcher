@@ -64,8 +64,13 @@ public class DigitalPauseActivity extends Activity {
                 .getInt(DigitalWellbeing.KEY_PAUSE_SECONDS, 10);
         remainingSeconds = Math.max(3, Math.min(60, remainingSeconds));
         buildScreen();
-        updateUsage();
         handler.postDelayed(ticker, 1000);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        // Refresh usage-access status after the user returns from Android Settings.
+        if (usageView != null) updateUsage();
     }
 
     private void buildScreen() {
