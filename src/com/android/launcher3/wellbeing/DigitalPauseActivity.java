@@ -188,8 +188,8 @@ public class DigitalPauseActivity extends Activity {
                 if (targetPackage.equals(stat.getPackageName())) total += stat.getTotalTimeInForeground();
             }
             long mins = total / 60000;
-            usageView.setText(getString(R.string.dw_usage_time_today,
-                    mins < 60 ? mins + " min" : (mins / 60) + "h " + (mins % 60) + "m"));
+            usageView.setText(getString(R.string.dw_usage_time_today)
+                    + (mins < 60 ? mins + " min" : (mins / 60) + "h " + (mins % 60) + "m"));
         } catch (RuntimeException ignored) {
             usageView.setVisibility(View.GONE);
         }
