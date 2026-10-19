@@ -53,6 +53,7 @@ public class DigitalPauseActivity extends Activity {
     private Button openButton;
     private TextView lotusView;
     private ObjectAnimator breathingAnimation;
+    private ObjectAnimator breathingYAnimation;
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -100,11 +101,11 @@ public class DigitalPauseActivity extends Activity {
         breathingAnimation.setRepeatCount(ValueAnimator.INFINITE);
         breathingAnimation.setRepeatMode(ValueAnimator.RESTART);
         breathingAnimation.start();
-        ObjectAnimator breathingY = ObjectAnimator.ofFloat(lotusView, View.SCALE_Y, 1f, 1.10f, 1f);
-        breathingY.setDuration(4200);
-        breathingY.setRepeatCount(ValueAnimator.INFINITE);
-        breathingY.setRepeatMode(ValueAnimator.RESTART);
-        breathingY.start();
+        breathingYAnimation = ObjectAnimator.ofFloat(lotusView, View.SCALE_Y, 1f, 1.10f, 1f);
+        breathingYAnimation.setDuration(4200);
+        breathingYAnimation.setRepeatCount(ValueAnimator.INFINITE);
+        breathingYAnimation.setRepeatMode(ValueAnimator.RESTART);
+        breathingYAnimation.start();
 
         TextView title = new TextView(this);
         title.setText(R.string.dw_pause_title);
@@ -209,6 +210,7 @@ public class DigitalPauseActivity extends Activity {
     @Override protected void onDestroy() {
         handler.removeCallbacksAndMessages(null);
         if (breathingAnimation != null) breathingAnimation.cancel();
+        if (breathingYAnimation != null) breathingYAnimation.cancel();
         super.onDestroy();
     }
 
