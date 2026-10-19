@@ -201,6 +201,23 @@ public class SettingsActivity extends FragmentActivity
             setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
 
             PreferenceScreen screen = getPreferenceScreen();
+
+            // Keep Digital Wellbeing visible in the Home Settings list and launch its setup
+            // directly. This also covers builds where the XML preference is filtered/omitted.
+            Preference digitalWellbeing = screen.findPreference("pref_digital_wellbeing");
+            if (digitalWellbeing == null) {
+                digitalWellbeing = new Preference(requireContext());
+                digitalWellbeing.setKey("pref_digital_wellbeing");
+                digitalWellbeing.setTitle(R.string.digital_wellbeing_title);
+                digitalWellbeing.setSummary(R.string.digital_wellbeing_summary);
+                screen.addPreference(digitalWellbeing);
+            }
+            digitalWellbeing.setOrder(-1);
+            digitalWellbeing.setOnPreferenceClickListener(pref -> {
+                startActivity(new Intent(requireContext(),
+                        com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity.class));
+                return true;
+            });
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
                 Preference preference = screen.getPreference(i);
                 if (!initPreference(preference)) {
