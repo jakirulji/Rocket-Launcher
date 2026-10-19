@@ -5,6 +5,8 @@
  */
 package com.android.launcher3.wellbeing;
 
+import com.android.launcher3.R;
+
 import android.app.Activity;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
