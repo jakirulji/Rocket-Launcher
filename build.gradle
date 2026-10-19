@@ -363,7 +363,11 @@ androidComponents {
     onVariants(selector().all()) { variant ->
         def channel = variant.productFlavors.last().second
         variant.outputs.forEach { output ->
-            if (variant.name == "lawnWithQuickstepGithubRelease") {\n                output.outputFileName.set("Rocket Launcher.apk")\n            } else {\n                output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")\n            }
+            if (variant.name == "lawnWithQuickstepGithubRelease") {
+                output.outputFileName.set("Rocket Launcher.apk")
+            } else {
+                output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")
+            }
         }
 
         // Lawnchair-TODO: A better way to sync proto file to the IDE preventing missing or outdated result. Please remove if this is the best solution we have right now
