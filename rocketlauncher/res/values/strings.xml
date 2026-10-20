@@ -1074,4 +1074,8 @@
     <string name="lawnchair_action_failed">Failed to trigger action</string>
 
     <string name="please_wait">Please wait…</string>
+    <string name="smartspace_mode_soul_space">Soul Space</string>
+    <string name="soul_space_settings">Soul Space</string>
+    <string name="soul_space_settings_intro">A calm space for daily wisdom and reflection. Basic quotes will work without downloading an AI model.</string>
+    <string name="soul_space_privacy_note">Mood analysis is optional. Personal text and mood analysis must remain on this device.</string>
 </resources>
