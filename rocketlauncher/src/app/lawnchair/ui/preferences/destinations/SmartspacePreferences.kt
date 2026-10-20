@@ -295,14 +295,60 @@ fun SmartspaceCalendarPreference(
 fun SoulSpaceSettings(
     modifier: Modifier = Modifier,
 ) {
+    val prefs = preferenceManager2()
+    val languageEntries = remember {
+        listOf(
+            ListPreferenceEntry("bengali_english") { stringResource(R.string.soul_space_language_both) },
+            ListPreferenceEntry("bengali") { stringResource(R.string.soul_space_language_bengali) },
+            ListPreferenceEntry("english") { stringResource(R.string.soul_space_language_english) },
+            ListPreferenceEntry("original_bengali") { stringResource(R.string.soul_space_language_original_bengali) },
+        )
+    }
+    val sourceEntries = remember {
+        listOf(
+            ListPreferenceEntry("mixed_reflections") { stringResource(R.string.soul_space_source_mixed) },
+            ListPreferenceEntry("quran") { stringResource(R.string.soul_space_source_quran) },
+            ListPreferenceEntry("hindu") { stringResource(R.string.soul_space_source_hindu) },
+            ListPreferenceEntry("buddhist") { stringResource(R.string.soul_space_source_buddhist) },
+            ListPreferenceEntry("sikh") { stringResource(R.string.soul_space_source_sikh) },
+            ListPreferenceEntry("sufi") { stringResource(R.string.soul_space_source_sufi) },
+            ListPreferenceEntry("general") { stringResource(R.string.soul_space_source_general) },
+        )
+    }
+    val scheduleEntries = remember {
+        listOf(
+            ListPreferenceEntry("each_unlock") { stringResource(R.string.soul_space_schedule_unlock) },
+            ListPreferenceEntry("daily") { stringResource(R.string.soul_space_schedule_daily) },
+            ListPreferenceEntry("weekly") { stringResource(R.string.soul_space_schedule_weekly) },
+            ListPreferenceEntry("manual") { stringResource(R.string.soul_space_schedule_manual) },
+        )
+    }
+
     Column(modifier.padding(top = 8.dp)) {
-        PreferenceGroup(
-            heading = stringResource(id = R.string.soul_space_settings),
-        ) {
+        PreferenceGroup(heading = stringResource(id = R.string.soul_space_settings)) {
             androidx.compose.material3.Text(
                 text = stringResource(id = R.string.soul_space_settings_intro),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            )
+            ListPreference(
+                adapter = prefs.soulSpaceLanguage.getAdapter(),
+                entries = languageEntries,
+                label = stringResource(R.string.soul_space_language_label),
+            )
+            ListPreference(
+                adapter = prefs.soulSpaceSource.getAdapter(),
+                entries = sourceEntries,
+                label = stringResource(R.string.soul_space_source_label),
+            )
+            ListPreference(
+                adapter = prefs.soulSpaceSchedule.getAdapter(),
+                entries = scheduleEntries,
+                label = stringResource(R.string.soul_space_schedule_label),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceFavoritesOnly.getAdapter(),
+                label = stringResource(R.string.soul_space_favorites_only),
             )
             androidx.compose.material3.Text(
                 text = stringResource(id = R.string.soul_space_privacy_note),
