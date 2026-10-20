@@ -1,6 +1,7 @@
 /*
  * Digital Wellbeing settings adaptation for Rocket Launcher.
  * Based on Dragon Launcher Digital Wellbeing; modifications are noted here.
+ * Modified for Rocket Launcher during 2026-10-19–2026-10-20.
  * Licensed under GPLv3 as part of this derivative feature; see THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md.
  */
 package com.android.launcher3.wellbeing;
