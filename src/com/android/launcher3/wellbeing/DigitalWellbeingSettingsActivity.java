@@ -1,4 +1,5 @@
 /*
+ * SPDX-License-Identifier: GPL-3.0-only
  * Digital Wellbeing settings adaptation for Rocket Launcher.
  * Based on Dragon Launcher Digital Wellbeing; modifications are noted here.
  * Modified for Rocket Launcher during 2026-10-19–2026-10-20.
