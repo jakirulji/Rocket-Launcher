@@ -38,6 +38,7 @@ fun Acknowledgements(
     viewModel: AcknowledgementsViewModel = viewModel(),
 ) {
     val ossLibraries by viewModel.ossLibraries.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     PreferenceLayoutLazyColumn(
         label = stringResource(id = R.string.acknowledgements),
         modifier = modifier,
