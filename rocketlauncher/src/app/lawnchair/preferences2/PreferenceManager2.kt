@@ -827,6 +827,37 @@ class PreferenceManager2 @Inject constructor(
         onSet = { reloadHelper.recreate() },
     )
 
+    val soulSpaceCardBackground = preference(
+        key = intPreferencesKey("soul_space_card_background"),
+        defaultValue = 0xFF172554.toInt(),
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceCardTextColor = preference(
+        key = intPreferencesKey("soul_space_card_text_color"),
+        defaultValue = 0xFFFFFFFF.toInt(),
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceCardReferenceColor = preference(
+        key = intPreferencesKey("soul_space_card_reference_color"),
+        defaultValue = 0xFFFCD34D.toInt(),
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceCardRadius = preference(
+        key = intPreferencesKey("soul_space_card_radius"),
+        defaultValue = 18,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceCardFontSize = preference(
+        key = intPreferencesKey("soul_space_card_font_size"),
+        defaultValue = 18,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceCardFontStyle = preference(
+        key = stringPreferencesKey("soul_space_card_font_style"),
+        defaultValue = "normal",
+        onSet = { reloadHelper.recreate() },
+    )
+
     val soulSpaceTextColorMode = preference(
         key = stringPreferencesKey("soul_space_text_color_mode"),
         defaultValue = "adaptive",
