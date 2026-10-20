@@ -148,6 +148,7 @@ final def buildCommit = providers.exec {
 final def ciBuild = System.getenv("CI") == "true"
 final def ciRef = System.getenv("GITHUB_REF") ?: ""
 final def ciRunNumber = System.getenv("GITHUB_RUN_NUMBER") ?: ""
+final def isSoulSpaceBuild = System.getenv("GITHUB_REF_NAME") == "soul-space"
 final def isReleaseBuild = ciBuild
         && (ciRef.endsWith("-alpha")
         || ciRef.endsWith("-beta")
@@ -256,7 +257,7 @@ android {
 
         debug {
             applicationIdSuffix ".debug"
-            resValue("string", "derived_app_name", "Rocket Launcher (Debug)")
+            resValue("string", "derived_app_name", isSoulSpaceBuild ? "test (Debug)" : "Rocket Launcher (Debug)")
 
             manifestPlaceholders.quickstepMinSdk = "0"
             manifestPlaceholders.quickstepMaxSdk = "100000"
@@ -265,7 +266,7 @@ android {
         }
 
         release {
-            resValue("string", "derived_app_name", "Rocket Launcher")
+            resValue("string", "derived_app_name", isSoulSpaceBuild ? "test" : "Rocket Launcher")
             minifyEnabled true
             shrinkResources true
             pseudoLocalesEnabled false
@@ -296,7 +297,7 @@ android {
         }
 
         github {
-            applicationId 'com.launcher.rocket'
+            applicationId isSoulSpaceBuild ? 'test.launcher.soul' : 'com.launcher.rocket'
             dimension "channel"
         }
 
@@ -379,7 +380,7 @@ androidComponents {
         def channel = variant.productFlavors.last().second
         variant.outputs.forEach { output ->
             if (variant.name == "lawnWithQuickstepGithubRelease") {
-                output.outputFileName.set("Rocket Launcher.apk")
+                output.outputFileName.set(isSoulSpaceBuild ? "test.apk" : "Rocket Launcher.apk")
             } else {
                 output.outputFileName.set("Lawnchair.${output.versionName.get()}.$channel.${variant.buildType}.apk")
             }
