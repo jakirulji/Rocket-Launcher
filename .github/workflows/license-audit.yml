@@ -53,6 +53,19 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
       - name: Generate dependency license report
         run: ./gradlew --no-daemon licensee
+      - name: Verify required license and attribution files
+        run: |
+          test -s LICENSE.txt
+          test -s COPYING
+          test -s NOTICE
+          test -s THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md
+          test -s lawnchair/assets/license.html
+          grep -q "Apache License" LICENSE.txt
+          grep -q "GNU GENERAL PUBLIC LICENSE" COPYING
+          grep -q "GNU GENERAL PUBLIC LICENSE" lawnchair/assets/license.html
+          grep -q "MIT License" lawnchair/assets/license.html
+          grep -q "Dragon Launcher" NOTICE
+          ! grep -q 'href="../../COPYING"' lawnchair/assets/license.html
       - name: Upload license reports
         if: always()
         uses: actions/upload-artifact@v7
