@@ -1,7 +1,7 @@
+/* Modified by Rocket Launcher on 2026-10-20: replaced GPL-2.0-only fuzzywuzzy with a local Levenshtein matcher. */
 package app.lawnchair.search.algorithms.engine.provider.apps
 
 import java.util.Locale
-import me.xdrop.fuzzywuzzy.FuzzySearch
 
 internal data class MatchResult(val score: Float, val type: MatchType)
 
@@ -79,9 +79,9 @@ internal object AppMatcher {
         }
 
         // Rule 6: Fuzzy Search
-        val fuzzyWhole = FuzzySearch.ratio(app, query)
+        val fuzzyWhole = similarityRatio(app, query)
         // Avoid re-calculating max if no tokens exist
-        val fuzzyToken = if (tokens.isEmpty()) 0 else tokens.maxOfOrNull { FuzzySearch.ratio(it, query) } ?: 0
+        val fuzzyToken = if (tokens.isEmpty()) 0 else tokens.maxOfOrNull { similarityRatio(it, query) } ?: 0
         val fuzzyScore = maxOf(fuzzyWhole, fuzzyToken)
 
         if (fuzzyScore >= FUZZY_SCORE_CUTOFF) {
@@ -90,5 +90,37 @@ internal object AppMatcher {
         }
 
         return MatchResult(0f, MatchType.NO_MATCH)
+    }
+
+    /**
+     * Returns a 0..100 similarity score using normalized Levenshtein distance.
+     * This keeps fuzzy matching local and avoids the GPL-2.0-only fuzzywuzzy dependency.
+     */
+    private fun similarityRatio(left: String, right: String): Int {
+        if (left.isEmpty() && right.isEmpty()) return 100
+        if (left.isEmpty() || right.isEmpty()) return 0
+
+        val longer = if (left.length >= right.length) left else right
+        val shorter = if (left.length >= right.length) right else left
+        var previous = IntArray(shorter.length + 1) { it }
+        var current = IntArray(shorter.length + 1)
+
+        for (i in longer.indices) {
+            current[0] = i + 1
+            for (j in shorter.indices) {
+                val substitutionCost = if (longer[i] == shorter[j]) 0 else 1
+                current[j + 1] = minOf(
+                    current[j] + 1,
+                    previous[j + 1] + 1,
+                    previous[j] + substitutionCost,
+                )
+            }
+            val temp = previous
+            previous = current
+            current = temp
+        }
+
+        val distance = previous[shorter.length]
+        return ((longer.length - distance) * 100) / longer.length
     }
 }
