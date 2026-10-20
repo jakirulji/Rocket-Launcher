@@ -664,7 +664,7 @@
     <string name="recents_screen_a11y_hint">open the Recents screen</string>
 
     <string name="generic_a11y_hint">To %1$s, turn on the Rocket Launcher accessibility service. Tap \"Open settings\", choose \"Rocket Launcher\" and turn on \"Use Rocket Launcher.\"</string>
-    <string name="generic_a11y_disclaimer">Rocket Launcher uses Accessibility\'s `performGlobalAction` method to perform this action. This is a sensitive permission that allows monitoring other apps. However, Lawnchair is not configured for that functionality and receives no events.</string>
+    <string name="generic_a11y_disclaimer">Rocket Launcher uses Accessibility\'s `performGlobalAction` method to perform this action. This is a sensitive permission that allows monitoring other apps. However, Rocket Launcher is not configured for that functionality and receives no events.</string>
 
     <string name="sleep_mode_label">Sleep mode</string>
     <string name="sleep_mode_auto">Automatic</string>
@@ -677,7 +677,7 @@
     Bug reporting
 
     -->
-    <string name="lawnchair_bug_report">Lawnchair bug report</string>
+    <string name="lawnchair_bug_report">Rocket Launcher bug report</string>
     <string name="crash_report_notif_title">%1$s crashed</string>
     <string name="action_upload_crash_report">Upload crash log</string>
 
@@ -855,7 +855,7 @@
     <string name="search_provider_vivaldi" translatable="false">Vivaldi</string>
     <string name="search_provider_custom">Custom</string>
 
-    <string name="search_provider_sponsored_description">%1$s and Lawnchair have a revenue share agreement.\n\nSearching with %1$s helps support Lawnchair.</string>
+    <string name="search_provider_sponsored_description">Searching with %1$s helps support the search provider.</string>
 
     <string name="app_label">App</string>
     <string name="website_label">Website</string>
