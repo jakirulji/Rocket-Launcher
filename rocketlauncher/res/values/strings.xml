@@ -1081,4 +1081,23 @@
     <string name="soul_space_accessibility">Soul Space daily reflection. Tap to show the next reflection.</string>
     <string name="soul_space_accessibility_current">%1$s. %2$s. Tap for the next reflection.</string>
     <string name="soul_space_next_hint">Tap for another reflection</string>
+    <string name="soul_space_language_label">Display language</string>
+    <string name="soul_space_language_both">Bengali + English</string>
+    <string name="soul_space_language_bengali">Bengali only</string>
+    <string name="soul_space_language_english">English only</string>
+    <string name="soul_space_language_original_bengali">Original language + Bengali</string>
+    <string name="soul_space_source_label">Wisdom sources</string>
+    <string name="soul_space_source_mixed">Mixed sources</string>
+    <string name="soul_space_source_quran">Qur’an</string>
+    <string name="soul_space_source_hindu">Hindu scriptures</string>
+    <string name="soul_space_source_buddhist">Buddhist texts</string>
+    <string name="soul_space_source_sikh">Sikh scripture</string>
+    <string name="soul_space_source_sufi">Sufi writings</string>
+    <string name="soul_space_source_general">General reflections only</string>
+    <string name="soul_space_schedule_label">Change reflection</string>
+    <string name="soul_space_schedule_unlock">On each unlock</string>
+    <string name="soul_space_schedule_daily">Daily</string>
+    <string name="soul_space_schedule_weekly">Weekly</string>
+    <string name="soul_space_schedule_manual">Only when tapped</string>
+    <string name="soul_space_favorites_only">Show saved favorites only</string>
 </resources>
