@@ -94,6 +94,7 @@ class SoulSpaceView @JvmOverloads constructor(
     private var receiverRegistered = false
     private val quoteView = TextView(context)
     private val sourceView = TextView(context)
+    private val cardContainer = LinearLayout(context)
     private val cardBackground = GradientDrawable()
 
     private val unlockReceiver = object : BroadcastReceiver() {
@@ -114,10 +115,17 @@ class SoulSpaceView @JvmOverloads constructor(
     }
 
     init {
+        // Reserve a stable Smartspace slot so a long quote cannot collide with the clock below.
+        // The visible card itself remains wrap_content and grows only as much as its text needs.
         orientation = VERTICAL
-        gravity = Gravity.CENTER_VERTICAL
-        background = cardBackground
-        setPadding(
+        gravity = Gravity.TOP
+        setPadding(0, 0, 0, 0)
+        minimumHeight = (400 * resources.displayMetrics.density).toInt()
+
+        cardContainer.orientation = VERTICAL
+        cardContainer.gravity = Gravity.CENTER_VERTICAL
+        cardContainer.background = cardBackground
+        cardContainer.setPadding(
             (14 * resources.displayMetrics.density).toInt(),
             (12 * resources.displayMetrics.density).toInt(),
             (14 * resources.displayMetrics.density).toInt(),
@@ -144,8 +152,9 @@ class SoulSpaceView @JvmOverloads constructor(
 
         val savedIndex = PreferenceManager2.getInstance(context).getCachedPreferences()[intPreferencesKey("soul_space_rotation_index")] ?: 0
         currentIndex = savedIndex
-        addView(quoteView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
-        addView(sourceView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        cardContainer.addView(quoteView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        cardContainer.addView(sourceView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        addView(cardContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         setOnClickListener { showNextReflection() }
         sourceView.setOnClickListener {
             currentItem()?.sourceUrl?.let { url ->
@@ -228,7 +237,8 @@ class SoulSpaceView @JvmOverloads constructor(
             else -> Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         }
         // wrap_content lets the card grow with the chosen font size and every line of text.
-        minimumHeight = ((fontSize * 2.6f + 44f) * density).toInt()
+        cardContainer.minimumHeight = ((fontSize * 2.6f + 44f) * density).toInt()
+        cardContainer.requestLayout()
         requestLayout()
     }
 
