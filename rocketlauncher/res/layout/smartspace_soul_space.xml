@@ -3,4 +3,5 @@
     android:id="@+id/soul_space_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="104dp"
     android:layout_gravity="center_vertical" />
