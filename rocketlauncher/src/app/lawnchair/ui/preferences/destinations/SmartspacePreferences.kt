@@ -312,23 +312,18 @@ fun SoulSpaceSettings(
     modifier: Modifier = Modifier,
 ) {
     val prefs = preferenceManager2()
-    val textColorModeAdapter = prefs.soulSpaceTextColorMode.getAdapter()
-    val customTextColorAdapter = prefs.soulSpaceCustomTextColor.getAdapter()
+    val cardBackgroundAdapter = prefs.soulSpaceCardBackground.getAdapter()
+    val cardTextAdapter = prefs.soulSpaceCardTextColor.getAdapter()
+    val cardReferenceAdapter = prefs.soulSpaceCardReferenceColor.getAdapter()
+    val radiusAdapter = prefs.soulSpaceCardRadius.getAdapter()
+    val fontSizeAdapter = prefs.soulSpaceCardFontSize.getAdapter()
+    val fontStyleAdapter = prefs.soulSpaceCardFontStyle.getAdapter()
     var showColorPalette by remember { mutableStateOf(false) }
-    val colorModes = remember {
-        listOf(
-            ListPreferenceEntry("adaptive") { stringResource(R.string.soul_space_text_color_adaptive) },
-            ListPreferenceEntry("custom") { stringResource(R.string.soul_space_text_color_choose) },
-        )
-    }
-    val palette = remember {
-        listOf(
-            0xFFFFFFFF.toInt(), 0xFF000000.toInt(), 0xFFF44336.toInt(), 0xFFE91E63.toInt(),
-            0xFF9C27B0.toInt(), 0xFF673AB7.toInt(), 0xFF3F51B5.toInt(), 0xFF2196F3.toInt(),
-            0xFF03A9F4.toInt(), 0xFF009688.toInt(), 0xFF4CAF50.toInt(), 0xFF8BC34A.toInt(),
-            0xFFFFC107.toInt(), 0xFFFF9800.toInt(), 0xFF795548.toInt(), 0xFF9E9E9E.toInt(),
-        )
-    }
+    var paletteTarget by remember { mutableStateOf("background") }
+    val palette = remember { listOf(0xFF172554.toInt(), 0xFF1E293B.toInt(), 0xFF064E3B.toInt(), 0xFF3F1D5B.toInt(), 0xFF7F1D1D.toInt(), 0xFFFFFFFF.toInt(), 0xFFF8FAFC.toInt(), 0xFFE2E8F0.toInt(), 0xFF000000.toInt(), 0xFF334155.toInt(), 0xFF0F766E.toInt(), 0xFF1D4ED8.toInt(), 0xFFFCD34D.toInt(), 0xFFBAE6FD.toInt(), 0xFFBBF7D0.toInt(), 0xFFFBCFE8.toInt(), 0xFF111827.toInt(), 0xFFDC2626.toInt(), 0xFF7C3AED.toInt(), 0xFFEA580C.toInt()) }
+    val radiusEntries = remember { listOf(0, 6, 12, 18, 24, 32).map { value -> ListPreferenceEntry(value) { "$value dp" } } }
+    val fontSizeEntries = remember { listOf(14, 16, 18, 20, 22, 24, 26, 28).map { value -> ListPreferenceEntry(value) { "$value sp" } } }
+    val fontStyleEntries = remember { listOf(ListPreferenceEntry("normal") { "Normal" }, ListPreferenceEntry("medium") { "Medium / Strong" }, ListPreferenceEntry("bold") { "Bold" }, ListPreferenceEntry("italic") { "Italic" }, ListPreferenceEntry("serif") { "Serif" }) }
     val languageEntries = remember {
         listOf(
             ListPreferenceEntry("bengali_english") { stringResource(R.string.soul_space_language_both) },
