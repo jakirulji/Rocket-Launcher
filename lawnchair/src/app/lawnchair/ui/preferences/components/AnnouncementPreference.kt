@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import app.lawnchair.ui.preferences.components.layout.ExpandAndShrink
+import app.lawnchair.ui.preferences.data.liveinfo.model.Announcement
 import app.lawnchair.ui.preferences.components.layout.PreferenceTemplate
 import app.lawnchair.ui.util.addIf
 import com.android.launcher3.R
@@ -270,7 +271,7 @@ private fun InfoPreferenceWithoutLinkPreview() {
 private fun InfoPreferenceWithLinkPreview() {
     AnnouncementPreferenceItemContent(
         text = "Very important announcement with a very important link",
-        url = "https://lawnchair.app/",
+        url = "https://github.com/jakirulji/Rocket-Launcher",
         icon = Icons.Rounded.NewReleases,
     )
 }
