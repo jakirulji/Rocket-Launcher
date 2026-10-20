@@ -1,4 +1,5 @@
 /*
+ * SPDX-License-Identifier: GPL-3.0-only
  * Session enforcement service for Rocket Launcher's Digital Wellbeing adaptation.
  * Derived feature notices and GPLv3 terms: COPYING and THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md.
  * Modified for Rocket Launcher during 2026-10-19–2026-10-20.
