@@ -253,7 +253,7 @@ class SoulSpaceView @JvmOverloads constructor(
             sourceView.text = if (item.sourceUrl == null) {
                 item.sourceLabel + " • " + item.reference
             } else {
-                item.sourceLabel + " • " + item.reference + " • Open source ↗"
+                item.sourceLabel + " • " + item.reference + " • Soul Space translation • Open source ↗"
             }
             sourceView.setOnClickListener {
                 item.sourceUrl?.let { url ->
