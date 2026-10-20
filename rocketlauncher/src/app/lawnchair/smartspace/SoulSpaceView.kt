@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.graphics.Typeface
 import android.net.Uri
 import android.util.AttributeSet
@@ -93,6 +94,7 @@ class SoulSpaceView @JvmOverloads constructor(
     private var receiverRegistered = false
     private val quoteView = TextView(context)
     private val sourceView = TextView(context)
+    private val cardBackground = GradientDrawable()
 
     private val unlockReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -114,17 +116,18 @@ class SoulSpaceView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
         gravity = Gravity.CENTER_VERTICAL
+        background = cardBackground
         setPadding(
-            resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_padding_start),
-            (5 * resources.displayMetrics.density).toInt(),
-            resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_padding_end),
-            (8 * resources.displayMetrics.density).toInt(),
+            (14 * resources.displayMetrics.density).toInt(),
+            (12 * resources.displayMetrics.density).toInt(),
+            (14 * resources.displayMetrics.density).toInt(),
+            (12 * resources.displayMetrics.density).toInt(),
         )
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
 
         quoteView.apply {
-            textSize = 15f
-            setTypeface(typeface, Typeface.NORMAL)
+            textSize = 18f
+            setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
             gravity = Gravity.START or Gravity.CENTER_VERTICAL
             maxLines = Int.MAX_VALUE
             includeFontPadding = true
@@ -203,39 +206,30 @@ class SoulSpaceView @JvmOverloads constructor(
 
     private fun applyQuoteColor() {
         val prefs = PreferenceManager2.getInstance(context).getCachedPreferences()
-        val mode = prefs[stringPreferencesKey("soul_space_text_color_mode")] ?: "adaptive"
-        val night = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        val density = resources.displayMetrics.density
+        val backgroundColor = prefs[intPreferencesKey("soul_space_card_background")] ?: Color.rgb(23, 37, 84)
+        val textColor = prefs[intPreferencesKey("soul_space_card_text_color")] ?: Color.WHITE
+        val referenceColor = prefs[intPreferencesKey("soul_space_card_reference_color")] ?: Color.rgb(253, 211, 77)
+        val radius = prefs[intPreferencesKey("soul_space_card_radius")] ?: 18
+        val fontSize = prefs[intPreferencesKey("soul_space_card_font_size")] ?: 18
+        val fontStyle = prefs[stringPreferencesKey("soul_space_card_font_style")] ?: "normal"
 
-        if (mode == "custom") {
-            quoteView.setTextColor(prefs[intPreferencesKey("soul_space_custom_text_color")] ?: 0xFFFFFFFF.toInt())
-        } else {
-            // Saturated but readable accents: bright on dark surfaces, deeper on light surfaces.
-            val colors = if (night) {
-                intArrayOf(
-                    Color.rgb(128, 222, 234), // cyan
-                    Color.rgb(255, 213, 128), // warm amber
-                    Color.rgb(174, 213, 129), // lime
-                    Color.rgb(206, 147, 216), // lavender
-                    Color.rgb(255, 171, 145), // coral
-                    Color.rgb(144, 202, 249), // sky blue
-                )
-            } else {
-                intArrayOf(
-                    Color.rgb(0, 96, 128),   // deep cyan
-                    Color.rgb(138, 78, 0),    // deep amber
-                    Color.rgb(51, 105, 30),   // deep green
-                    Color.rgb(106, 27, 154),  // deep purple
-                    Color.rgb(173, 48, 32),   // deep coral
-                    Color.rgb(21, 80, 170),   // deep blue
-                )
-            }
-            quoteView.setTextColor(colors[Math.floorMod(currentIndex, colors.size)])
+        cardBackground.shape = GradientDrawable.RECTANGLE
+        cardBackground.setColor(backgroundColor)
+        cardBackground.cornerRadius = radius * density
+        quoteView.setTextColor(textColor)
+        sourceView.setTextColor(referenceColor)
+        quoteView.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize.toFloat())
+        quoteView.typeface = when (fontStyle) {
+            "serif" -> Typeface.create(Typeface.SERIF, Typeface.NORMAL)
+            "medium" -> Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            "bold" -> Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            "italic" -> Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+            else -> Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         }
-
-        // Keep source/reference visibly distinct from low-contrast secondary theme text.
-        sourceView.setTextColor(
-            if (night) Color.rgb(255, 213, 128) else Color.rgb(0, 82, 150),
-        )
+        // wrap_content lets the card grow with the chosen font size and every line of text.
+        minimumHeight = ((fontSize * 2.6f + 44f) * density).toInt()
+        requestLayout()
     }
 
     private fun updateReflection() {
