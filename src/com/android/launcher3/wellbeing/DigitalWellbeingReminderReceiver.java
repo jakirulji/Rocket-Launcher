@@ -1,4 +1,5 @@
 /*
+ * SPDX-License-Identifier: GPL-3.0-only
  * Digital Wellbeing reminder adaptation for Rocket Launcher.
  * See THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md and COPYING.
  * Modified for Rocket Launcher during 2026-10-19–2026-10-20.
