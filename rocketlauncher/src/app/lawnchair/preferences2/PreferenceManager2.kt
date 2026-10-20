@@ -782,6 +782,27 @@ class PreferenceManager2 @Inject constructor(
         save = { it.toString() },
     )
 
+    // Soul Space settings are stored locally in the launcher's existing DataStore.
+    val soulSpaceLanguage = preference(
+        key = stringPreferencesKey("soul_space_language"),
+        defaultValue = "bengali_english",
+    )
+
+    val soulSpaceSource = preference(
+        key = stringPreferencesKey("soul_space_source"),
+        defaultValue = "mixed_reflections",
+    )
+
+    val soulSpaceSchedule = preference(
+        key = stringPreferencesKey("soul_space_schedule"),
+        defaultValue = "daily",
+    )
+
+    val soulSpaceFavoritesOnly = preference(
+        key = booleanPreferencesKey("soul_space_favorites_only"),
+        defaultValue = false,
+    )
+
     val smartspacerMaxCount = preference(
         key = intPreferencesKey(name = "smartspace_max_count"),
         defaultValue = 5,
