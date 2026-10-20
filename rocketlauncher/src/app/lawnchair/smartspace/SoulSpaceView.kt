@@ -119,9 +119,14 @@ class SoulSpaceView @JvmOverloads constructor(
         // The visible card itself remains wrap_content and grows only as much as its text needs.
         orientation = VERTICAL
         gravity = Gravity.TOP
+        // Avoid clipping long Bengali/English text inside this custom view.
+        clipChildren = false
+        clipToPadding = false
         setPadding(0, 0, 0, 0)
         minimumHeight = (1200 * resources.displayMetrics.density).toInt()
 
+        cardContainer.clipChildren = false
+        cardContainer.clipToPadding = false
         cardContainer.orientation = VERTICAL
         cardContainer.gravity = Gravity.CENTER_VERTICAL
         cardContainer.background = cardBackground
@@ -138,12 +143,16 @@ class SoulSpaceView @JvmOverloads constructor(
             setTypeface(Typeface.DEFAULT, Typeface.NORMAL)
             gravity = Gravity.START or Gravity.CENTER_VERTICAL
             maxLines = Int.MAX_VALUE
+            ellipsize = null
+            setHorizontallyScrolling(false)
             includeFontPadding = true
         }
         sourceView.apply {
             textSize = 12f
             alpha = 1f
             maxLines = Int.MAX_VALUE
+            ellipsize = null
+            setHorizontallyScrolling(false)
             includeFontPadding = true
             setPadding(0, (4 * resources.displayMetrics.density).toInt(), 0, 0)
             isClickable = true
@@ -270,5 +279,10 @@ class SoulSpaceView @JvmOverloads constructor(
             contentDescription = "${quoteView.text}. Source: ${item.sourceLabel}. Reference: ${item.reference}. Tap for next."
         }
         applyQuoteColor()
+        // Re-measure after text/language changes so the card follows the full content.
+        quoteView.requestLayout()
+        sourceView.requestLayout()
+        cardContainer.requestLayout()
+        requestLayout()
     }
 }
