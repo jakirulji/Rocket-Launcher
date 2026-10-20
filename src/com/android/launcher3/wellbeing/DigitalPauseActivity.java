@@ -39,7 +39,24 @@ public class DigitalPauseActivity extends Activity {
     private int remainingSeconds;
     private TextView countdownView;
     private TextView usageView;
+    private TextView pauseCaptionView;
+    private String[] pauseCaptions;
+    private int pauseCaptionIndex;
     private final android.os.Handler handler = new android.os.Handler();
+    private final Runnable captionTicker = new Runnable() {
+        @Override public void run() {
+            if (isFinishing() || confirmationShown || dailyLimitReached
+                    || pauseCaptionView == null || pauseCaptions == null
+                    || pauseCaptions.length < 2) return;
+            pauseCaptionView.animate().alpha(0f).setDuration(250).withEndAction(() -> {
+                if (isFinishing() || confirmationShown || pauseCaptionView == null) return;
+                pauseCaptionIndex = (pauseCaptionIndex + 1) % pauseCaptions.length;
+                pauseCaptionView.setText(pauseCaptions[pauseCaptionIndex]);
+                pauseCaptionView.animate().alpha(1f).setDuration(350).start();
+                handler.postDelayed(this, 2200);
+            }).start();
+        }
+    };
     private final Runnable ticker = new Runnable() {
         @Override public void run() {
             if (isFinishing()) return;
@@ -69,7 +86,10 @@ public class DigitalPauseActivity extends Activity {
                 .getInt(DigitalWellbeing.KEY_PAUSE_SECONDS, 10);
         remainingSeconds = Math.max(3, Math.min(60, remainingSeconds));
         buildScreen();
-        if (!dailyLimitReached) handler.postDelayed(ticker, 1000);
+        if (!dailyLimitReached) {
+            handler.postDelayed(ticker, 1000);
+            handler.postDelayed(captionTicker, 2200);
+        }
     }
 
     @Override protected void onResume() {
@@ -125,14 +145,15 @@ public class DigitalPauseActivity extends Activity {
         title.setGravity(Gravity.CENTER);
         root.addView(title, matchWrap());
 
-        TextView message = new TextView(this);
-        message.setText(dailyLimitReached ? getString(R.string.dw_daily_limit_reached_message)
-                : getRandomPauseCaption());
-        message.setTextColor(Color.rgb(210, 220, 225));
-        message.setTextSize(15);
-        message.setGravity(Gravity.CENTER);
-        message.setPadding(0, dp(12), 0, dp(20));
-        root.addView(message, matchWrap());
+        pauseCaptionView = new TextView(this);
+        pauseCaptionView.setText(dailyLimitReached
+                ? getString(R.string.dw_daily_limit_reached_message) : getRandomPauseCaption());
+        pauseCaptionView.setTextColor(Color.rgb(210, 220, 225));
+        pauseCaptionView.setTextSize(15);
+        pauseCaptionView.setGravity(Gravity.CENTER);
+        pauseCaptionView.setMinHeight(dp(58));
+        pauseCaptionView.setPadding(0, dp(12), 0, dp(20));
+        root.addView(pauseCaptionView, matchWrap());
 
         countdownView = new TextView(this);
         countdownView.setText(dailyLimitReached ? getString(R.string.dw_limit_reached_short)
@@ -175,6 +196,7 @@ public class DigitalPauseActivity extends Activity {
         if (confirmationShown || isFinishing() || dailyLimitReached) return;
         confirmationShown = true;
         handler.removeCallbacks(ticker);
+        handler.removeCallbacks(captionTicker);
         remainingSeconds = 0;
 
         int bgTop = Color.rgb(15, 27, 42);
@@ -275,19 +297,19 @@ public class DigitalPauseActivity extends Activity {
      * Avoid repeating the immediately previous caption when possible.
      */
     private String getRandomPauseCaption() {
-        String[] captions = getResources().getStringArray(R.array.dw_pause_captions);
-        if (captions.length == 0) return getString(R.string.dw_pause_message);
+        pauseCaptions = getResources().getStringArray(R.array.dw_pause_captions);
+        if (pauseCaptions.length == 0) return getString(R.string.dw_pause_message);
 
         android.content.SharedPreferences prefs = DigitalWellbeing.preferences(this);
         int previous = prefs.getInt("dw_last_pause_caption_index", -1);
-        int selected = new Random().nextInt(captions.length);
-        if (captions.length > 1) {
-            while (selected == previous) {
-                selected = new Random().nextInt(captions.length);
+        pauseCaptionIndex = new Random().nextInt(pauseCaptions.length);
+        if (pauseCaptions.length > 1) {
+            while (pauseCaptionIndex == previous) {
+                pauseCaptionIndex = new Random().nextInt(pauseCaptions.length);
             }
         }
-        prefs.edit().putInt("dw_last_pause_caption_index", selected).apply();
-        return captions[selected];
+        prefs.edit().putInt("dw_last_pause_caption_index", pauseCaptionIndex).apply();
+        return pauseCaptions[pauseCaptionIndex];
     }
 
     private void updateUsage() {
@@ -351,6 +373,7 @@ public class DigitalPauseActivity extends Activity {
 
     @Override protected void onDestroy() {
         handler.removeCallbacksAndMessages(null);
+        if (pauseCaptionView != null) pauseCaptionView.animate().cancel();
         if (breathingAnimation != null) breathingAnimation.cancel();
         if (breathingYAnimation != null) breathingYAnimation.cancel();
         super.onDestroy();
