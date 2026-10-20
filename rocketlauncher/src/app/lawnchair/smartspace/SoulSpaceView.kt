@@ -120,7 +120,7 @@ class SoulSpaceView @JvmOverloads constructor(
         orientation = VERTICAL
         gravity = Gravity.TOP
         setPadding(0, 0, 0, 0)
-        minimumHeight = (400 * resources.displayMetrics.density).toInt()
+        minimumHeight = (1200 * resources.displayMetrics.density).toInt()
 
         cardContainer.orientation = VERTICAL
         cardContainer.gravity = Gravity.CENTER_VERTICAL
@@ -237,7 +237,7 @@ class SoulSpaceView @JvmOverloads constructor(
             else -> Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         }
         // wrap_content lets the card grow with the chosen font size and every line of text.
-        cardContainer.minimumHeight = ((fontSize * 2.6f + 44f) * density).toInt()
+        cardContainer.minimumHeight = 0
         cardContainer.requestLayout()
         requestLayout()
     }
