@@ -1,4 +1,5 @@
 /* Modified by Rocket Launcher on 2026-10-20: replaced GPL-2.0-only fuzzywuzzy with a local Levenshtein matcher. */
+
 package app.lawnchair.search.algorithms.engine.provider.apps
 
 import java.util.Locale
