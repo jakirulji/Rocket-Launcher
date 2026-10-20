@@ -19,6 +19,7 @@
 ** Modifications copyright 2021, Lawnchair
 */
 -->
+<!-- Rocket Launcher modifications: registers the Digital Wellbeing screens, receiver, and required permissions. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-sdk android:targetSdkVersion="30" android:minSdkVersion="26"
