@@ -1,3 +1,5 @@
+/* Modified by Rocket Launcher: custom app identity/version and build-time preparation of Rocket Launcher icon artwork. See LICENSE.txt and NOTICE for upstream terms and attribution. */
+
 import app.cash.licensee.SpdxId
 import com.android.build.gradle.api.AndroidBasePlugin
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
