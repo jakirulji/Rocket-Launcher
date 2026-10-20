@@ -1,4 +1,5 @@
 /*
+ * SPDX-License-Identifier: GPL-3.0-only
  * Digital Wellbeing launch-gate adaptation for Rocket Launcher.
  * Based on the Digital Wellbeing feature in Dragon Launcher.
  * Copyright notices and GPLv3 terms: see THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md and COPYING.
