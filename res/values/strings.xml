@@ -569,6 +569,7 @@
     <string name="arch_shape_title">Arch</string>
 
     <!-- Digital Wellbeing adaptation based on Dragon Launcher (GPLv3); see THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md. -->
+    <!-- Digital Wellbeing strings for Rocket Launcher; adaptation revised 2026-10-20. The integrated feature is GPLv3-covered; see COPYING and THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md. -->
     <string name="digital_wellbeing_title">Digital Wellbeing</string>
     <string name="digital_wellbeing_summary">Pause selected apps and take a mindful moment before opening them.</string>
     <string name="dw_pause_title">Take a mindful pause</string>
