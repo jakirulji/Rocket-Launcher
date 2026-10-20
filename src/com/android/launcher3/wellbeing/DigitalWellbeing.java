@@ -3,6 +3,7 @@
  * Based on the Digital Wellbeing feature in Dragon Launcher.
  * Copyright notices and GPLv3 terms: see THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md and COPYING.
  * This file is a modified adaptation; it is not endorsed by the Dragon Launcher authors.
+ * Rocket Launcher adaptation revised 2026-10-20; the upstream feature was modified for this app.
  */
 package com.android.launcher3.wellbeing;
 
