@@ -9,8 +9,6 @@ import com.android.launcher3.popup.PopupPopulator
 import com.android.launcher3.search.StringMatcherUtility
 import com.android.launcher3.shortcuts.ShortcutRequest
 import java.util.Locale
-import me.xdrop.fuzzywuzzy.FuzzySearch
-import me.xdrop.fuzzywuzzy.algorithms.WeightedRatio
 
 object SearchUtils {
     fun normalSearch(apps: List<AppInfo>, query: String, maxResultsCount: Int, hiddenApps: Set<String>, hiddenAppsInSearch: String): List<AppInfo> {
@@ -27,19 +25,54 @@ object SearchUtils {
 
     fun fuzzySearch(apps: List<AppInfo>, query: String, maxResultsCount: Int, hiddenApps: Set<String>, hiddenAppsInSearch: String): List<AppInfo> {
         val queryTextLower = query.lowercase(Locale.getDefault())
-        val filteredApps = apps.asSequence()
+        return apps.asSequence()
             .filterHiddenApps(queryTextLower, hiddenApps, hiddenAppsInSearch)
+            .map { app -> app to weightedSimilarity(queryTextLower, app.sectionName + app.title) }
+            .filter { (_, score) -> score >= 65 }
+            .sortedByDescending { (_, score) -> score }
+            .take(maxResultsCount)
+            .map { (app, _) -> app }
             .toList()
-        val matches = FuzzySearch.extractSorted(
-            queryTextLower,
-            filteredApps,
-            { it.sectionName + it.title },
-            WeightedRatio(),
-            65,
-        )
+    }
 
-        return matches.take(maxResultsCount)
-            .map { it.referent }
+    /**
+     * Local fuzzy-search score replacing the GPL-2.0-only fuzzywuzzy dependency.
+     * Uses the best normalized Levenshtein similarity across the whole name and its tokens.
+     */
+    private fun weightedSimilarity(query: String, candidate: String): Int {
+        val normalizedCandidate = candidate.lowercase(Locale.getDefault())
+        val wholeScore = similarityRatio(query, normalizedCandidate)
+        val tokenScore = normalizedCandidate.split(Regex("\\s+"))
+            .maxOfOrNull { token -> similarityRatio(query, token) } ?: 0
+        return maxOf(wholeScore, tokenScore)
+    }
+
+    private fun similarityRatio(left: String, right: String): Int {
+        if (left.isEmpty() && right.isEmpty()) return 100
+        if (left.isEmpty() || right.isEmpty()) return 0
+
+        val longer = if (left.length >= right.length) left else right
+        val shorter = if (left.length >= right.length) right else left
+        var previous = IntArray(shorter.length + 1) { it }
+        var current = IntArray(shorter.length + 1)
+
+        for (i in longer.indices) {
+            current[0] = i + 1
+            for (j in shorter.indices) {
+                val substitutionCost = if (longer[i] == shorter[j]) 0 else 1
+                current[j + 1] = minOf(
+                    current[j] + 1,
+                    previous[j + 1] + 1,
+                    previous[j] + substitutionCost,
+                )
+            }
+            val temp = previous
+            previous = current
+            current = temp
+        }
+
+        val distance = previous[shorter.length]
+        return ((longer.length - distance) * 100) / longer.length
     }
 
     fun getShortcuts(app: AppInfo, context: Context): List<ShortcutInfo> {
