@@ -561,7 +561,6 @@ spotless {
 licensee {
     allow(SpdxId.Apache_20)
     allow(SpdxId.BSD_3_Clause)
-    allow(SpdxId.GPL_20_or_later)
     allowDependency(libs.libsu.core)
     allowDependency(libs.libsu.service)
     allowUrl("https://github.com/patrykmichalik/opto/blob/master/LICENSE")
