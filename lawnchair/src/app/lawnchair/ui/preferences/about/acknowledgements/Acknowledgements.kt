@@ -18,13 +18,13 @@
 package app.lawnchair.ui.preferences.about.acknowledgements
 
 import android.content.Intent
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
