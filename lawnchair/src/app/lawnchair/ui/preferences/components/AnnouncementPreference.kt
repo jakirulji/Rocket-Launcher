@@ -30,10 +30,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,40 +45,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import app.lawnchair.preferences2.asState
 import app.lawnchair.ui.preferences.components.layout.ExpandAndShrink
 import app.lawnchair.ui.preferences.components.layout.PreferenceTemplate
-import app.lawnchair.ui.preferences.data.liveinfo.liveInformationManager
-import app.lawnchair.ui.preferences.data.liveinfo.model.Announcement
 import app.lawnchair.ui.util.addIf
 import com.android.launcher3.R
 import com.android.launcher3.util.MSDLPlayerWrapper
 import com.google.android.msdl.data.model.MSDLToken
-import kotlinx.coroutines.launch
 
+/**
+ * Project-owned dashboard banner. Keep this independent of Lawnchair's remote
+ * announcement feed so the fork links to its own project page.
+ */
 @Composable
 fun AnnouncementPreference() {
-    val liveInformationManager = liveInformationManager()
-
-    val coroutineScope = rememberCoroutineScope()
-    val enabled by liveInformationManager.enabled.asState()
-    val showAnnouncements by liveInformationManager.showAnnouncements.asState()
-    val dismissedAnnouncementIds by liveInformationManager.dismissedAnnouncementIds.asState()
-    val liveInformation by liveInformationManager.liveInformation.asState()
-
-    val announcements = remember(liveInformation, dismissedAnnouncementIds) {
-        liveInformation.announcements.filter { it.id !in dismissedAnnouncementIds }
-    }
-
-    if (enabled && showAnnouncements) {
-        AnnouncementPreference(
-            announcements = announcements,
-            onDismiss = { announcement ->
-                val dismissed = dismissedAnnouncementIds.toMutableSet().apply { add(announcement.id) }
-                coroutineScope.launch { liveInformationManager.dismissedAnnouncementIds.set(dismissed) }
-            },
-        )
-    }
+    AnnouncementPreferenceItemContent(
+        text = "Rocket Launcher · Open-source Android launcher — View project on GitHub",
+        url = "https://github.com/jakirulji/Rocket-Launcher",
+        icon = Icons.Rounded.NewReleases,
+    )
 }
 
 @Composable
