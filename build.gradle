@@ -495,7 +495,6 @@ dependencies {
     implementation libs.material.motion.compose
     implementation libs.kdrag0n.colorkt
     implementation libs.coil.compose
-    implementation libs.xdrop.fuzzywuzzy
 
     implementation libs.bundles.opto
     implementation libs.androidx.datastore.preferences
