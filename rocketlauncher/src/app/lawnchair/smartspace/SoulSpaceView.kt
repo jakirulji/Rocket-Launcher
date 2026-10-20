@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.util.AttributeSet
@@ -117,7 +118,7 @@ class SoulSpaceView @JvmOverloads constructor(
             resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_padding_start),
             (5 * resources.displayMetrics.density).toInt(),
             resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_padding_end),
-            (5 * resources.displayMetrics.density).toInt(),
+            (8 * resources.displayMetrics.density).toInt(),
         )
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
 
@@ -125,12 +126,14 @@ class SoulSpaceView @JvmOverloads constructor(
             textSize = 15f
             setTypeface(typeface, Typeface.NORMAL)
             gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            maxLines = 2
+            maxLines = Int.MAX_VALUE
+            includeFontPadding = true
         }
         sourceView.apply {
-            textSize = 11f
+            textSize = 12f
             alpha = 1f
-            maxLines = 2
+            maxLines = Int.MAX_VALUE
+            includeFontPadding = true
             setPadding(0, (4 * resources.displayMetrics.density).toInt(), 0, 0)
             isClickable = true
             isFocusable = true
@@ -201,21 +204,38 @@ class SoulSpaceView @JvmOverloads constructor(
     private fun applyQuoteColor() {
         val prefs = PreferenceManager2.getInstance(context).getCachedPreferences()
         val mode = prefs[stringPreferencesKey("soul_space_text_color_mode")] ?: "adaptive"
+        val night = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
         if (mode == "custom") {
             quoteView.setTextColor(prefs[intPreferencesKey("soul_space_custom_text_color")] ?: 0xFFFFFFFF.toInt())
-            return
-        }
-        val value = TypedValue()
-        val resolved = context.theme.resolveAttribute(android.R.attr.textColorPrimary, value, true)
-        if (resolved) {
-            val color = if (value.resourceId != 0) {
-                runCatching { context.getColor(value.resourceId) }.getOrDefault(value.data)
-            } else value.data
-            quoteView.setTextColor(color)
         } else {
-            val night = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-            quoteView.setTextColor(if (night) 0xFFFFFFFF.toInt() else 0xFF202124.toInt())
+            // Saturated but readable accents: bright on dark surfaces, deeper on light surfaces.
+            val colors = if (night) {
+                intArrayOf(
+                    Color.rgb(128, 222, 234), // cyan
+                    Color.rgb(255, 213, 128), // warm amber
+                    Color.rgb(174, 213, 129), // lime
+                    Color.rgb(206, 147, 216), // lavender
+                    Color.rgb(255, 171, 145), // coral
+                    Color.rgb(144, 202, 249), // sky blue
+                )
+            } else {
+                intArrayOf(
+                    Color.rgb(0, 96, 128),   // deep cyan
+                    Color.rgb(138, 78, 0),    // deep amber
+                    Color.rgb(51, 105, 30),   // deep green
+                    Color.rgb(106, 27, 154),  // deep purple
+                    Color.rgb(173, 48, 32),   // deep coral
+                    Color.rgb(21, 80, 170),   // deep blue
+                )
+            }
+            quoteView.setTextColor(colors[Math.floorMod(currentIndex, colors.size)])
         }
+
+        // Keep source/reference visibly distinct from low-contrast secondary theme text.
+        sourceView.setTextColor(
+            if (night) Color.rgb(255, 213, 128) else Color.rgb(0, 82, 150),
+        )
     }
 
     private fun updateReflection() {
