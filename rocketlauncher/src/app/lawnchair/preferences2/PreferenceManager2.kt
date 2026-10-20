@@ -786,21 +786,25 @@ class PreferenceManager2 @Inject constructor(
     val soulSpaceLanguage = preference(
         key = stringPreferencesKey("soul_space_language"),
         defaultValue = "bengali_english",
+        onSet = { reloadHelper.recreate() },
     )
 
     val soulSpaceSource = preference(
         key = stringPreferencesKey("soul_space_source"),
         defaultValue = "mixed_reflections",
+        onSet = { reloadHelper.recreate() },
     )
 
     val soulSpaceSchedule = preference(
         key = stringPreferencesKey("soul_space_schedule"),
         defaultValue = "daily",
+        onSet = { reloadHelper.recreate() },
     )
 
     val soulSpaceFavoritesOnly = preference(
         key = booleanPreferencesKey("soul_space_favorites_only"),
         defaultValue = false,
+        onSet = { reloadHelper.recreate() },
     )
 
     val smartspacerMaxCount = preference(
