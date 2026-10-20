@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rocket_launcher_derived_description">A modified version of Lawnchair by Rocket Developer</string>
+    <string name="open_source_licenses_acknowledgements">Open-source licenses &amp; acknowledgements</string>
+    <string name="project_acknowledgements">Project acknowledgements</string>
+    <string name="dragon_launcher_digital_wellbeing">Dragon Launcher — Digital Wellbeing</string>
+    <string name="dragon_launcher_acknowledgement_summary">Digital Wellbeing feature adapted from Dragon Launcher • GPL-3.0</string>
+    <string name="view_original_project">View original project</string>
+    <string name="view_gpl_license">View GPL-3.0 license</string>
+</resources>
