@@ -21,9 +21,25 @@ import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -296,6 +312,23 @@ fun SoulSpaceSettings(
     modifier: Modifier = Modifier,
 ) {
     val prefs = preferenceManager2()
+    val textColorModeAdapter = prefs.soulSpaceTextColorMode.getAdapter()
+    val customTextColorAdapter = prefs.soulSpaceCustomTextColor.getAdapter()
+    var showColorPalette by remember { mutableStateOf(false) }
+    val colorModes = remember {
+        listOf(
+            ListPreferenceEntry("adaptive") { stringResource(R.string.soul_space_text_color_adaptive) },
+            ListPreferenceEntry("custom") { stringResource(R.string.soul_space_text_color_choose) },
+        )
+    }
+    val palette = remember {
+        listOf(
+            0xFFFFFFFF.toInt(), 0xFF000000.toInt(), 0xFFF44336.toInt(), 0xFFE91E63.toInt(),
+            0xFF9C27B0.toInt(), 0xFF673AB7.toInt(), 0xFF3F51B5.toInt(), 0xFF2196F3.toInt(),
+            0xFF03A9F4.toInt(), 0xFF009688.toInt(), 0xFF4CAF50.toInt(), 0xFF8BC34A.toInt(),
+            0xFFFFC107.toInt(), 0xFFFF9800.toInt(), 0xFF795548.toInt(), 0xFF9E9E9E.toInt(),
+        )
+    }
     val languageEntries = remember {
         listOf(
             ListPreferenceEntry("bengali_english") { stringResource(R.string.soul_space_language_both) },
@@ -323,6 +356,73 @@ fun SoulSpaceSettings(
                 entries = languageEntries,
                 label = stringResource(R.string.soul_space_language_label),
             )
+            ListPreference(
+                adapter = textColorModeAdapter,
+                entries = colorModes,
+                label = stringResource(R.string.soul_space_text_color_label),
+            )
+            if (textColorModeAdapter.state.value == "custom") {
+                ClickablePreference(
+                    label = stringResource(R.string.soul_space_text_color_choose),
+                    subtitle = stringResource(R.string.soul_space_text_color_palette_hint),
+                    onClick = { showColorPalette = true },
+                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .background(Color(customTextColorAdapter.state.value), CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
+                    )
+                    Text(
+                        text = "#%06X".format(0xFFFFFF and customTextColorAdapter.state.value),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+            }
+            if (showColorPalette) {
+                AlertDialog(
+                    onDismissRequest = { showColorPalette = false },
+                    title = { Text(stringResource(R.string.soul_space_text_color_choose)) },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            palette.chunked(4).forEach { colorRow ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    colorRow.forEach { colorValue ->
+                                        Box(
+                                            modifier = Modifier
+                                                .size(42.dp)
+                                                .background(Color(colorValue), CircleShape)
+                                                .border(
+                                                    width = if (customTextColorAdapter.state.value == colorValue) 3.dp else 1.dp,
+                                                    color = if (customTextColorAdapter.state.value == colorValue) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                                    shape = CircleShape,
+                                                )
+                                                .clickable {
+                                                    customTextColorAdapter.onChange(colorValue)
+                                                    showColorPalette = false
+                                                },
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showColorPalette = false }) {
+                            Text(stringResource(android.R.string.cancel))
+                        }
+                    },
+                )
+            }
             androidx.compose.material3.Text(
                 text = stringResource(R.string.soul_space_source_label),
                 style = MaterialTheme.typography.titleSmall,
