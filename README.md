@@ -11,7 +11,7 @@ Open Source Project (AOSP) Launcher3.
 ## License and attribution
 
 - The inherited Lawnchair/AOSP-derived code retains its applicable upstream notices and Apache License 2.0 terms; see [LICENSE.txt](LICENSE.txt).
-- The Digital Wellbeing feature being integrated from Dragon Launcher is licensed under **GNU GPL version 3**. The exact license text is in [COPYING](COPYING), and attribution is recorded in [THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md](THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md).
+- The integrated Digital Wellbeing adaptation based on Dragon Launcher is licensed under **GNU GPL version 3**. The exact license text is in [COPYING](COPYING), and attribution is recorded in [THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md](THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md).
 - Preserve all original copyright and license notices in copied source files and assets. Clearly mark files adapted for Rocket Launcher and record the changes.
 - For distributions containing the combined GPLv3-covered work, comply with GPLv3, including providing the corresponding source code and required notices. Individual third-party components retain their own applicable licenses; see [NOTICE](NOTICE) and [LICENSE_COMPLIANCE.md](LICENSE_COMPLIANCE.md).
 - The Apache License does **not** grant permission to use Lawnchair trademarks, logos, or branding as Rocket Launcher branding.
