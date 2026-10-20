@@ -686,7 +686,8 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
         int cellHSpan = mLauncher.getDeviceProfile().inv.numColumns;
         // Soul Space contains multi-line bilingual text, so reserve three workspace rows
         // for it. A single row clips the view regardless of its own minimum height.
-        int cellVSpan = mFirstPagePinnedItem instanceof app.lawnchair.smartspace.SoulSpaceView ? 3 : 1;
+        int cellVSpan = mFirstPagePinnedItem instanceof app.lawnchair.smartspace.SoulSpaceView
+                ? mLauncher.getDeviceProfile().inv.numRows : 1;
         CellLayoutLayoutParams lp = new CellLayoutLayoutParams(0, 0, cellHSpan, cellVSpan);
         lp.canReorder = false;
         if (!firstPage.addViewToCellLayout(
