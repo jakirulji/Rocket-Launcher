@@ -830,10 +830,12 @@ class PreferenceManager2 @Inject constructor(
     val soulSpaceTextColorMode = preference(
         key = stringPreferencesKey("soul_space_text_color_mode"),
         defaultValue = "adaptive",
+        onSet = { reloadHelper.recreate() },
     )
     val soulSpaceCustomTextColor = preference(
         key = intPreferencesKey("soul_space_custom_text_color"),
         defaultValue = 0xFFFFFFFF.toInt(),
+        onSet = { reloadHelper.recreate() },
     )
     val soulSpaceRotationIndex = preference(
         key = intPreferencesKey("soul_space_rotation_index"),
