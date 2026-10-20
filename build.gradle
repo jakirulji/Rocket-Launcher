@@ -230,9 +230,16 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     } catch (Exception signingConfigError) {
-        if (System.getenv("CI") == "true") {
+        /*
+         * Only release-producing Gradle invocations require the permanent signing key.
+         * Formatting checks and debug-only builds must still configure without it.
+         */
+        def releaseTaskRequested = gradle.startParameter.taskNames.any {
+            it.toLowerCase().contains("release")
+        }
+        if (System.getenv("CI") == "true" && releaseTaskRequested) {
             throw new GradleException(
-                "CI release signing is required. Configure the same KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD GitHub Actions secrets used by Daily_Tracker; refusing to silently sign with the debug key.",
+                "CI release signing is required for release builds. Configure KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD GitHub Actions secrets; refusing to silently sign a release with the debug key.",
                 signingConfigError
             )
         }
