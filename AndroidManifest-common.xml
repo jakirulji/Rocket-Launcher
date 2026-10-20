@@ -17,6 +17,7 @@
 ** limitations under the License.
 **
 ** Modifications copyright 2021, Lawnchair
+** Rocket Launcher modifications: custom app icon identity and Digital Wellbeing permissions/manifest entries.
 */
 -->
 <manifest
