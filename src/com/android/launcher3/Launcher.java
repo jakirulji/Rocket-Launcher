@@ -14,7 +14,9 @@
  * limitations under the License.
  *
  * Modifications copyright 2025, Lawnchair
- */
+  * Rocket Launcher modification: adds the Digital Wellbeing launch-interception hook.
+ * See THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md for the related GPLv3 component notice.
+*/
 
 package com.android.launcher3;
 
