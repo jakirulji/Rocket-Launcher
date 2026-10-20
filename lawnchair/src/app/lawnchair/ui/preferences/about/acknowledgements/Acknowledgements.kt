@@ -18,6 +18,8 @@ package app.lawnchair.ui.preferences.about.acknowledgements
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +42,44 @@ fun Acknowledgements(
         label = stringResource(id = R.string.acknowledgements),
         modifier = modifier,
     ) {
-        preferenceGroupItems(ossLibraries, isFirstChild = true) { _, library ->
+        item {
+            androidx.compose.material3.Text(
+                text = stringResource(R.string.project_acknowledgements),
+                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+        }
+        item {
+            ClickablePreference(
+                label = stringResource(R.string.dragon_launcher_digital_wellbeing),
+                subtitle = stringResource(R.string.dragon_launcher_acknowledgement_summary),
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        "https://github.com/Elnix90/Dragon-Launcher".toUri(),
+                    )
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    }
+                },
+            )
+        }
+        item {
+            ClickablePreference(
+                label = stringResource(R.string.view_gpl_license),
+                subtitle = "Dragon Launcher • GNU General Public License v3",
+                onClick = {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        "https://github.com/Elnix90/Dragon-Launcher/blob/main/LICENSE".toUri(),
+                    )
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    }
+                },
+            )
+        }
+        preferenceGroupItems(ossLibraries, isFirstChild = false) { _, library ->
             OssLibraryItem(
                 name = library.name,
                 license = library.license,
