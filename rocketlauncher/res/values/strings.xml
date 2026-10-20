@@ -1078,4 +1078,7 @@
     <string name="soul_space_settings">Soul Space</string>
     <string name="soul_space_settings_intro">A calm space for daily wisdom and reflection. Basic quotes will work without downloading an AI model.</string>
     <string name="soul_space_privacy_note">Mood analysis is optional. Personal text and mood analysis must remain on this device.</string>
+    <string name="soul_space_accessibility">Soul Space daily reflection. Tap to show the next reflection.</string>
+    <string name="soul_space_accessibility_current">%1$s. %2$s. Tap for the next reflection.</string>
+    <string name="soul_space_next_hint">Tap for another reflection</string>
 </resources>
