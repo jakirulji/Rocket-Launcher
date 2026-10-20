@@ -15,7 +15,7 @@ on:
       - 'NOTICE'
       - 'LICENSE_COMPLIANCE.md'
       - 'THIRD_PARTY_LICENSES/**'
-      - 'lawnchair/assets/license.html'
+      - 'rocketlauncher/assets/license.html'
       - '**/*.kt'
       - '**/*.java'
       - '**/*.xml'
@@ -85,13 +85,13 @@ jobs:
           test -s COPYING
           test -s NOTICE
           test -s THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md
-          test -s lawnchair/assets/license.html
+          test -s rocketlauncher/assets/license.html
           grep -q "Apache License" LICENSE.txt
           grep -q "GNU GENERAL PUBLIC LICENSE" COPYING
-          grep -q "GNU GENERAL PUBLIC LICENSE" lawnchair/assets/license.html
-          grep -q "MIT License" lawnchair/assets/license.html
+          grep -q "GNU GENERAL PUBLIC LICENSE" rocketlauncher/assets/license.html
+          grep -q "MIT License" rocketlauncher/assets/license.html
           grep -q "Dragon Launcher" NOTICE
-          ! grep -q 'href="../../COPYING"' lawnchair/assets/license.html
+          ! grep -q 'href="../../COPYING"' rocketlauncher/assets/license.html
       - name: Upload license reports
         if: always()
         uses: actions/upload-artifact@v7

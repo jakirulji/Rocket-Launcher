@@ -36,7 +36,7 @@ CATEGORY_MAP = {
 }
 
 IN_PATH = "playstore"
-OUT_PATH = "../lawnchair/assets/flowerpot/"
+OUT_PATH = "../rocketlauncher/assets/flowerpot/"
 TEMPLATE_PATH = "templates"
 FORMAT_VERSION = "1"
 FORMAT_VERSION_HUMAN = "azalea"
