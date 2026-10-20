@@ -1081,6 +1081,7 @@
     <string name="soul_space_accessibility">Soul Space daily reflection. Tap to show the next reflection.</string>
     <string name="soul_space_accessibility_current">%1$s. %2$s. Tap for the next reflection.</string>
     <string name="soul_space_next_hint">Tap for another reflection</string>
+    <string name="soul_space_original_reflection">Soul Space • Original reflection (not scripture)</string>
     <string name="soul_space_language_label">Display language</string>
     <string name="soul_space_language_both">Bengali + English</string>
     <string name="soul_space_language_bengali">Bengali only</string>
