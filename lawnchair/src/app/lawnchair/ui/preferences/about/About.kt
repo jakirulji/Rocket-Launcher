@@ -108,7 +108,7 @@ fun About(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_home_comp),
+                    painter = painterResource(id = R.drawable.rocket_launcher_settings_background),
                     contentDescription = null,
                     modifier = Modifier
                         .size(72.dp)
