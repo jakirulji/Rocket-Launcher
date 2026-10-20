@@ -1,5 +1,5 @@
-<!-- Rocket Launcher-specific pause captions for the GPLv3-covered Digital Wellbeing adaptation; revised 2026-10-20. See COPYING and THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md. -->
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Rocket Launcher-specific pause captions for the GPLv3-covered Digital Wellbeing adaptation; revised 2026-10-20. See COPYING and THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md. -->
 <resources>
     <!-- Local bilingual Digital Wellbeing pause captions. No network access required. -->
     <string-array name="dw_pause_captions">
