@@ -84,6 +84,92 @@ class SoulSpaceView @JvmOverloads constructor(
             "Original Soul Space reflection", null),
     )
 
+
+    // Additional carefully labelled thematic paraphrases. These are not presented as
+    // verbatim translations; the linked source and precise passage are shown to users.
+    private fun paraphraseItems(
+        key: String,
+        label: String,
+        url: String,
+        entries: List<Triple<String, String, String>>,
+    ) = entries.map { (reference, english, bengali) ->
+        WisdomItem(key, label, null, english, bengali,
+            "$reference • Soul Space paraphrase", url)
+    }
+
+    private val supplementalWisdom = listOf(
+        paraphraseItems("soul_space_source_quran", "Qur’an", "https://quran.com/2/152-153", listOf(
+            Triple("Al-Baqarah 2:152", "Remember God with gratitude, and do not respond to blessings with denial.", "কৃতজ্ঞতার সঙ্গে আল্লাহকে স্মরণ করো; প্রাপ্ত অনুগ্রহ অস্বীকার কোরো না।"),
+            Triple("Al-Baqarah 2:153", "Seek strength through patience and prayer; perseverance is not the same as being alone.", "ধৈর্য ও সালাতের মাধ্যমে শক্তি চাও; ধৈর্য ধরা মানে একা হয়ে থাকা নয়।"),
+            Triple("Al-Hujurat 49:13", "Human differences are a reason to learn about one another, not to boast over one another.", "মানুষের বৈচিত্র্য পরস্পরকে জানার সুযোগ, একে অপরের ওপর শ্রেষ্ঠত্ব দেখানোর কারণ নয়।"),
+            Triple("An-Nahl 16:90", "Justice, generosity, and care for kin are joined with the call to avoid wrongdoing.", "ন্যায়, উদারতা ও আত্মীয়ের প্রতি যত্নের সঙ্গে অন্যায় থেকে বিরত থাকার নির্দেশও রয়েছে।"),
+            Triple("Al-Isra 17:37", "Do not walk the earth with arrogance; human power has limits.", "পৃথিবীতে অহংকার নিয়ে চলো না; মানুষের ক্ষমতার সীমা আছে।"),
+            Triple("Ash-Shura 42:40", "Forgiveness and reconciliation can be greater than simply returning harm for harm.", "অন্যায়ের বদলা নেওয়ার চেয়ে ক্ষমা ও মীমাংসা অনেক সময় মহত্তর পথ।"),
+            Triple("Al-Ankabut 29:69", "Those who strive sincerely for what is right are promised guidance along their way.", "যারা আন্তরিকভাবে সঠিক পথে চেষ্টা করে, তাদের পথনির্দেশের প্রতিশ্রুতি দেওয়া হয়েছে।"),
+            Triple("Al-Imran 3:134", "Restraint in anger and forgiveness are marks of generosity of spirit.", "ক্রোধ সংবরণ ও ক্ষমা উদার হৃদয়ের পরিচয়।"),
+            Triple("Az-Zumar 39:10", "Patience has a reward beyond easy calculation.", "ধৈর্যের প্রতিদান অপরিমেয়।"),
+            Triple("Al-Ma’idah 5:8", "Do not let hostility make you abandon justice.", "কারও প্রতি বিরাগ যেন তোমাকে ন্যায়বিচার থেকে সরিয়ে না দেয়।")
+        )),
+        paraphraseItems("soul_space_source_hindu", "Bhagavad Gita", "https://www.gitasupersite.iitk.ac.in/", listOf(
+            Triple("Bhagavad Gita 2.ang", "The wise seek steadiness amid changing circumstances.", "পরিস্থিতি বদলালেও জ্ঞানী ব্যক্তি অন্তরের স্থিরতা অনুশীলন করেন।"),
+            Triple("Bhagavad Gita 2.48", "Act with balance, letting go of fixation on success and failure.", "সাফল্য ও ব্যর্থতার প্রতি অতিরিক্ত আসক্তি ছেড়ে সমভাব নিয়ে কাজ করো।"),
+            Triple("Bhagavad Gita 3.19", "Do the work that should be done without clinging to its reward.", "প্রাপ্য কর্তব্য সম্পাদন করো, কিন্তু পুরস্কারের প্রতি আঁকড়ে থেকো না।"),
+            Triple("Bhagavad Gita 4.38", "Wisdom is a purifier; it grows through sincere practice and understanding.", "জ্ঞান অন্তরকে শুদ্ধ করে; আন্তরিক অনুশীলন ও উপলব্ধির মাধ্যমে তা বিকশিত হয়।"),
+            Triple("Bhagavad Gita 6.5", "Let the self become a support for growth rather than an obstacle.", "নিজের মনকে উন্নতির সহায় করো, বাধা নয়।"),
+            Triple("Bhagavad Gita 6.26", "Whenever the restless mind wanders, gently guide it back.", "চঞ্চল মন যখনই সরে যায়, ধীরে ধীরে তাকে ফিরিয়ে আনো।"),
+            Triple("Bhagavad Gita 12.13–14", "Friendliness, compassion, and freedom from possessiveness are signs of devotion.", "বন্ধুভাব, করুণা ও অধিকারবোধের আসক্তি কমানো ভক্তির লক্ষণ।"),
+            Triple("Bhagavad Gita 16.2", "Nonviolence, truthfulness, and freedom from anger are qualities worth cultivating.", "অহিংসা, সত্যবাদিতা ও ক্রোধমুক্তি চর্চা করার মতো মহৎ গুণ।"),
+            Triple("Bhagavad Gita 17.15", "Speech is disciplined when it is truthful, kind, beneficial, and not needlessly hurtful.", "সত্য, মঙ্গল ও কোমলতায় ভরা এবং অকারণে কষ্ট না দেওয়া কথাই সংযত বাক্য।"),
+            Triple("Bhagavad Gita 18.63", "Reflect carefully, then choose with understanding and responsibility.", "ভেবে দেখো, তারপর উপলব্ধি ও দায়িত্ববোধ নিয়ে সিদ্ধান্ত নাও।")
+        )),
+        paraphraseItems("soul_space_source_buddhist", "Dhammapada", "https://www.gutenberg.org/ebooks/2017", listOf(
+            Triple("Dhammapada 1.2", "A wholesome mind brings happiness that follows like a faithful shadow.", "কল্যাণময় মন এমন সুখ আনে, যা বিশ্বস্ত ছায়ার মতো সঙ্গ দেয়।"),
+            Triple("Dhammapada 1.3–4", "Rehearsing injury keeps hostility alive; releasing it opens another path.", "অপমান আঁকড়ে থাকলে বিদ্বেষ বেঁচে থাকে; তা ছেড়ে দিলে অন্য পথ খুলে যায়।"),
+            Triple("Dhammapada 2.21", "Mindful attention is a path toward the deathless; heedlessness wastes life.", "সচেতনতা অমৃতের পথে নিয়ে যায়; অসতর্কতা জীবনকে অপচয় করে।"),
+            Triple("Dhammapada 5.63", "Recognizing one's lack of wisdom is the beginning of becoming wiser.", "নিজের অজ্ঞতা চিনতে পারাই প্রজ্ঞাবান হওয়ার সূচনা।"),
+            Triple("Dhammapada 6.76", "Value a wise guide who points out faults as well as strengths.", "যিনি গুণের পাশাপাশি ভুলও দেখান, সেই জ্ঞানী পথপ্রদর্শককে মূল্য দাও।"),
+            Triple("Dhammapada 10.129–130", "All beings fear harm and value life; remembering this supports compassion.", "সব প্রাণী আঘাতকে ভয় পায় এবং জীবনকে ভালোবাসে; এই বোধ করুণাকে শক্ত করে।"),
+            Triple("Dhammapada 12.160", "You must make your own effort; no one can walk the path in your place.", "নিজের প্রচেষ্টা তোমাকেই করতে হবে; তোমার হয়ে কেউ পথ চলতে পারে না।"),
+            Triple("Dhammapada 15.197–200", "Peace is possible even among those who live in hostility, if hatred is not fed.", "বিদ্বেষকে পুষ্ট না করলে বিরোধের মধ্যেও শান্তি সম্ভব।"),
+            Triple("Dhammapada 20.276", "Awakened teachers show the way; practice is each person's work.", "জাগ্রত শিক্ষক পথ দেখান; অনুশীলনের দায়িত্ব প্রত্যেকের নিজের।"),
+            Triple("Dhammapada 25.368", "Cultivate goodwill and the heart can become quiet and clear.", "মৈত্রী চর্চা করো; হৃদয় ধীরে ধীরে শান্ত ও স্বচ্ছ হতে পারে।")
+        )),
+        paraphraseItems("soul_space_source_sikh", "Guru Granth Sahib", "https://www.srigranth.org/", listOf(
+            Triple("Japji Sahib, Pauri 1 • Ang 1", "Truth is not merely spoken; living truthfully is the deeper practice.", "সত্য শুধু মুখে বলা নয়; সত্যনিষ্ঠভাবে বাঁচাই গভীরতর সাধনা।"),
+            Triple("Japji Sahib, Pauri 4 • Ang 2", "Love and humility shape the seeker’s approach to the Divine.", "প্রেম ও বিনয় সাধকের পরমের দিকে এগোনোর পথ গড়ে দেয়।"),
+            Triple("Japji Sahib, Pauri 8–11 • Ang 3–4", "Listening deeply can transform understanding, conduct, and inner life.", "গভীরভাবে শ্রবণ উপলব্ধি, আচরণ ও অন্তর্জীবনকে বদলে দিতে পারে।"),
+            Triple("Japji Sahib, Pauri 21 • Ang 4", "No single human calculation can fully measure the vastness of creation.", "মানুষের কোনো হিসাবই সৃষ্টির বিশালতাকে পুরোপুরি মাপতে পারে না।"),
+            Triple("Sukhmani Sahib • Ang 262", "Remembering the Divine is presented as a source of inner steadiness.", "পরমকে স্মরণ করাকে অন্তরের স্থিরতার একটি উৎস হিসেবে তুলে ধরা হয়েছে।"),
+            Triple("Ang 286", "The Divine is understood as present through all beings and places.", "সব প্রাণী ও স্থানের মধ্যে পরমের উপস্থিতি উপলব্ধির শিক্ষা রয়েছে।"),
+            Triple("Ang 595", "Ego loosens when a person turns from self-importance toward the Name.", "আত্মম্ভরিতা থেকে নাম-স্মরণের দিকে ফিরলে অহংবোধ শিথিল হয়।"),
+            Triple("Ang 1349", "Compassion and remembrance belong in daily life, not only in ceremony.", "করুণা ও স্মরণ শুধু আনুষ্ঠানিকতায় নয়, দৈনন্দিন জীবনেও থাকা উচিত।")
+        )),
+        paraphraseItems("soul_space_source_sufi", "Sufi wisdom • thematic reflections", "https://www.masnavi.net/1/50/eng/1/", listOf(
+            Triple("Rumi, Mathnawi I • opening passage", "The reed's lament becomes an image of longing for reunion with one's origin.", "নলখাগড়ার আর্তি নিজের উৎসের সঙ্গে পুনর্মিলনের আকাঙ্ক্ষার প্রতীক হয়ে ওঠে।"),
+            Triple("Rumi, Mathnawi I • separation motif", "Longing can reveal what the heart believes it has lost.", "আকুলতা হৃদয় কী হারিয়েছে বলে মনে করে, তা প্রকাশ করতে পারে।"),
+            Triple("Rumi, Mathnawi I • love motif", "Love is portrayed as a force that changes the listener, not merely a passing feeling.", "প্রেমকে ক্ষণিক অনুভূতি নয়, মানুষকে বদলে দেওয়া শক্তি হিসেবে দেখানো হয়েছে।"),
+            Triple("Attar, The Conference of the Birds • journey motif", "The search for truth also asks the seeker to examine the self.", "সত্যের অনুসন্ধান সাধককে নিজের অন্তরও পরীক্ষা করতে বলে।"),
+            Triple("Saadi, Gulistan • ethical counsel", "Wisdom without kindness can fail the people it claims to guide.", "দয়াহীন প্রজ্ঞা যাদের পথ দেখানোর দাবি করে, তাদেরই ব্যর্থ করতে পারে।"),
+            Triple("Al-Ghazali, ethical writings • self-examination", "Self-knowledge requires honest attention to motives, not only outward conduct.", "আত্মজ্ঞান শুধু বাহ্যিক আচরণ নয়, নিজের উদ্দেশ্যকেও সৎভাবে দেখার দাবি রাখে।"),
+            Triple("Rabia al-Basri • devotional tradition", "Love of the Divine is described as deeper than bargaining for reward.", "পরমের প্রতি প্রেমকে পুরস্কারের বিনিময়-প্রত্যাশার চেয়ে গভীর বলে বর্ণনা করা হয়।"),
+            Triple("Ibn Arabi • unity and perception", "Humility begins by recognizing that one's own perspective is not the whole of reality.", "নিজের দৃষ্টিভঙ্গিই সমগ্র বাস্তবতা নয়—এ কথা মানা বিনয়ের সূচনা।")
+        )),
+        paraphraseItems("soul_space_source_philosophy", "Philosophy & Literature • thematic paraphrase", "https://www.gutenberg.org/", listOf(
+            Triple("Plato, Apology 38a", "A life without self-examination leaves important questions unasked.", "আত্মপর্যালোচনা ছাড়া জীবন গুরুত্বপূর্ণ প্রশ্নগুলোকে অনুচ্চারিত রেখে দেয়।"),
+            Triple("Aristotle, Nicomachean Ethics I.7", "A good life is shaped by sustained activity and character, not a single pleasant moment.", "একটি ভালো জীবন গড়ে ওঠে ধারাবাহিক কাজ ও চরিত্রে, একটি সুখের মুহূর্তে নয়।"),
+            Triple("Epictetus, Enchiridion 1", "Separate what depends on your choices from what does not.", "যা তোমার সিদ্ধান্তের ওপর নির্ভর করে, তা যা করে না—সেগুলো আলাদা করে দেখো।"),
+            Triple("Marcus Aurelius, Meditations II.1", "Meet difficult people by remembering that people act from their own understanding.", "মানুষ নিজের উপলব্ধি অনুযায়ী কাজ করে—এ কথা মনে রেখে কঠিন মানুষের মুখোমুখি হও।"),
+            Triple("Kierkegaard, The Sickness unto Death", "Despair can involve refusing to face who one is or who one may become.", "হতাশা কখনো নিজের বর্তমান সত্তা বা সম্ভাব্য সত্তার মুখোমুখি হতে অস্বীকার করার মধ্যেও থাকে।"),
+            Triple("Dostoevsky, The Brothers Karamazov", "Responsibility toward others can be understood as a demanding form of love.", "অন্যের প্রতি দায়িত্বকে ভালোবাসার এক কঠিন অথচ গভীর রূপ হিসেবে বোঝা যায়।"),
+            Triple("Tolstoy, A Confession", "Questions of meaning often return when outward success no longer satisfies.", "বাহ্যিক সাফল্য আর তৃপ্তি না দিলে জীবনের অর্থ নিয়ে প্রশ্ন ফিরে আসে।"),
+            Triple("Camus, The Myth of Sisyphus", "Facing life's absurdity honestly need not mean surrendering to it.", "জীবনের অসংগতির মুখোমুখি হওয়া মানেই তার কাছে আত্মসমর্পণ করা নয়।"),
+            Triple("Kafka, The Diaries • self-examination", "Inner conflict can make ordinary life feel strange, demanding careful attention.", "অন্তর্দ্বন্দ্ব সাধারণ জীবনকেও অচেনা করে তুলতে পারে; তাই মনোযোগ দিয়ে দেখা দরকার।"),
+            Triple("Hermann Hesse, Siddhartha", "Another person's path may inspire you, but it cannot replace your own experience.", "অন্যের পথ অনুপ্রেরণা দিতে পারে, কিন্তু নিজের অভিজ্ঞতার বিকল্প হতে পারে না।"),
+            Triple("Schopenhauer, Essays and Aphorisms", "Desire can renew dissatisfaction unless we learn to examine what we pursue.", "কী চাইছি তা বিচার না করলে আকাঙ্ক্ষা বারবার অসন্তোষ ফিরিয়ে আনতে পারে।"),
+            Triple("Rilke, Letters to a Young Poet", "Some questions need time to be lived with before they can be answered.", "কিছু প্রশ্নের উত্তর পাওয়ার আগে সেগুলোর সঙ্গে সময় কাটিয়ে বাঁচতে হয়।")
+        ))
+    )
+
     private val sourcedWisdom = listOf(
         WisdomItem("soul_space_source_quran", "Qur’an",
             "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا",
@@ -216,7 +302,7 @@ class SoulSpaceView @JvmOverloads constructor(
             "জীবনের সংগ্রামশালা থেকে: যা আমাকে মেরে ফেলে না, তা আমাকে আরও শক্তিশালী করে। (জার্মান মূল থেকে Soul Space-এর অনুবাদ।)",
             "Twilight of the Idols, “Maxims and Arrows,” §8 • German original; translation by Soul Space",
             "https://www.gutenberg.org/ebooks/52263"),
-    )
+    ) + supplementalWisdom.flatten()
 
     private var currentIndex = 0
     private var receiverRegistered = false
