@@ -789,15 +789,41 @@ class PreferenceManager2 @Inject constructor(
         onSet = { reloadHelper.recreate() },
     )
 
-    val soulSpaceSource = preference(
-        key = stringPreferencesKey("soul_space_source"),
-        defaultValue = "mixed_reflections",
+    // Independent source toggles: users can combine several traditions.
+    val soulSpaceSourceQuran = preference(
+        key = booleanPreferencesKey("soul_space_source_quran"),
+        defaultValue = false,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceSourceHindu = preference(
+        key = booleanPreferencesKey("soul_space_source_hindu"),
+        defaultValue = false,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceSourceBuddhist = preference(
+        key = booleanPreferencesKey("soul_space_source_buddhist"),
+        defaultValue = false,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceSourceSikh = preference(
+        key = booleanPreferencesKey("soul_space_source_sikh"),
+        defaultValue = false,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceSourceSufi = preference(
+        key = booleanPreferencesKey("soul_space_source_sufi"),
+        defaultValue = false,
+        onSet = { reloadHelper.recreate() },
+    )
+    val soulSpaceSourceGeneral = preference(
+        key = booleanPreferencesKey("soul_space_source_general"),
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
 
     val soulSpaceSchedule = preference(
         key = stringPreferencesKey("soul_space_schedule"),
-        defaultValue = "daily",
+        defaultValue = "each_unlock",
         onSet = { reloadHelper.recreate() },
     )
 
