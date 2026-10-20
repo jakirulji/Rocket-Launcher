@@ -44,7 +44,7 @@ import app.lawnchair.smartspace.model.LawnchairSmartspace
 import app.lawnchair.smartspace.model.SmartspaceCalendar
 import app.lawnchair.smartspace.model.SmartspaceMode
 import app.lawnchair.smartspace.model.SmartspaceTimeFormat
-import app.lawnchair.smartspace.model.Smartspacer
+import app.lawnchair.smartspace.model.SoulSpace
 import app.lawnchair.smartspace.provider.SmartspaceProvider
 import app.lawnchair.ui.preferences.LocalIsExpandedScreen
 import app.lawnchair.ui.preferences.components.controls.ClickablePreference
@@ -105,8 +105,8 @@ fun SmartspacePreferences(
                             LawnchairSmartspaceSettings(smartspaceProvider)
                         }
 
-                        Smartspacer -> {
-                            SmartspacerSettings()
+                        SoulSpace -> {
+                            SoulSpaceSettings()
                         }
 
                         else -> {}
@@ -289,6 +289,28 @@ fun SmartspaceCalendarPreference(
         label = stringResource(id = R.string.smartspace_calendar),
         modifier = modifier,
     )
+}
+
+@Composable
+fun SoulSpaceSettings(
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier.padding(top = 8.dp)) {
+        PreferenceGroup(
+            heading = stringResource(id = R.string.soul_space_settings),
+        ) {
+            androidx.compose.material3.Text(
+                text = stringResource(id = R.string.soul_space_settings_intro),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            )
+            androidx.compose.material3.Text(
+                text = stringResource(id = R.string.soul_space_privacy_note),
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+        }
+    }
 }
 
 @Composable
