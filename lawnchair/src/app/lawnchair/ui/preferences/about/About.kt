@@ -25,8 +25,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -51,13 +51,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.lawnchair.preferences.PreferenceManager
 import app.lawnchair.ui.preferences.LocalIsExpandedScreen
 import app.lawnchair.ui.preferences.components.NavigationActionPreference
-import app.lawnchair.ui.preferences.components.controls.ClickablePreference
-import app.lawnchair.ui.preferences.components.layout.PreferenceDivider
-import app.lawnchair.ui.preferences.components.layout.PreferenceGroupHeading
 import app.lawnchair.ui.preferences.components.layout.PreferenceGroupItem
 import app.lawnchair.ui.preferences.components.layout.PreferenceLayoutLazyColumn
-import app.lawnchair.ui.preferences.components.layout.preferenceGroupItems
-import app.lawnchair.ui.preferences.navigation.AboutLicenses
 import com.android.launcher3.BuildConfig
 import com.android.launcher3.R
 import kotlinx.coroutines.launch
@@ -107,8 +102,7 @@ fun About(
         }
         item {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Image(
@@ -133,8 +127,7 @@ fun About(
         }
         item {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Text(
@@ -146,20 +139,30 @@ fun About(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .combinedClickable(
-                            onClick = {},
-                            onLongClick = {
-                                val commitUrl =
-                                    "https://github.com/LawnchairLauncher/lawnchair/commit/${BuildConfig.COMMIT_HASH}"
-                                context.startActivity(Intent(Intent.ACTION_VIEW, commitUrl.toUri()))
-                            },
-                        ),
+                    modifier = Modifier.combinedClickable(
+                        onClick = {},
+                        onLongClick = {
+                            val commitUrl =
+                                "https://github.com/jakirulji/Rocket-Launcher/commit/${BuildConfig.COMMIT_HASH}"
+                            context.startActivity(Intent(Intent.ACTION_VIEW, commitUrl.toUri()))
+                        },
+                    ),
                 )
             }
         }
         item {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+        item {
+            Text(
+                text = stringResource(R.string.rocket_launcher_derived_description),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+            )
         }
         item {
             UpdateSection(
@@ -185,90 +188,15 @@ fun About(
             Spacer(modifier = Modifier.requiredHeight(16.dp))
         }
         item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            ) {
-                uiState.topLinks.forEach { link ->
-                    LawnchairLink(
-                        iconResId = link.iconResId,
-                        label = stringResource(id = link.labelResId),
-                        modifier = Modifier.weight(weight = 1f),
-                        url = link.url,
-                    )
-                }
-            }
-        }
-        preferenceGroupItems(
-            items = uiState.coreTeam,
-            isFirstChild = false,
-            heading = { stringResource(id = R.string.product) },
-            key = { _, it -> it.name },
-        ) { _, it ->
-            ContributorRow(
-                member = it,
-            )
-        }
-        preferenceGroupItems(
-            items = uiState.supportAndPr,
-            isFirstChild = false,
-            heading = { stringResource(id = R.string.support_and_pr) },
-            key = { _, it -> it.name },
-        ) { _, it ->
-            ContributorRow(
-                member = it,
-            )
-        }
-        preferenceGroupItems(
-            items = uiState.bottomLinks,
-            isFirstChild = false,
-            heading = { stringResource(id = R.string.community) },
-            key = { _, it -> it.labelResId },
-        ) { _, it ->
-            HorizontalLawnchairLink(
-                iconResId = it.iconResId,
-                label = stringResource(id = it.labelResId),
-                url = it.url,
-            )
-        }
-        item {
-            PreferenceGroupHeading(
-                stringResource(R.string.legal),
-            )
-        }
-        item {
             PreferenceGroupItem(
                 cutTop = false,
-                cutBottom = true,
-            ) {
-                NavigationActionPreference(
-                    label = stringResource(id = R.string.acknowledgements),
-                    destination = AboutLicenses,
-                )
-            }
-        }
-        item {
-            Spacer(Modifier.height(3.dp))
-        }
-        item {
-            PreferenceGroupItem(
-                cutTop = true,
                 cutBottom = false,
             ) {
-                ClickablePreference(
-                    label = stringResource(id = R.string.privacy_policy),
-                    onClick = {
-                        val webpage = PRIVACY_POLICY.toUri()
-                        val intent = Intent(Intent.ACTION_VIEW, webpage)
-                        if (intent.resolveActivity(context.packageManager) != null) {
-                            context.startActivity(intent)
-                        }
-                    },
+                NavigationActionPreference(
+                    label = stringResource(R.string.open_source_licenses_acknowledgements),
+                    destination = AboutLicenses,
                 )
             }
         }
     }
 }
-
-private const val PRIVACY_POLICY = "https://lawnchair.app/privacy_policy"
