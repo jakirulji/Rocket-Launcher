@@ -356,73 +356,63 @@ fun SoulSpaceSettings(
                 entries = languageEntries,
                 label = stringResource(R.string.soul_space_language_label),
             )
-            ListPreference(
-                adapter = textColorModeAdapter,
-                entries = colorModes,
-                label = stringResource(R.string.soul_space_text_color_label),
+            ClickablePreference(
+                label = "Card background color",
+                subtitle = "Choose the filled rectangle color",
+                onClick = { paletteTarget = "background"; showColorPalette = true },
             )
-            if (textColorModeAdapter.state.value == "custom") {
-                ClickablePreference(
-                    label = stringResource(R.string.soul_space_text_color_choose),
-                    subtitle = stringResource(R.string.soul_space_text_color_palette_hint),
-                    onClick = { showColorPalette = true },
-                )
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(Color(customTextColorAdapter.state.value), CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
-                    )
-                    Text(
-                        text = "#%06X".format(0xFFFFFF and customTextColorAdapter.state.value),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+            ClickablePreference(
+                label = "Quote text color",
+                subtitle = "Default: white for clear contrast",
+                onClick = { paletteTarget = "text"; showColorPalette = true },
+            )
+            ClickablePreference(
+                label = "Source / reference color",
+                subtitle = "Default: bright amber",
+                onClick = { paletteTarget = "reference"; showColorPalette = true },
+            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                listOf("Card" to cardBackgroundAdapter.state.value, "Text" to cardTextAdapter.state.value, "Reference" to cardReferenceAdapter.state.value).forEach { (label, colorValue) ->
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(modifier = Modifier.size(24.dp).background(Color(colorValue), CircleShape).border(1.dp, MaterialTheme.colorScheme.outline, CircleShape))
+                        Text(label, style = MaterialTheme.typography.labelSmall)
+                    }
                 }
             }
             if (showColorPalette) {
                 AlertDialog(
                     onDismissRequest = { showColorPalette = false },
-                    title = { Text(stringResource(R.string.soul_space_text_color_choose)) },
+                    title = { Text("Choose color") },
                     text = {
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             palette.chunked(4).forEach { colorRow ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
                                     colorRow.forEach { colorValue ->
                                         Box(
-                                            modifier = Modifier
-                                                .size(42.dp)
-                                                .background(Color(colorValue), CircleShape)
-                                                .border(
-                                                    width = if (customTextColorAdapter.state.value == colorValue) 3.dp else 1.dp,
-                                                    color = if (customTextColorAdapter.state.value == colorValue) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                                                    shape = CircleShape,
-                                                )
-                                                .clickable {
-                                                    customTextColorAdapter.onChange(colorValue)
-                                                    showColorPalette = false
-                                                },
+                                            modifier = Modifier.size(38.dp).background(Color(colorValue), CircleShape).border(1.dp, MaterialTheme.colorScheme.outline, CircleShape).clickable {
+                                                when (paletteTarget) {
+                                                    "background" -> cardBackgroundAdapter.onChange(colorValue)
+                                                    "text" -> cardTextAdapter.onChange(colorValue)
+                                                    else -> cardReferenceAdapter.onChange(colorValue)
+                                                }
+                                                showColorPalette = false
+                                            },
                                         )
                                     }
                                 }
                             }
                         }
                     },
-                    confirmButton = {
-                        TextButton(onClick = { showColorPalette = false }) {
-                            Text(stringResource(android.R.string.cancel))
-                        }
-                    },
+                    confirmButton = { TextButton(onClick = { showColorPalette = false }) { Text(stringResource(android.R.string.cancel)) } },
                 )
             }
+            ListPreference(adapter = radiusAdapter, entries = radiusEntries, label = "Corner radius")
+            ListPreference(adapter = fontSizeAdapter, entries = fontSizeEntries, label = "Quote font size")
+            ListPreference(adapter = fontStyleAdapter, entries = fontStyleEntries, label = "Quote font style")
             androidx.compose.material3.Text(
                 text = stringResource(R.string.soul_space_source_label),
                 style = MaterialTheme.typography.titleSmall,
