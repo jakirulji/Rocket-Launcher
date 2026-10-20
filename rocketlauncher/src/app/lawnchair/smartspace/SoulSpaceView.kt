@@ -17,6 +17,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import app.lawnchair.preferences2.PreferenceManager2
+import com.patrykmichalik.opto.core.setBlocking
 import com.android.launcher3.R
 
 /**
@@ -102,7 +103,7 @@ class SoulSpaceView @JvmOverloads constructor(
                 val items = selectedItems()
                 if (items.isNotEmpty()) {
                     currentIndex = ((prefs[intPreferencesKey("soul_space_rotation_index")] ?: currentIndex) + 1) % items.size
-                    manager.soulSpaceRotationIndex.set(currentIndex)
+                    manager.soulSpaceRotationIndex.setBlocking(currentIndex)
                     updateReflection()
                 }
             }
@@ -192,7 +193,7 @@ class SoulSpaceView @JvmOverloads constructor(
         val items = selectedItems()
         if (items.isNotEmpty()) {
             currentIndex = (currentIndex + 1) % items.size
-            PreferenceManager2.getInstance(context).soulSpaceRotationIndex.set(currentIndex)
+            PreferenceManager2.getInstance(context).soulSpaceRotationIndex.setBlocking(currentIndex)
         }
         updateReflection()
     }
