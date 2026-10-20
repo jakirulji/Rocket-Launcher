@@ -41,7 +41,7 @@ class SoulSpaceView @JvmOverloads constructor(
     private val generalReflections = listOf(
         WisdomItem("soul_space_source_general", "Soul Space original reflection", null,
             "Pause for a moment. You do not have to solve everything at once.",
-            "একটু থামুন। সবকিছু একসঙ্গে সমাধান করতে হবে না。",
+            "একটু থামুন। সবকিছু একসঙ্গে সমাধান করতে হবে না।",
             "Original Soul Space reflection", null),
         WisdomItem("soul_space_source_general", "Soul Space original reflection", null,
             "Let kindness guide your next step, even when the whole path is unclear.",
