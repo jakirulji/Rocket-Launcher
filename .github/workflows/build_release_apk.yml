@@ -5,11 +5,12 @@ on:
   push:
     branches:
       - 16-dev
+      - soul-space
 
 jobs:
   build-release-apk:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/16-dev' || endsWith(github.ref, '-alpha') || endsWith(github.ref, '-beta') || endsWith(github.ref, '-rc') || endsWith(github.ref, '-stable')
+    if: github.ref == 'refs/heads/16-dev' || github.ref == 'refs/heads/soul-space' || endsWith(github.ref, '-alpha') || endsWith(github.ref, '-beta') || endsWith(github.ref, '-rc') || endsWith(github.ref, '-stable')
     steps:
       - uses: actions/checkout@v7
         with:
