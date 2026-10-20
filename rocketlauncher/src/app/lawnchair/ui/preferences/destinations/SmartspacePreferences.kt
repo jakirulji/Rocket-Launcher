@@ -304,22 +304,9 @@ fun SoulSpaceSettings(
             ListPreferenceEntry("original_bengali") { stringResource(R.string.soul_space_language_original_bengali) },
         )
     }
-    val sourceEntries = remember {
-        listOf(
-            ListPreferenceEntry("mixed_reflections") { stringResource(R.string.soul_space_source_mixed) },
-            ListPreferenceEntry("quran") { stringResource(R.string.soul_space_source_quran) },
-            ListPreferenceEntry("hindu") { stringResource(R.string.soul_space_source_hindu) },
-            ListPreferenceEntry("buddhist") { stringResource(R.string.soul_space_source_buddhist) },
-            ListPreferenceEntry("sikh") { stringResource(R.string.soul_space_source_sikh) },
-            ListPreferenceEntry("sufi") { stringResource(R.string.soul_space_source_sufi) },
-            ListPreferenceEntry("general") { stringResource(R.string.soul_space_source_general) },
-        )
-    }
     val scheduleEntries = remember {
         listOf(
             ListPreferenceEntry("each_unlock") { stringResource(R.string.soul_space_schedule_unlock) },
-            ListPreferenceEntry("daily") { stringResource(R.string.soul_space_schedule_daily) },
-            ListPreferenceEntry("weekly") { stringResource(R.string.soul_space_schedule_weekly) },
             ListPreferenceEntry("manual") { stringResource(R.string.soul_space_schedule_manual) },
         )
     }
@@ -336,19 +323,39 @@ fun SoulSpaceSettings(
                 entries = languageEntries,
                 label = stringResource(R.string.soul_space_language_label),
             )
-            ListPreference(
-                adapter = prefs.soulSpaceSource.getAdapter(),
-                entries = sourceEntries,
-                label = stringResource(R.string.soul_space_source_label),
+            androidx.compose.material3.Text(
+                text = stringResource(R.string.soul_space_source_label),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceSourceQuran.getAdapter(),
+                label = stringResource(R.string.soul_space_source_quran),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceSourceHindu.getAdapter(),
+                label = stringResource(R.string.soul_space_source_hindu),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceSourceBuddhist.getAdapter(),
+                label = stringResource(R.string.soul_space_source_buddhist),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceSourceSikh.getAdapter(),
+                label = stringResource(R.string.soul_space_source_sikh),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceSourceSufi.getAdapter(),
+                label = stringResource(R.string.soul_space_source_sufi),
+            )
+            SwitchPreference(
+                adapter = prefs.soulSpaceSourceGeneral.getAdapter(),
+                label = stringResource(R.string.soul_space_source_general),
             )
             ListPreference(
                 adapter = prefs.soulSpaceSchedule.getAdapter(),
                 entries = scheduleEntries,
                 label = stringResource(R.string.soul_space_schedule_label),
-            )
-            SwitchPreference(
-                adapter = prefs.soulSpaceFavoritesOnly.getAdapter(),
-                label = stringResource(R.string.soul_space_favorites_only),
             )
             androidx.compose.material3.Text(
                 text = stringResource(id = R.string.soul_space_privacy_note),
