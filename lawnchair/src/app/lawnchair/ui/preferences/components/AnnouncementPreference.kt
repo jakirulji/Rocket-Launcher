@@ -1,3 +1,4 @@
+/* Rocket Launcher modification: formatting/import-order adjustment for the custom launcher build. */
 package app.lawnchair.ui.preferences.components
 
 import android.content.Intent
