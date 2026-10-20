@@ -1099,5 +1099,9 @@
 
     <string name="soul_space_schedule_manual">Only when tapped</string>
     <string name="soul_space_sources_unavailable">The selected scripture source has no verified offline quote pack yet. No scripture quote will be invented or misattributed.</string>
-    <string name="soul_space_source_general_status">General original reflections • not scripture</string>
+    <string name="soul_space_no_source_selected">Choose at least one source in Soul Space settings.</string>
+    <string name="soul_space_source_pack_status">Selected source content status</string>
+    <string name="soul_space_source_general_status">General original reflection • not scripture</string>
+    <string name="soul_space_general_with_unavailable_sources">General original reflection • not scripture. Selected scripture packs are not available yet.</string>
+    <string name="soul_space_unlock_hint">Changes after each phone unlock • tap for the next reflection</string>
 </resources>
