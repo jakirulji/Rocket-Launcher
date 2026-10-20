@@ -1097,6 +1097,7 @@
     <string name="soul_space_source_buddhist">Buddhist texts</string>
     <string name="soul_space_source_sikh">Sikh scripture</string>
     <string name="soul_space_source_sufi">Sufi writings</string>
+    <string name="soul_space_source_philosophy">Philosophy &amp; Literature</string>
     <string name="soul_space_source_general">General reflections only</string>
     <string name="soul_space_schedule_label">Change reflection</string>
     <string name="soul_space_schedule_unlock">On each unlock</string>

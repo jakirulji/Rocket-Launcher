@@ -434,6 +434,10 @@ fun SoulSpaceSettings(
                 label = stringResource(R.string.soul_space_source_sufi),
             )
             SwitchPreference(
+                adapter = prefs.soulSpaceSourcePhilosophy.getAdapter(),
+                label = stringResource(R.string.soul_space_source_philosophy),
+            )
+            SwitchPreference(
                 adapter = prefs.soulSpaceSourceGeneral.getAdapter(),
                 label = stringResource(R.string.soul_space_source_general),
             )

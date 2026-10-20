@@ -815,6 +815,11 @@ class PreferenceManager2 @Inject constructor(
         defaultValue = false,
         onSet = { reloadHelper.recreate() },
     )
+    val soulSpaceSourcePhilosophy = preference(
+        key = booleanPreferencesKey("soul_space_source_philosophy"),
+        defaultValue = false,
+        onSet = { reloadHelper.recreate() },
+    )
     val soulSpaceSourceGeneral = preference(
         key = booleanPreferencesKey("soul_space_source_general"),
         defaultValue = true,
