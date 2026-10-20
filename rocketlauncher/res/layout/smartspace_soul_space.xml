@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app.lawnchair.smartspace.SoulSpaceView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/soul_space_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/enhanced_smartspace_height"
+    android:layout_gravity="center_vertical"
+    android:background="?attr/selectableItemBackground"
+    android:paddingStart="@dimen/enhanced_smartspace_padding_start"
+    android:paddingEnd="@dimen/enhanced_smartspace_padding_end" />
