@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- /* Rocket Launcher modifications: displays Dragon Launcher GPLv3 attribution and license access. */
+  * Rocket Launcher modifications: displays Dragon Launcher GPLv3 attribution and license access.
 */
 
 package app.lawnchair.ui.preferences.about.acknowledgements
