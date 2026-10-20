@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "project": "Soul Space",
+  "datasets": [
+    {
+      "id": "quran",
+      "targetMin": 300,
+      "targetMax": 500,
+      "status": "source-identified-not-imported",
+      "source": "Tanzil Quran Text",
+      "url": "https://tanzil.net/",
+      "license": "CC BY 3.0",
+      "constraints": [
+        "Arabic text must be preserved verbatim",
+        "Include Tanzil attribution and updates link",
+        "Do not bundle translations without edition-specific redistribution permission"
+      ]
+    },
+    {
+      "id": "sufi",
+      "targetMin": 200,
+      "targetMax": 500,
+      "status": "research-required",
+      "notes": "Use traceable public-domain texts or openly licensed editions; no invented attribution."
+    },
+    {
+      "id": "philosophy-literature",
+      "targetMin": 200,
+      "targetMax": 500,
+      "status": "research-required",
+      "notes": "Select public-domain original texts and verify each translation's copyright status."
+    },
+    {
+      "id": "bhagavad-gita",
+      "targetMin": 200,
+      "targetMax": 200,
+      "status": "research-required",
+      "notes": "Verify source edition and translation licence before redistribution."
+    },
+    {
+      "id": "dhammapada",
+      "targetMin": 200,
+      "targetMax": 200,
+      "status": "source-text-bundled",
+      "source": "ETCBC/dhammapada",
+      "url": "https://github.com/ETCBC/dhammapada",
+      "license": "MIT",
+      "fieldsAvailable": [
+        "Pali source text"
+      ],
+      "fieldsPending": [
+        "verse-level records",
+        "English rendering",
+        "Bengali rendering",
+        "reference validation"
+      ]
+    },
+    {
+      "id": "guru-granth-sahib",
+      "targetMin": 200,
+      "targetMax": 200,
+      "status": "research-required",
+      "notes": "Verify source text and translation rights separately."
+    },
+    {
+      "id": "original-reflections",
+      "targetMin": 200,
+      "targetMax": 200,
+      "status": "to-be-authored",
+      "notes": "Original Soul Space writing; not attributed to historical figures."
+    }
+  ]
+}
