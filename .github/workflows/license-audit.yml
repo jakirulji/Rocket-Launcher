@@ -53,6 +53,32 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
       - name: Generate dependency license report
         run: ./gradlew --no-daemon licensee
+      - name: Reject GPL-2.0-only dependencies in GPLv3 combined build
+        run: |
+          python3 - <<'PY'
+          import glob
+          import json
+          import sys
+
+          incompatible = []
+          for report in glob.glob("**/build/reports/licensee/**/artifacts.json", recursive=True):
+              with open(report, encoding="utf-8") as source:
+                  artifacts = json.load(source)
+              for artifact in artifacts:
+                  for license_info in artifact.get("spdxLicenses", []):
+                      if license_info.get("identifier") in {"GPL-2.0", "GPL-2.0-only"}:
+                          coordinate = ":".join(
+                              str(artifact.get(key, "")) for key in ("groupId", "artifactId", "version")
+                          )
+                          incompatible.append(f"{report}: {coordinate} ({license_info['identifier']})")
+
+          if incompatible:
+              print("GPL-2.0-only dependencies are incompatible with this GPLv3-covered combined build:")
+              print("\n".join(incompatible))
+              sys.exit(1)
+
+          print("No GPL-2.0-only dependencies found in Licensee reports.")
+          PY
       - name: Verify required license and attribution files
         run: |
           test -s LICENSE.txt
