@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Typeface
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -18,32 +19,110 @@ import com.android.launcher3.R
 /**
  * Offline Soul Space surface.
  *
- * The bundled starter content is original reflection copy, not scripture or an attributed quotation.
- * Source-specific scripture/writing packs must be verified and licensed before being displayed.
+ * Scripture entries contain ancient original-language text and translations authored for Soul Space.
+ * They are not copied from modern published translations. Each sourced entry links to a reference.
  */
 class SoulSpaceView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : LinearLayout(context, attrs) {
 
-    private data class Reflection(val english: String, val bengali: String)
+    private data class WisdomItem(
+        val sourceKey: String,
+        val sourceLabel: String,
+        val original: String?,
+        val english: String,
+        val bengali: String,
+        val reference: String,
+        val sourceUrl: String?,
+    )
 
-    private val reflections = listOf(
-        Reflection(
+    private val generalReflections = listOf(
+        WisdomItem(
+            "soul_space_source_general",
+            "General reflection • not scripture",
+            null,
             "Pause for a moment. You do not have to solve everything at once.",
             "একটু থামুন। সবকিছু একসঙ্গে সমাধান করতে হবে না।",
+            "Original Soul Space reflection",
+            null,
         ),
-        Reflection(
+        WisdomItem(
+            "soul_space_source_general",
+            "General reflection • not scripture",
+            null,
             "Let kindness guide your next step, even when the whole path is unclear.",
             "পুরো পথ স্পষ্ট না হলেও, পরের পদক্ষেপটি সদয়ভাবে নিন।",
+            "Original Soul Space reflection",
+            null,
         ),
-        Reflection(
+        WisdomItem(
+            "soul_space_source_general",
+            "General reflection • not scripture",
+            null,
             "A difficult moment is part of your story, not the whole of it.",
             "কঠিন একটি মুহূর্ত আপনার জীবনের অংশ—পুরো জীবন নয়।",
+            "Original Soul Space reflection",
+            null,
         ),
-        Reflection(
+        WisdomItem(
+            "soul_space_source_general",
+            "General reflection • not scripture",
+            null,
             "Make room for gratitude, patience, and a little quiet.",
             "কৃতজ্ঞতা, ধৈর্য আর একটু নীরবতার জন্য জায়গা রাখুন।",
+            "Original Soul Space reflection",
+            null,
+        ),
+    )
+
+    // Original-language text is paired with newly authored Bengali and English renderings.
+    // Source links point to reference texts; no modern translation text is bundled here.
+    private val sourcedWisdom = listOf(
+        WisdomItem(
+            "soul_space_source_quran",
+            "Qur’an",
+            "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+            "With hardship, there is surely ease. With hardship, there is surely ease.",
+            "নিশ্চয়ই কষ্টের সঙ্গে স্বস্তি রয়েছে। নিশ্চয়ই কষ্টের সঙ্গেই স্বস্তি রয়েছে।",
+            "Surah Ash-Sharh 94:5–6",
+            "https://quran.com/94/5-6",
+        ),
+        WisdomItem(
+            "soul_space_source_hindu",
+            "Bhagavad Gita",
+            "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥",
+            "Your concern is with action, never with its fruits. Do not make the fruits your motive, and do not become attached to inaction.",
+            "তোমার অধিকার কর্মে, কখনোই তার ফলে নয়। কর্মফলকে একমাত্র উদ্দেশ্য কোরো না, আবার অকর্মেও আসক্ত হয়ো না।",
+            "Bhagavad Gita 2.47",
+            "https://www.gitasupersite.iitk.ac.in/srimad?choose=1&field_chapter_value=2&field_nsutra_value=47",
+        ),
+        WisdomItem(
+            "soul_space_source_buddhist",
+            "Dhammapada",
+            "Manopubbaṅgamā dhammā, manoseṭṭhā manomayā;\nmanasā ce paduṭṭhena, bhāsati vā karoti vā;\ntato naṃ dukkhamanveti, cakkaṃva vahato padaṃ.",
+            "Mind leads the way; mind is foremost, and experience is shaped by mind. If one speaks or acts with a troubled mind, suffering follows, as a cart-wheel follows the ox’s foot.",
+            "মনই আগে চলে; মনই প্রধান, আর মন থেকেই অভিজ্ঞতা গড়ে ওঠে। কলুষিত মনে কথা বললে বা কাজ করলে দুঃখ পিছু নেয়—যেমন গরুর পিছু চাকার চিহ্ন।",
+            "Dhammapada 1.1",
+            "https://www.tipitaka.org/hindi/Dhammapada.pdf",
+        ),
+        WisdomItem(
+            "soul_space_source_sikh",
+            "Guru Granth Sahib",
+            "ੴ ਸਤਿ ਨਾਮੁ ਕਰਤਾ ਪੁਰਖੁ ਨਿਰਭਉ ਨਿਰਵੈਰੁ ਅਕਾਲ ਮੂਰਤਿ ਅਜੂਨੀ ਸੈਭੰ ਗੁਰ ਪ੍ਰਸਾਦਿ ॥",
+            "One Universal Creator; Truth is the Name; the Creator is present. Without fear or enmity, timeless, unborn, self-existent—known by the Guru’s grace.",
+            "এক ওংকার; সত্য তাঁর নাম, তিনিই সৃষ্টিকর্তা। তিনি নির্ভয়, নির্বৈর, কালাতীত, অজন্মা ও স্বয়ংপ্রকাশিত—গুরুর কৃপায় উপলব্ধ।",
+            "Mool Mantar • Ang 1",
+            "https://www.srigranth.org/servlet/gurbani.gurbani?Action=Page&Param=1&g=2&h=1&k=&p=0&r=0&t=0",
+        ),
+        WisdomItem(
+            "soul_space_source_sufi",
+            "Jalal al-Din Rumi • Masnavi",
+            "بشنو این نی چون شکایت می‌کند\nاز جدایی‌ها حکایت می‌کند",
+            "Listen to this reed: it tells its tale of separation, voicing its longing.",
+            "এই নলখাগড়ার বাঁশির কথা শোনো—সে বিচ্ছেদের কাহিনি বলে, বিচ্ছেদের বেদনাই জানায়।",
+            "Mathnawi, Book I • opening couplet",
+            "https://www.masnavi.net/1/50/eng/1/",
         ),
     )
 
@@ -58,7 +137,7 @@ class SoulSpaceView @JvmOverloads constructor(
             if (intent?.action != Intent.ACTION_USER_PRESENT) return
             val prefs = PreferenceManager2.getInstance(this@SoulSpaceView.context).getCachedPreferences()
             val schedule = prefs[stringPreferencesKey("soul_space_schedule")] ?: "each_unlock"
-            if (schedule == "each_unlock") showNextReflection()
+            if (schedule != "manual") showNextReflection()
         }
     }
 
@@ -78,12 +157,14 @@ class SoulSpaceView @JvmOverloads constructor(
             textSize = 16f
             setTypeface(typeface, Typeface.NORMAL)
             gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            maxLines = 4
+            maxLines = 5
         }
         sourceView.apply {
             textSize = 12f
-            alpha = 0.78f
+            alpha = 0.82f
             setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
+            isClickable = true
+            isFocusable = true
         }
         hintView.apply {
             text = context.getString(R.string.soul_space_next_hint)
@@ -96,6 +177,11 @@ class SoulSpaceView @JvmOverloads constructor(
         addView(sourceView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         addView(hintView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         setOnClickListener { showNextReflection() }
+        sourceView.setOnClickListener {
+            currentItem()?.sourceUrl?.let { url ->
+                runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
+            }
+        }
         isClickable = true
         isFocusable = true
         updateReflection()
@@ -122,8 +208,28 @@ class SoulSpaceView @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
+    private fun selectedItems(): List<WisdomItem> {
+        val prefs = PreferenceManager2.getInstance(context).getCachedPreferences()
+        val selected = mutableListOf<WisdomItem>()
+        if (prefs[booleanPreferencesKey("soul_space_source_general")] ?: true) {
+            selected.addAll(generalReflections)
+        }
+        selected.addAll(sourcedWisdom.filter { item ->
+            prefs[booleanPreferencesKey(item.sourceKey)] == true
+        })
+        return selected
+    }
+
+    private fun currentItem(): WisdomItem? {
+        val items = selectedItems()
+        if (items.isEmpty()) return null
+        currentIndex %= items.size
+        return items[currentIndex]
+    }
+
     private fun showNextReflection() {
-        currentIndex = (currentIndex + 1) % reflections.size
+        val items = selectedItems()
+        if (items.isNotEmpty()) currentIndex = (currentIndex + 1) % items.size
         updateReflection()
     }
 
@@ -131,34 +237,28 @@ class SoulSpaceView @JvmOverloads constructor(
         val prefs = PreferenceManager2.getInstance(context).getCachedPreferences()
         val language = prefs[stringPreferencesKey("soul_space_language")] ?: "bengali_english"
         val schedule = prefs[stringPreferencesKey("soul_space_schedule")] ?: "each_unlock"
-        val generalEnabled = prefs[booleanPreferencesKey("soul_space_source_general")] ?: true
-        val scriptureSourcesSelected = listOf(
-            "soul_space_source_quran",
-            "soul_space_source_hindu",
-            "soul_space_source_buddhist",
-            "soul_space_source_sikh",
-            "soul_space_source_sufi",
-        ).any { key -> prefs[booleanPreferencesKey(key)] == true }
+        val item = currentItem()
 
-        if (!generalEnabled) {
-            quoteView.text = if (scriptureSourcesSelected) {
-                context.getString(R.string.soul_space_sources_unavailable)
-            } else {
-                context.getString(R.string.soul_space_no_source_selected)
-            }
+        if (item == null) {
+            quoteView.text = context.getString(R.string.soul_space_no_source_selected)
             sourceView.text = context.getString(R.string.soul_space_source_pack_status)
+            sourceView.setOnClickListener(null)
         } else {
-            val reflection = reflections[currentIndex]
             quoteView.text = when (language) {
-                "bengali" -> reflection.bengali
-                "english" -> reflection.english
-                "original_bengali" -> reflection.bengali
-                else -> reflection.bengali + "\n" + reflection.english
+                "bengali" -> item.bengali
+                "english" -> item.english
+                "original_bengali" -> listOfNotNull(item.original, item.bengali).joinToString("\n")
+                else -> item.bengali + "\n" + item.english
             }
-            sourceView.text = if (scriptureSourcesSelected) {
-                context.getString(R.string.soul_space_general_with_unavailable_sources)
+            sourceView.text = if (item.sourceUrl == null) {
+                item.sourceLabel + " • " + item.reference
             } else {
-                context.getString(R.string.soul_space_source_general_status)
+                item.sourceLabel + " • " + item.reference + " • Open source ↗"
+            }
+            sourceView.setOnClickListener {
+                item.sourceUrl?.let { url ->
+                    runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
+                }
             }
         }
 
