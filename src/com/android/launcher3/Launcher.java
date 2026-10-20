@@ -2158,7 +2158,7 @@ public class Launcher extends StatefulActivity<LauncherState>
             return result;
         }
 
-        // Adaptation of Dragon Launcher Digital Wellbeing: pause selected apps before launch.
+        // Rocket Launcher integration added 2026-10-19–2026-10-20, adapting Dragon Launcher Digital Wellbeing.
         // Keep the original launch intent intact; the pause Activity launches it directly after
         // the user completes the breathing countdown.
         if (DigitalWellbeing.tryInterceptLaunch(this, intent)) {
