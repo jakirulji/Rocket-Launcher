@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.datastore.preferences.core.stringPreferencesKey
+import app.lawnchair.preferences2.PreferenceManager2
 import com.android.launcher3.R
 
 /**
@@ -19,24 +21,24 @@ class SoulSpaceView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
 ) : LinearLayout(context, attrs) {
 
-    private data class Reflection(val text: String, val source: String)
+    private data class Reflection(val english: String, val bengali: String)
 
     private val reflections = listOf(
         Reflection(
             "Pause for a moment. You do not have to solve everything at once.",
-            "Soul Space • Daily reflection",
+            "একটু থামুন। সবকিছু একসঙ্গে সমাধান করতে হবে না।",
         ),
         Reflection(
             "Let kindness guide your next step, even when the whole path is unclear.",
-            "Soul Space • Daily reflection",
+            "পুরো পথ স্পষ্ট না হলেও, পরের পদক্ষেপটি সদয়ভাবে নিন।",
         ),
         Reflection(
             "A difficult moment is part of your story, not the whole of it.",
-            "Soul Space • Daily reflection",
+            "কঠিন একটি মুহূর্ত আপনার জীবনের অংশ—পুরো জীবন নয়।",
         ),
         Reflection(
             "Make room for gratitude, patience, and a little quiet.",
-            "Soul Space • Daily reflection",
+            "কৃতজ্ঞতা, ধৈর্য আর একটু নীরবতার জন্য জায়গা রাখুন।",
         ),
     )
 
@@ -90,13 +92,22 @@ class SoulSpaceView @JvmOverloads constructor(
     }
 
     private fun updateReflection() {
+        val preferences = PreferenceManager2.getInstance(context).getCachedPreferences()
+        val language = preferences[stringPreferencesKey("soul_space_language")] ?: "bengali_english"
         val reflection = reflections[currentIndex]
-        quoteView.text = reflection.text
-        sourceView.text = reflection.source
+        val displayedText = when (language) {
+            "bengali" -> reflection.bengali
+            "english" -> reflection.english
+            "original_bengali" -> reflection.bengali
+            else -> reflection.bengali + "\n" + reflection.english
+        }
+        val source = context.getString(R.string.soul_space_original_reflection)
+        quoteView.text = displayedText
+        sourceView.text = source
         contentDescription = context.getString(
             R.string.soul_space_accessibility_current,
-            reflection.text,
-            reflection.source,
+            displayedText,
+            source,
         )
     }
 }
