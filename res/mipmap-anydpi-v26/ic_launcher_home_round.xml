@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Lawnchair / Rocket Launcher adaptive round icon. -->
+<!-- Modified by Rocket Launcher to use custom Rocket Launcher artwork in the adaptive round icon; upstream resource adapted. -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@mipmap/ic_launcher_home_background"/>
     <foreground android:drawable="@drawable/rocket_launcher_icon"/>
