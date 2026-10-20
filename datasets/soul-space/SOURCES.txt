@@ -1,0 +1,33 @@
+SOUL SPACE DATASET SOURCE NOTES
+Updated: 2026-10-21
+
+1) Dhammapada Pali
+File: datasets/soul-space/dhammapada/pali.txt
+Upstream: https://github.com/ETCBC/dhammapada
+Upstream license: MIT (see upstream LICENSE).
+Text/edition note: Pali text from the ETCBC Dhammapada project.
+
+2) Dhammapada Latin translation
+File: datasets/soul-space/dhammapada/latin.txt
+Upstream file: https://github.com/ETCBC/dhammapada/blob/master/sources/latin.txt
+Edition: V. Fausboll, Latin text; electronic preparation credited in source header to prof. dr. Bee Scherer.
+License: ETCBC repository MIT license applies to its project files; retain upstream copyright/license notice.
+
+3) Bhagavad Gita, K.T. Telang translation
+File: datasets/soul-space/bhagavad-gita/bhagavad_gita_telang_sbe08.txt
+Upstream corpus file: https://github.com/sharanharsoor/antardarshan/blob/main/corpus/raw/bhagavad_gita_telang_sbe08.txt
+Original edition: K.T. Telang, Sacred Books of the East, Vol. 8 (1882).
+The upstream corpus marks the historic translation as public domain. Original file header and source details are retained. This is an English translation, not a Bengali translation or Sanskrit original.
+
+4) Songs of Kabir, translated by Rabindranath Tagore
+File: datasets/soul-space/sufi-wisdom/songs_of_kabir_tagore.txt
+Upstream file: https://github.com/sharanharsoor/antardarshan/blob/main/corpus/raw/songs_of_kabir_tagore.txt
+Edition: Rabindranath Tagore, 1915; source text is from Project Gutenberg eBook 6519.
+Source: https://www.gutenberg.org/ebooks/6519
+The original eBook header and attribution are retained. Check local public-domain status before distributing in every jurisdiction.
+
+IMPORTANT
+- Keep source headers, author/translator/edition metadata, and license notices when transforming these files.
+- These are complete source texts, not yet normalized into individual app-ready quote records.
+- Do not label the English translations as Bengali translations.
+- Other category files and any translations must be checked independently; no blanket license is implied by this file.
