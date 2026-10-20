@@ -50,9 +50,9 @@ class SoulSpaceView @JvmOverloads constructor(
         gravity = Gravity.CENTER_VERTICAL
         setPadding(
             resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_padding_start),
-            resources.getDimensionPixelSize(R.dimen.smartspace_page_margin_16),
+            (8 * resources.displayMetrics.density).toInt(),
             resources.getDimensionPixelSize(R.dimen.enhanced_smartspace_padding_end),
-            resources.getDimensionPixelSize(R.dimen.smartspace_page_margin_16),
+            (8 * resources.displayMetrics.density).toInt(),
         )
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         contentDescription = context.getString(R.string.soul_space_accessibility)
@@ -66,13 +66,13 @@ class SoulSpaceView @JvmOverloads constructor(
         sourceView.apply {
             textSize = 12f
             alpha = 0.78f
-            setPadding(0, resources.getDimensionPixelSize(R.dimen.smartspace_page_margin_16), 0, 0)
+            setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
         }
         hintView.apply {
             text = context.getString(R.string.soul_space_next_hint)
             textSize = 11f
             alpha = 0.65f
-            setPadding(0, resources.getDimensionPixelSize(R.dimen.smartspace_page_margin_16), 0, 0)
+            setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
         }
 
         addView(quoteView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
