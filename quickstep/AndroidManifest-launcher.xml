@@ -19,6 +19,7 @@
 ** Modifications copyright 2021, Lawnchair
 */
 -->
+<!-- Rocket Launcher modifications: registers Digital Wellbeing activities and related permissions. -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
