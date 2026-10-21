@@ -141,3 +141,11 @@ This selection is a starter expansion, not completion of the requested per-secto
 
 
 Quote-only filter update (2026-10-21): removed the 10 `saadi-gulistan-ross-1900-*` narrative/story records from `datasets/soul-space/sufi-wisdom/records.jsonl`. Current Sufi quote-record count is 160; the 10 Bustān wisdom selections remain. Do not surface story summaries as direct quotations.
+
+
+Scripture expansion pass 2 — 2026-10-21
+- Qur'an: 52 new distinct references added, for 66 normalized records total. Arabic verse lines matched against bundled Tanzil Quran Simple Clean text; keep Tanzil attribution/license. English and Bengali are Soul Space-authored renderings, not published QuranEnc translations.
+- Bhagavad Gita: 50 new distinct verse references added, for 67 normalized records total. Sanskrit text sourced from https://github.com/gita/gita (data/verse.json); repository LICENSE declares Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings. Verse interpretation and Sanskrit normalization should still receive human review before production.
+- Dhammapada: 54 new distinct verse-number records added, for 76 normalized records total, from the bundled ETCBC Pāli text under MIT. English and Bengali are Soul Space-authored renderings, not published translations. Verify Pāli punctuation and verse-number mapping upstream before production.
+- Duplicate guard: each new record was checked against the existing reference strings before insertion; the three target files have unique IDs and unique reference strings after the update.
+- No narrative/story records were added in this pass. Guru Granth Sahib was not expanded because the approved original-text and Bengali-translation clearance remains unresolved.
