@@ -26,8 +26,37 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - License: CC BY 3.0; verbatim redistribution is allowed, but the Arabic text must not be changed. Include Tanzil attribution and link to https://tanzil.net/updates/.
 - Do not bundle a translation until that specific translation edition's redistribution terms are verified.
 
-## Other categories — not yet bundled
+## Sufi wisdom — Rumi source texts
 
-The following categories require a source-by-source licence review and verified records before bundling: Bhagavad Gita, Guru Granth Sahib, Sufi wisdom, philosophy & literature, and Soul Space original reflections. Public availability alone is not permission to redistribute. Do not treat paraphrases as quotations or fabricate attributions.
+### Project Gutenberg eBook #45159
+- Title: *The Persian Mystics: Jalálu'd-dín Rúmí*.
+- Historical edition: F. Hadland Davis, 1907 (the eBook metadata lists a later release date).
+- Source: https://www.gutenberg.org/ebooks/45159
+- Bundled file: `sufi-wisdom/sources/rumi_persian_mystics_davis_1907.txt`
+- The book's preface credits multiple translators for different selections. Preserve this book's acknowledgements and do not assume every poem uses the same English translator.
+
+### Project Gutenberg eBook #61724
+- Title: *The Mesnevi*, Book I, Rumi.
+- Translator: Sir James W. Redhouse; original edition 1881.
+- Source: https://www.gutenberg.org/ebooks/61724
+- Bundled file: `sufi-wisdom/sources/rumi_mesnevi_redhouse_book1_1881.txt`
+
+### Project Gutenberg eBook #57068
+- Title: *The Festival of Spring, from the Díván of Jeláleddín*.
+- Translator: William Hastie; historical edition 1903.
+- Source: https://www.gutenberg.org/ebooks/57068
+- Bundled file: `sufi-wisdom/sources/rumi_festival_of_spring_hastie_1903.txt`
+
+All three files preserve the Project Gutenberg header and license text. Project Gutenberg describes its eBooks as public domain in the USA and advises readers outside the USA to check local law. These historical editions were selected after a preliminary review of contributor dates under the Bangladesh life-plus-60-year rule as understood for this project. Keep the notices intact and recheck jurisdiction-specific terms if the distribution model changes.
+
+### Structured selections
+- File: `sufi-wisdom/records.jsonl`
+- Contains 100 titled selections from eBook #45159 with source line anchors and English source text.
+- Bengali translation fields are null and explicitly marked `pending_ai_simple_translation`. Do not label them as verified Bengali translations until the on-device AI translation path is implemented and its output is reviewed.
+- Status: `sufi-wisdom/SUFI_CORPUS_STATUS.md`.
+
+## Other categories — source review still required
+
+Bhagavad Gita, Guru Granth Sahib, philosophy & literature, and Soul Space original reflections still require their own source-by-source license review and verified records. Public availability alone is not permission to redistribute. Do not treat paraphrases as quotations or fabricate attributions.
 
 This file is an attribution index, not a claim that all target counts have been met.
