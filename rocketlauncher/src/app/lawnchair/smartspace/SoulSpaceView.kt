@@ -1,5 +1,6 @@
 package app.lawnchair.smartspace
 
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,13 +15,16 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import org.json.JSONArray
 import org.json.JSONObject
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import app.lawnchair.preferences2.PreferenceManager2
 import com.patrykmichalik.opto.core.setBlocking
+import kotlinx.coroutines.runBlocking
 import com.android.launcher3.R
 
 /**
@@ -357,6 +361,9 @@ class SoulSpaceView @JvmOverloads constructor(
     private val quoteView = TextView(context)
     private val sourceView = TextView(context)
     private val cardContainer = LinearLayout(context)
+    private val actionRow = LinearLayout(context)
+    private val favoriteButton = TextView(context)
+    private val historyButton = TextView(context)
     private val cardBackground = GradientDrawable()
 
     private val unlockReceiver = object : BroadcastReceiver() {
@@ -429,6 +436,21 @@ class SoulSpaceView @JvmOverloads constructor(
         currentIndex = savedIndex
         cardContainer.addView(quoteView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         cardContainer.addView(sourceView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
+        actionRow.orientation = HORIZONTAL
+        actionRow.gravity = Gravity.END
+        actionRow.setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
+        listOf(favoriteButton, historyButton).forEach { button ->
+            button.setTextColor(Color.WHITE)
+            button.textSize = 12f
+            button.setPadding((10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt(), (10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt())
+            button.isClickable = true
+            button.isFocusable = true
+            actionRow.addView(button, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
+        }
+        favoriteButton.setOnClickListener { toggleFavorite() }
+        historyButton.text = "History"
+        historyButton.setOnClickListener { showSavedList("soul_space_history", "Wisdom history") }
+        cardContainer.addView(actionRow, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         addView(cardContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         setOnClickListener { showNextReflection() }
         sourceView.setOnClickListener {
@@ -524,6 +546,50 @@ class SoulSpaceView @JvmOverloads constructor(
         updateReflection()
     }
 
+    private fun savedEntries(key: String): MutableList<String> {
+        val raw = PreferenceManager2.getInstance(context).getCachedPreferences()[stringPreferencesKey(key)] ?: "[]"
+        return runCatching {
+            val array = JSONArray(raw)
+            MutableList(array.length()) { index -> array.getString(index) }
+        }.getOrDefault(mutableListOf())
+    }
+
+    private fun saveEntries(key: String, entries: List<String>) {
+        val encoded = JSONArray().apply { entries.forEach { put(it) } }.toString()
+        runBlocking {
+            PreferenceManager2.getInstance(context).preferencesDataStore.edit { it[stringPreferencesKey(key)] = encoded }
+        }
+    }
+
+    private fun itemSnapshot(item: WisdomItem): String =
+        "${item.sourceLabel} • ${item.reference}\\n${item.bengali.ifBlank { item.english }}\\n${item.english}"
+
+    private fun toggleFavorite() {
+        val item = currentItem() ?: return
+        val entries = savedEntries("soul_space_favorites")
+        val snapshot = itemSnapshot(item)
+        if (snapshot in entries) entries.remove(snapshot) else entries.add(0, snapshot)
+        saveEntries("soul_space_favorites", entries.take(200))
+        updateActionLabels()
+    }
+
+    private fun updateActionLabels() {
+        val item = currentItem()
+        val saved = item != null && itemSnapshot(item) in savedEntries("soul_space_favorites")
+        favoriteButton.text = if (saved) "★ Saved" else "☆ Favorite"
+    }
+
+    private fun showSavedList(key: String, title: String) {
+        val entries = savedEntries(key)
+        if (entries.isEmpty()) {
+            AlertDialog.Builder(context).setTitle(title).setMessage("Nothing saved yet.").setPositiveButton("OK", null).show()
+            return
+        }
+        AlertDialog.Builder(context).setTitle(title).setItems(entries.toTypedArray()) { _, which ->
+            AlertDialog.Builder(context).setTitle(title).setMessage(entries[which]).setPositiveButton("OK", null).show()
+        }.setPositiveButton("Close", null).show()
+    }
+
     private fun applyQuoteColor() {
         val prefs = PreferenceManager2.getInstance(context).getCachedPreferences()
         val density = resources.displayMetrics.density
@@ -585,6 +651,12 @@ class SoulSpaceView @JvmOverloads constructor(
             }
             contentDescription = "${quoteView.text}. Source: ${item.sourceLabel}. Reference: ${item.reference}. Tap for next."
         }
+        if (item != null) {
+            val history = savedEntries("soul_space_history")
+            val snapshot = itemSnapshot(item)
+            if (history.firstOrNull() != snapshot) saveEntries("soul_space_history", (listOf(snapshot) + history).take(100))
+        }
+        updateActionLabels()
         applyQuoteColor()
         // Re-measure after text/language changes so the card follows the full content.
         quoteView.requestLayout()
