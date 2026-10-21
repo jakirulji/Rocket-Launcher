@@ -7,7 +7,7 @@ This directory is the source-controlled home for the seven independent offline S
 | Dataset | Target | Current bundled status |
 |---|---:|---|
 | Qur’an | 300–500 | Source/licence identified for Arabic text; not yet imported |
-| Sufi wisdom | 200–500 | Source verification required; no fabricated attributions |
+| Sufi wisdom | 200–500 | 3 historical English source texts imported; 100 titled selections normalized; Bengali AI translations pending |
 | Philosophy & literature | 200–500 | Source-by-source public-domain/licence review required |
 | Bhagavad Gita | 200 | Open text candidate identified; edition/licence validation required |
 | Dhammapada | 200 | Pāli source text bundled; verse-level normalisation and Bengali/English fields pending |
@@ -22,6 +22,10 @@ This directory is the source-controlled home for the seven independent offline S
 - Do not count one passage split into multiple records as multiple independent quotations.
 - Never mark the dataset complete until automated record counts and reference checks pass.
 
-## Current source
+## Current source status
 
-dhammapada/pali.txt is the Pāli source text from ETCBC/dhammapada under its upstream MIT licence. It is not yet the final app-ready JSONL dataset; conversion into verse-level records and authored Bengali/English renderings is a separate data-preparation step.
+- `dhammapada/pali.txt` is the Pāli source text from ETCBC/dhammapada under its upstream MIT licence. It is not yet the final app-ready JSONL dataset; verse-level normalization and translation fields remain pending.
+- `sufi-wisdom/sources/` now contains three historical English Rumi source texts with Project Gutenberg headers and license notices preserved.
+- `sufi-wisdom/records.jsonl` contains 100 titled passages from the 1907 Davis volume. Bengali translation is not yet populated; records are explicitly marked for AI-assisted simple translation. The corpus is not complete and the 200+ per-sector goal has not been met.
+- Raw source texts are not automatically app-integrated. The app still needs a loader/translation path before these records appear in Soul Space UI.
+
