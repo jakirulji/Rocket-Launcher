@@ -36,6 +36,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import app.lawnchair.LawnchairApp.Companion.showQuickstepWarningIfNecessary
 import app.lawnchair.compat.LawnchairQuickstepCompat
 import app.lawnchair.data.AppDatabase
@@ -485,14 +486,17 @@ class LawnchairLauncher : QuickstepLauncher() {
      */
     private fun applySoulSpaceDefaultsAndMaybeOnboard(savedInstanceState: Bundle?) {
         if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_defaults_applied")] != true) {
-            preferenceManager2.smartspaceMode.setBlocking(SoulSpace)
-            preferenceManager2.soulSpaceSourceQuran.setBlocking(true)
-            preferenceManager2.soulSpaceSourceHindu.setBlocking(true)
-            preferenceManager2.soulSpaceSourceBuddhist.setBlocking(true)
-            preferenceManager2.soulSpaceSourceSikh.setBlocking(true)
-            preferenceManager2.soulSpaceSourceSufi.setBlocking(true)
-            preferenceManager2.soulSpaceSourcePhilosophy.setBlocking(true)
-            preferenceManager2.soulSpaceSourceGeneral.setBlocking(true)
+            val storedMode = preferenceManager2.getCachedPreferences()[stringPreferencesKey("smartspace_mode")]
+            if (storedMode != null && storedMode != "soul_space") {
+                preferenceManager2.smartspaceMode.setBlocking(SoulSpace)
+            }
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_quran")] == false) preferenceManager2.soulSpaceSourceQuran.setBlocking(true)
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_hindu")] == false) preferenceManager2.soulSpaceSourceHindu.setBlocking(true)
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_buddhist")] == false) preferenceManager2.soulSpaceSourceBuddhist.setBlocking(true)
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_sikh")] == false) preferenceManager2.soulSpaceSourceSikh.setBlocking(true)
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_sufi")] == false) preferenceManager2.soulSpaceSourceSufi.setBlocking(true)
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_philosophy")] == false) preferenceManager2.soulSpaceSourcePhilosophy.setBlocking(true)
+            if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_source_general")] == false) preferenceManager2.soulSpaceSourceGeneral.setBlocking(true)
             preferenceManager2.soulSpaceDefaultsApplied.setBlocking(true)
         }
 
