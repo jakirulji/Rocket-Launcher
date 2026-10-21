@@ -56,3 +56,7 @@ Re-publication terms: https://quranenc.com/en/home/api
 The source permits download and re-publication subject to the same seven conditions above. The JSON source snapshot is kept verbatim, including translation footnotes.
 
 License note: a free-to-use source does not mean all translation files have the same license. Keep each translation's own terms and attribution; do not replace these files with Tanzil translations, whose translation list has separate restrictions.
+
+8) License review and source eligibility
+File: datasets/soul-space/LICENSE_REVIEW.txt
+This register records which sources meet the current Soul Space use case, which have only been approved as candidates, and which remain excluded pending verification. Do not treat an approved candidate as integrated until its full source text is committed. Bhikkhu Sujato's Dhammapada translation is excluded from AI-assisted mood selection due to its request against AI-derived technologies.
