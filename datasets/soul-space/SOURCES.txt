@@ -64,3 +64,18 @@ This register records which sources meet the current Soul Space use case, which 
 9) Bengali translation eligibility and integration status
 File: datasets/soul-space/BENGALI_TRANSLATIONS_STATUS.md
 This tracks the Bengali translation already present (QuranEnc Rowwad), the historical Gita source requiring complete OCR/proofing, and sources not yet cleared for redistribution. Source URLs alone do not count as offline dataset integration.
+
+
+10) Sufi wisdom — Rumi source texts
+Files:
+- datasets/soul-space/sufi-wisdom/sources/rumi_persian_mystics_davis_1907.txt
+- datasets/soul-space/sufi-wisdom/sources/rumi_mesnevi_redhouse_book1_1881.txt
+- datasets/soul-space/sufi-wisdom/sources/rumi_festival_of_spring_hastie_1903.txt
+Sources: Project Gutenberg eBooks #45159, #61724, and #57068.
+- https://www.gutenberg.org/ebooks/45159
+- https://www.gutenberg.org/ebooks/61724
+- https://www.gutenberg.org/ebooks/57068
+The original Project Gutenberg headers and license text are preserved in each raw text file. These are historical English translations/selections, not the original Persian text. The 1907 Davis volume includes translations by multiple contributors as stated in its preface; do not attribute all passages to one English translator without checking the source.
+Structured records: datasets/soul-space/sufi-wisdom/records.jsonl contains 100 titled selections extracted from the Davis volume, with source line anchors. Bengali fields remain null and are marked pending AI-assisted simple translation; no machine translation is falsely represented as a published translation.
+Status and scope: datasets/soul-space/sufi-wisdom/SUFI_CORPUS_STATUS.md. This is an initial import, not the final 200+ per-sector target.
+License note: Project Gutenberg identifies these editions as public domain in the USA and asks users outside the USA to check local law. The historical contributors' relevant terms are understood to have expired in Bangladesh by 2026, but keep the source license text and attribution with all redistributed copies.
