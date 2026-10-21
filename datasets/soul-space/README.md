@@ -6,13 +6,13 @@ This directory is the source-controlled home for the seven independent offline S
 
 | Dataset | Target | Current bundled status |
 |---|---:|---|
-| Qur’an | 300–500 | Source/licence identified for Arabic text; not yet imported |
-| Sufi wisdom | 200–500 | 3 historical English source texts imported; 100 titled selections normalized; Bengali AI translations pending |
-| Philosophy & literature | 200–500 | Source-by-source public-domain/licence review required |
-| Bhagavad Gita | 200 | Open text candidate identified; edition/licence validation required |
-| Dhammapada | 200 | Pāli source text bundled; verse-level normalisation and Bengali/English fields pending |
-| Guru Granth Sahib | 200 | Source/licence review required, especially translations |
-| Original reflections | 200 | To be authored specifically for Soul Space and labelled original |
+| Qur’an | 300–500 | Arabic and English/Bengali source files bundled; app-ready entries are only a small starter subset |
+| Sufi wisdom | 200–500 | 170 structured records: Rumi 120, Kabir 20, Sa'di 20, Hafiz 10; Bengali renderings are AI-assisted and need review |
+| Philosophy & literature | 200–500 | Only a small starter paraphrase exists; source-verified corpus expansion remains |
+| Bhagavad Gita | 200 | Historic K.T. Telang English text bundled; structured app-ready records are only a small starter subset |
+| Dhammapada | 200 | Pāli and Latin source files bundled; verse-level normalization and accepted English/Bengali records remain incomplete |
+| Guru Granth Sahib | 200 | Bengali translation excluded pending express approval; current entries are paraphrases, not verbatim Gurbani |
+| Original reflections | 200 | Small original set exists; expansion and quality review remain |
 
 ## Data integrity rules
 
@@ -26,6 +26,6 @@ This directory is the source-controlled home for the seven independent offline S
 
 - `dhammapada/pali.txt` is the Pāli source text from ETCBC/dhammapada under its upstream MIT licence. It is not yet the final app-ready JSONL dataset; verse-level normalization and translation fields remain pending.
 - `sufi-wisdom/sources/` now contains three historical English Rumi source texts with Project Gutenberg headers and license notices preserved.
-- `sufi-wisdom/records.jsonl` contains 100 titled passages from the 1907 Davis volume. Bengali translation is not yet populated; records are explicitly marked for AI-assisted simple translation. The corpus is not complete and the 200+ per-sector goal has not been met.
+- `sufi-wisdom/records.jsonl` contains 170 structured records across Rumi, Kabir, Sa'di, and Hafiz. Bengali fields are AI-assisted plain translations or summaries, not published/expert-certified translations. The corpus is incomplete and the 200+ target has not been met.
 - Raw source texts are not automatically app-integrated. The app still needs a loader/translation path before these records appear in Soul Space UI.
 
