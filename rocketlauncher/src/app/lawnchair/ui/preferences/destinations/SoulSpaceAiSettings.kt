@@ -95,9 +95,9 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
             val modelEntries = remember {
                 listOf(
                     ListPreferenceEntry(MODEL_ID) { "Qwen3 0.6B · Q4_0 · 429 MB (Lite)" },
-                    ListPreferenceEntry("qwen3_1_7b_q4", { "Qwen3 1.7B · not available yet" }, enabled = false),
-                    ListPreferenceEntry("qwen3_4b_q4", { "Qwen3 4B · heavy · not available yet" }, enabled = false),
-                    ListPreferenceEntry("gemma_mobile", { "Mobile Gemma candidate · not available yet" }, enabled = false),
+                    ListPreferenceEntry("qwen3_1_7b_q4", label = { "Qwen3 1.7B · not available yet" }, enabled = false),
+                    ListPreferenceEntry("qwen3_4b_q4", label = { "Qwen3 4B · heavy · not available yet" }, enabled = false),
+                    ListPreferenceEntry("gemma_mobile", label = { "Mobile Gemma candidate · not available yet" }, enabled = false),
                 )
             }
             ListPreference(
