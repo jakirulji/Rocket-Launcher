@@ -32,6 +32,7 @@ import app.lawnchair.ui.preferences.components.controls.SwitchPreference
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
@@ -196,7 +197,7 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
                             } catch (error: Exception) {
                                 status = "Download failed: ${error.message ?: "unknown error"}. You can try again."
                             } finally {
-                                withContext(Dispatchers.IO) { partial.delete() }
+                                withContext(NonCancellable + Dispatchers.IO) { partial.delete() }
                                 downloading = false
                                 downloadJob = null
                             }
