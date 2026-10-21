@@ -83,7 +83,7 @@ License note: Project Gutenberg identifies these editions as public domain in th
 
 SUFI WISDOM DATASET — ADDITIONAL STRUCTURED RECORDS (2026-10-21)
 File: datasets/soul-space/sufi-wisdom/records.jsonl
-Current structured-record count at this update: 160
+Current structured-record count at this update: 170
 
 Rumi selections:
 Work: The Festival of Spring, from the Díván of Jeláleddín
@@ -119,3 +119,22 @@ Files:
 - datasets/soul-space/sufi-wisdom/records.jsonl (10 selections with source line anchors and AI-assisted Bengali translations)
 Source: https://www.gutenberg.org/ebooks/60471
 The translation is from Persian into English; the Bengali field is an AI-assisted rendering of the English text, not a direct Persian-to-Bengali translation or expert-certified published translation. Project Gutenberg labels the edition public domain in the USA; Bangladesh/local status remains unconfirmed.
+
+
+11) Primary scripture quote selection — Soul Space (2026-10-21)
+Files:
+- datasets/soul-space/quran/entries.json (14 records)
+- datasets/soul-space/bhagavad-gita/entries.json (17 records)
+- datasets/soul-space/dhammapada/entries.json (22 records)
+
+Selection scope: non-narrative verse excerpts aligned with resilience, patience, hope, self-regulation, compassion, forgiveness, truthfulness, humility, and ethical action. No narrative/story summaries were added in this scripture expansion.
+
+Qur'an: the 12 new Arabic verse lines are copied from the bundled Tanzil Quran Simple Clean source; retain the full ayah text and Tanzil attribution/license. English and Bengali fields are Soul Space-authored renderings, not QuranEnc published translations. Existing Rowwad and Saheeh translation JSON snapshots must remain unchanged and follow QuranEnc's seven conditions.
+
+Bhagavad Gita: 15 Sanskrit excerpts were added with Soul Space-authored English and Bengali renderings. The bundled K.T. Telang file is a historical English translation, not the Sanskrit source; each Sanskrit excerpt and reference must be checked against a reliable critical Sanskrit edition before production release. The added renderings are not published/expert-certified translations.
+
+Dhammapada: 20 Pāli verse records were selected from datasets/soul-space/dhammapada/pali.txt (ETCBC/dhammapada, MIT). English and Bengali fields are Soul Space renderings, not published translations. Verify verse numbers and exact punctuation against upstream before production release.
+
+Guru Granth Sahib: no new verbatim quotations were added in this pass because the current source/licensing review does not establish an eligible verified original-language passage and approved Bengali translation. Existing entries remain explicitly marked as paraphrases, not verbatim Gurbani.
+
+This selection is a starter expansion, not completion of the requested per-sector target. Public-domain status of historic editions in the USA does not establish copyright clearance in Bangladesh.
