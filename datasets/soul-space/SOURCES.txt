@@ -83,7 +83,7 @@ License note: Project Gutenberg identifies these editions as public domain in th
 
 SUFI WISDOM DATASET — ADDITIONAL STRUCTURED RECORDS (2026-10-21)
 File: datasets/soul-space/sufi-wisdom/records.jsonl
-Current structured-record count at this update: 150
+Current structured-record count at this update: 160
 
 Rumi selections:
 Work: The Festival of Spring, from the Díván of Jeláleddín
@@ -104,3 +104,10 @@ Source: https://www.gutenberg.org/ebooks/13060
 License status: Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local jurisdiction before redistribution. The current Bengali fields are AI-assisted story summaries, not literal certified translations.
 
 Translation note: all AI-assisted Bengali text is marked in each record. It is not represented as a published or expert-certified Bengali translation. Retain the English source and source URL; do not imply the Persian originals were directly translated by AI from Persian.
+
+
+Hafiz selections:
+Work: Poems from the Divan of Hafiz
+Translator: Gertrude Lowthian Bell; 1897 edition
+Source: https://www.gutenberg.org/ebooks/74883
+License status: Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local jurisdiction before redistribution. Bengali fields are AI-assisted plain renderings/summaries, not certified published translations.
