@@ -478,7 +478,11 @@ class SoulSpaceView @JvmOverloads constructor(
                 .replace(Regex("[^\\p{L}\\p{N}]+"), " ")
                 .replace(Regex("\\s+"), " ")
                 .trim()
-            "${item.sourceKey}:$normalizedReference"
+            if (item.sourceKey == "soul_space_source_general") {
+                "${item.sourceKey}:${item.english.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), " ").replace(Regex("\\s+"), " ").trim()}"
+            } else {
+                "${item.sourceKey}:$normalizedReference"
+            }
         }.distinctBy { item ->
             "${item.sourceKey}:${item.english.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), " ").replace(Regex("\\s+"), " ").trim()}"
         }
