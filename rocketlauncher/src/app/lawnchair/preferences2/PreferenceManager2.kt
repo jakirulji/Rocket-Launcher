@@ -44,6 +44,7 @@ import app.lawnchair.search.algorithms.LawnchairSearchAlgorithm
 import app.lawnchair.search.algorithms.engine.provider.web.WebSearchProvider
 import app.lawnchair.smartspace.model.SmartspaceCalendar
 import app.lawnchair.smartspace.model.SmartspaceMode
+import app.lawnchair.smartspace.model.SoulSpace
 import app.lawnchair.smartspace.model.SmartspaceTimeFormat
 import app.lawnchair.theme.color.ColorMode
 import app.lawnchair.theme.color.ColorOption
@@ -670,7 +671,7 @@ class PreferenceManager2 @Inject constructor(
 
     val enableSmartspace = preference(
         key = booleanPreferencesKey(name = "enable_smartspace"),
-        defaultValue = context.resources.getBoolean(R.bool.config_default_enable_smartspace),
+        defaultValue = true,
         onSet = { reloadHelper.restart() },
     )
 
