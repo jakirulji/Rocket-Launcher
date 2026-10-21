@@ -20,8 +20,29 @@
       "id": "sufi",
       "targetMin": 200,
       "targetMax": 500,
-      "status": "research-required",
-      "notes": "Use traceable public-domain texts or openly licensed editions; no invented attribution."
+      "status": "initial-source-texts-and-records-bundled",
+      "notes": "Use traceable public-domain texts or openly licensed editions; no invented attribution.",
+      "source": "Project Gutenberg historical Rumi editions",
+      "url": "https://www.gutenberg.org/ebooks/45159",
+      "license": "Historical public-domain translations; preserve Project Gutenberg headers and verify local terms",
+      "fieldsAvailable": [
+        "English source text",
+        "100 titled passage records",
+        "source line references",
+        "attribution and source URLs"
+      ],
+      "fieldsPending": [
+        "AI-assisted simple Bengali translation",
+        "additional verified Sufi authors and works",
+        "200+ unique passages per planned sub-sector",
+        "quality review of Bengali translations"
+      ],
+      "files": [
+        "datasets/soul-space/sufi-wisdom/sources/rumi_persian_mystics_davis_1907.txt",
+        "datasets/soul-space/sufi-wisdom/sources/rumi_mesnevi_redhouse_book1_1881.txt",
+        "datasets/soul-space/sufi-wisdom/sources/rumi_festival_of_spring_hastie_1903.txt",
+        "datasets/soul-space/sufi-wisdom/records.jsonl"
+      ]
     },
     {
       "id": "philosophy-literature",
