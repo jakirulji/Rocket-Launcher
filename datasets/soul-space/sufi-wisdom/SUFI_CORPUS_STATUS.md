@@ -1,6 +1,6 @@
-# Sufi Wisdom — initial corpus import
+# Sufi Wisdom — corpus status
 
-Updated: 2026-10-21 (100 Bengali translations added)
+Updated: 2026-10-21 (170 records; includes 10 Bustān selections)
 
 ## Imported source texts
 
@@ -31,9 +31,23 @@ These source files preserve Project Gutenberg headers, edition details, and lice
 
 ## Additional imports (2026-10-21)
 
-The structured Sufi/wisdom records now contain 160 records in total: 120 Jalal al-Din Rumi selections, 20 Kabir selections, 10 Sa'di selections, 10 Hafiz of Shiraz selections.
+The structured Sufi/wisdom records now contain 170 records in total: 120 Jalal al-Din Rumi selections, 20 Kabir selections, 20 Sa'di selections (10 Gulistan story summaries and 10 Bustān excerpts), and 10 Hafiz of Shiraz selections.
 
 All new Bengali fields are AI-assisted plain renderings; Sa'di story entries are summaries rather than certified literal translations. They are explicitly labelled as such and should not be presented as published Bengali translations. The source English text and source references are retained. Project Gutenberg marks these editions public domain in the USA; copyright status in Bangladesh and any other target jurisdiction must be reviewed before redistribution. This is an initial expansion, not a complete 200-per-author corpus. No full build was run because only data files and documentation changed.
 
 
 Additional Hafiz import: 10 selections from Gertrude Lowthian Bell's 1897 English translation, *Poems from the Divan of Hafiz* (Project Gutenberg eBook #74883), were added with AI-assisted Bengali plain renderings/summaries. The Bengali text is not a published translation or expert-certified. Source English and links are retained. Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local copyright status before redistribution.
+
+
+## Additional Sa'di import — The Bustān of Sadi
+
+- Added 10 short excerpts from A. Hart Edwards's 1911 English translation, Project Gutenberg eBook #60471.
+- Each record includes the exact English excerpt (line wrapping normalized only), a Bengali rendering, a section label, a source URL, and line anchors in the downloaded source text.
+- Bengali fields are AI-assisted translations of the English translation, not direct translations from Persian and not expert-certified.
+- Project Gutenberg labels the edition public domain in the USA. Bangladesh/local copyright status is not independently confirmed; review before redistribution.
+
+## Remaining work
+
+- This is not a complete Sufi corpus and does not meet the 200-record target. More Bengali and South Asian Sufi figures remain to be researched.
+- Bengali Lalon material: Wikimedia Commons has a scan of *Lalon Shah O Lalon Geetika* (1899) marked public domain, but it is a scan, not proofread machine-readable text. Do not claim song-level integration until transcription and page-by-page checking are complete.
+- Do not run a build for this data-only change; app integration and all other sector targets remain separate unfinished work.
