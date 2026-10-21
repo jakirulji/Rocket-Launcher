@@ -363,7 +363,6 @@ class SoulSpaceView @JvmOverloads constructor(
     private val cardContainer = LinearLayout(context)
     private val actionRow = LinearLayout(context)
     private val favoriteButton = TextView(context)
-    private val historyButton = TextView(context)
     private val cardBackground = GradientDrawable()
 
     private val unlockReceiver = object : BroadcastReceiver() {
@@ -439,7 +438,7 @@ class SoulSpaceView @JvmOverloads constructor(
         actionRow.orientation = HORIZONTAL
         actionRow.gravity = Gravity.END
         actionRow.setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
-        listOf(favoriteButton, historyButton).forEach { button ->
+        listOf(favoriteButton).forEach { button ->
             button.setTextColor(Color.WHITE)
             button.textSize = 12f
             button.setPadding((10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt(), (10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt())
@@ -448,8 +447,6 @@ class SoulSpaceView @JvmOverloads constructor(
             actionRow.addView(button, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
         }
         favoriteButton.setOnClickListener { toggleFavorite() }
-        historyButton.text = "History"
-        historyButton.setOnClickListener { showSavedList("soul_space_history", "Wisdom history") }
         cardContainer.addView(actionRow, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         addView(cardContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         setOnClickListener { showNextReflection() }
@@ -579,16 +576,6 @@ class SoulSpaceView @JvmOverloads constructor(
         favoriteButton.text = if (saved) "★ Saved" else "☆ Favorite"
     }
 
-    private fun showSavedList(key: String, title: String) {
-        val entries = savedEntries(key)
-        if (entries.isEmpty()) {
-            AlertDialog.Builder(context).setTitle(title).setMessage("Nothing saved yet.").setPositiveButton("OK", null).show()
-            return
-        }
-        AlertDialog.Builder(context).setTitle(title).setItems(entries.toTypedArray()) { _, which ->
-            AlertDialog.Builder(context).setTitle(title).setMessage(entries[which]).setPositiveButton("OK", null).show()
-        }.setPositiveButton("Close", null).show()
-    }
 
     private fun applyQuoteColor() {
         val prefs = PreferenceManager2.getInstance(context).getCachedPreferences()
