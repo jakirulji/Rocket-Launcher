@@ -10,11 +10,13 @@ import android.os.Build
 import android.os.StatFs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,21 +25,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import app.lawnchair.preferences.getAdapter
 import app.lawnchair.preferences2.preferenceManager2
-import app.lawnchair.ui.preferences.components.controls.ListPreference
-import app.lawnchair.ui.preferences.components.controls.ListPreferenceEntry
-import app.lawnchair.ui.preferences.components.layout.PreferenceGroup
 import app.lawnchair.ui.preferences.components.controls.SwitchPreference
+import app.lawnchair.ui.preferences.components.layout.PreferenceGroup
+import com.google.ai.edge.litertlm.Backend
+import com.google.ai.edge.litertlm.Engine
+import com.google.ai.edge.litertlm.EngineConfig
+import com.google.ai.edge.litertlm.LogSeverity
+import com.patrykmichalik.opto.core.setBlocking
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -45,17 +53,49 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.security.MessageDigest
 
-private const val MODEL_ID = "qwen3_0_6b_q4_0"
-private const val MODEL_FILE = "Qwen3-0.6B-Q4_0.gguf"
-private const val MODEL_URL =
-    "https://huggingface.co/ggml-org/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_0.gguf"
-private const val MODEL_SHA256 =
-    "da2572f16c06133561ce56accaa822216f2391ef4d37fba427801cd6736417d4"
+private data class SoulSpaceModel(
+    val id: String,
+    val name: String,
+    val description: String,
+    val fileName: String,
+    val url: String,
+    val expectedBytes: Long,
+    val minRamMb: Long,
+    val minAvailableMb: Long,
+    val minStorageMb: Long,
+)
 
-private fun modelFile(context: Context) =
-    File(context.filesDir, "soul-space/models/$MODEL_FILE")
+private val soulSpaceModels = listOf(
+    SoulSpaceModel(
+        "qwen3_0_6b_q4_0", "Qwen3 0.6B · Lite",
+        "Smallest download; best starting point for modest phones.",
+        "qwen3_0_6b_mixed_int4.litertlm",
+        "https://huggingface.co/litert-community/Qwen3-0.6B/resolve/main/qwen3_0_6b_mixed_int4.litertlm",
+        497_700_000L, 3_000L, 1_000L, 900L,
+    ),
+    SoulSpaceModel(
+        "qwen3_1_7b_q4", "Qwen3 1.7B · Balanced",
+        "Stronger language ability; needs more available memory.",
+        "Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+        "https://huggingface.co/litert-community/Qwen3-1.7B/resolve/main/Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+        1_024_000_000L, 6_000L, 2_000L, 1_500L,
+    ),
+    SoulSpaceModel(
+        "qwen3_4b_q4", "Qwen3 4B · Advanced",
+        "Large model; can cause heavy memory use, heat and battery drain.",
+        "qwen3_4b_mixed_int4.litertlm",
+        "https://huggingface.co/litert-community/Qwen3-4B/resolve/main/qwen3_4b_mixed_int4.litertlm",
+        2_700_000_000L, 12_000L, 5_000L, 3_200L,
+    ),
+    SoulSpaceModel(
+        "gemma_mobile", "Gemma 4 E2B · Mobile candidate",
+        "Google Gemma model; large download and memory demand.",
+        "gemma-4-E2B-it.litertlm",
+        "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it.litertlm",
+        2_780_000_000L, 8_000L, 3_000L, 3_000L,
+    ),
+)
 
 private data class AiDeviceReport(
     val totalRamMb: Long,
@@ -64,144 +104,154 @@ private data class AiDeviceReport(
     val cpuCores: Int,
     val is64Bit: Boolean,
     val androidVersion: Int,
-    val recommendedModel: String,
-    val explanation: String,
-    val caution: String?,
+    val recommendedModelId: String,
+    val reason: String,
 )
 
 private fun inspectAiDevice(context: Context): AiDeviceReport {
     val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val memory = ActivityManager.MemoryInfo().also(activityManager::getMemoryInfo)
     val storage = StatFs(context.filesDir.absolutePath)
-    val totalRamMb = memory.totalMem / (1024L * 1024L)
-    val availableRamMb = memory.availMem / (1024L * 1024L)
-    val freeStorageMb = storage.availableBytes / (1024L * 1024L)
+    val total = memory.totalMem / (1024L * 1024L)
+    val available = memory.availMem / (1024L * 1024L)
+    val free = storage.availableBytes / (1024L * 1024L)
     val is64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
-    val canRecommendLite = totalRamMb >= 3000L && availableRamMb >= 1000L &&
-        freeStorageMb >= 900L && is64Bit
-
+    val recommended = when {
+        is64Bit && total >= 12_000L && available >= 5_000L && free >= 3_200L -> "qwen3_4b_q4"
+        is64Bit && total >= 8_000L && available >= 3_000L && free >= 3_000L -> "gemma_mobile"
+        is64Bit && total >= 6_000L && available >= 2_000L && free >= 1_500L -> "qwen3_1_7b_q4"
+        else -> "qwen3_0_6b_q4_0"
+    }
+    val chosen = soulSpaceModels.first { it.id == recommended }
+    val enough = total >= chosen.minRamMb && available >= chosen.minAvailableMb &&
+        free >= chosen.minStorageMb && is64Bit
     return AiDeviceReport(
-        totalRamMb = totalRamMb,
-        availableRamMb = availableRamMb,
-        freeStorageMb = freeStorageMb,
-        cpuCores = Runtime.getRuntime().availableProcessors(),
-        is64Bit = is64Bit,
-        androidVersion = Build.VERSION.SDK_INT,
-        recommendedModel = if (canRecommendLite) "Qwen3 0.6B · Q4_0" else "Qwen3 0.6B · Q4_0 (Lite, with caution)",
-        explanation = if (canRecommendLite) {
-            "The device meets the basic memory, storage and 64-bit checks for the currently supported Lite model."
+        total, available, free, Runtime.getRuntime().availableProcessors(),
+        is64Bit, Build.VERSION.SDK_INT,
+        if (enough) recommended else "qwen3_0_6b_q4_0",
+        if (enough) {
+            "This recommendation matches the RAM, currently available memory, free storage and 64-bit checks on this device. Actual speed still depends on chipset and thermal conditions."
         } else {
-            "Only the Lite model is currently available. This device may still run it, but low available memory, storage or 32-bit support can cause slowdowns or prevent inference."
+            "The device did not meet every minimum check for the larger candidate, so the Lite model is the safer starting point. Actual performance must be tested on-device."
         },
-        caution = if (canRecommendLite) null else
-            "Recommendation is provisional: this app currently has only one downloadable model, and on-device inference runtime is not integrated yet.",
     )
 }
+
+private fun modelFile(context: Context, model: SoulSpaceModel) =
+    File(context.filesDir, "soul-space/models/${model.fileName}")
 
 @Composable
 fun SoulSpaceAiSettings(onBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = preferenceManager2()
     val scope = rememberCoroutineScope()
-    val target = remember { modelFile(context) }
-    val deviceReport = remember(context) { inspectAiDevice(context) }
-    var modelReady by remember { mutableStateOf(target.isFile && target.length() > 0L) }
+    val report = remember(context) { inspectAiDevice(context) }
+    val modelKey = stringPreferencesKey("soul_space_ai_model")
+    var selectedModelId by remember {
+        mutableStateOf(prefs.getCachedPreferences()[modelKey] ?: "auto")
+    }
+    val recommended = soulSpaceModels.first { it.id == report.recommendedModelId }
+    val selected = if (selectedModelId == "auto") recommended
+        else soulSpaceModels.firstOrNull { it.id == selectedModelId } ?: recommended
+    val target = modelFile(context, selected)
+    var modelReady by remember(selected.id) { mutableStateOf(target.isFile && target.length() > 0L) }
     var downloading by remember { mutableStateOf(false) }
     var progress by remember { mutableStateOf(0f) }
     var status by remember {
         mutableStateOf(
-            if (modelReady) "Model file is stored on this device."
-            else "No AI model downloaded yet. Wisdom cards continue to work without it.",
+            if (modelReady) "Selected model file is stored on this device."
+            else "No selected model downloaded yet. Regular wisdom cards continue to work.",
         )
     }
     var downloadJob by remember { mutableStateOf<Job?>(null) }
+    var testing by remember { mutableStateOf(false) }
+    var testResponse by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         PreferenceGroup(heading = "AI Settings") {
-            TextButton(
-                onClick = onBack,
-                modifier = Modifier.padding(horizontal = 8.dp),
-            ) { Text("← Back to Soul Space settings") }
-
+            TextButton(onClick = onBack, modifier = Modifier.padding(horizontal = 8.dp)) {
+                Text("← Back to Soul Space settings")
+            }
             SwitchPreference(
                 adapter = prefs.soulSpaceAiEnabled.getAdapter(),
                 label = "Enable on-device AI",
             )
-
             Text(
-                text = "AI is intended to analyse mood/context locally and help select relevant wisdom. Personal text, mood and analysis are never uploaded. The switch defaults ON, but AI inference is not active until a supported local runtime and model are installed.",
+                "Your phone is checked locally. Android does not require a dangerous runtime permission to read RAM, CPU ABI, Android version or available storage, so Soul Space will not ask for unrelated personal permissions. Internet access is used only when you choose to download a model.",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
-
-            val modelEntries = remember {
-                listOf(
-                    ListPreferenceEntry("auto") { "Automatic · recommended for this device" },
-                    ListPreferenceEntry(MODEL_ID) { "Qwen3 0.6B · Q4_0 · 429 MB (Lite, currently supported)" },
-                    ListPreferenceEntry("qwen3_1_7b_q4", label = { "Qwen3 1.7B · not available yet" }, enabled = false),
-                    ListPreferenceEntry("qwen3_4b_q4", label = { "Qwen3 4B · heavy · not available yet" }, enabled = false),
-                    ListPreferenceEntry("gemma_mobile", label = { "Mobile Gemma candidate · not available yet" }, enabled = false),
-                )
-            }
-            ListPreference(
-                adapter = prefs.soulSpaceAiModel.getAdapter(),
-                entries = modelEntries,
-                label = "AI model",
-            )
-
             Text(
-                text = "Device compatibility check",
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            )
-            Text(
-                text = "RAM: ${deviceReport.totalRamMb / 1024} GB total · ${deviceReport.availableRamMb} MB currently available\n" +
-                    "Free storage: ${deviceReport.freeStorageMb} MB\n" +
-                    "CPU cores: ${deviceReport.cpuCores} · 64-bit ABI: ${if (deviceReport.is64Bit) "supported" else "not detected"}\n" +
-                    "Android: ${deviceReport.androidVersion}",
+                "Device check: RAM ${report.totalRamMb / 1024} GB total · ${report.availableRamMb} MB currently available\n" +
+                    "Free storage: ${report.freeStorageMb} MB · CPU cores: ${report.cpuCores}\n" +
+                    "64-bit ABI: ${if (report.is64Bit) "supported" else "not detected"} · Android API ${report.androidVersion}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             )
             Text(
-                text = "Best match: ${deviceReport.recommendedModel}\n${deviceReport.explanation}",
-                style = MaterialTheme.typography.bodyMedium,
+                "Best match for this device: ${recommended.name}\n${report.reason}",
                 color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
-            deviceReport.caution?.let { caution ->
-                Text(
-                    text = caution,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                )
+            Text(
+                "Choose an AI model",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
+            soulSpaceModels.forEach { model ->
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RadioButton(
+                        selected = selected.id == model.id,
+                        onClick = {
+                            selectedModelId = model.id
+                            prefs.soulSpaceAiModel.setBlocking(model.id)
+                            testResponse = ""
+                            status = "Selected ${model.name}. Download it below to use local inference."
+                        },
+                    )
+                    Column(modifier = Modifier.weight(1f).padding(vertical = 6.dp)) {
+                        Text(model.name, style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            model.description + if (model.id == report.recommendedModelId) " · Recommended for this device" else "",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Text(
+                            "Download: ${if (model.expectedBytes >= 1_000_000_000L) "${model.expectedBytes / 1_000_000_000L} GB+" else "${model.expectedBytes / 1_000_000L} MB+"}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
             }
         }
 
-        PreferenceGroup(heading = "Model Manager") {
+        PreferenceGroup(heading = "Download and run AI") {
             Text(
-                text = "Qwen3 0.6B Q4_0 · approximately 429 MB download. The model file is saved in app-private storage. A checksum is checked after download.",
+                "The model is the AI's local knowledge and language engine. Downloading it enables offline inference after the file is stored; the model is not bundled in the APK. Downloads come from public LiteRT Community model repositories. Model files remain in private app storage.",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
-
             if (downloading) {
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 )
                 Text(
-                    text = "Downloading ${(progress * 100).toInt()}%… Keep the app open until it finishes.",
+                    "Downloading ${(progress * 100).toInt()}%…",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
-                Button(
-                    onClick = { downloadJob?.cancel() },
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                ) { Text("Cancel download") }
+                Button(onClick = { downloadJob?.cancel() }, modifier = Modifier.padding(horizontal = 16.dp)) {
+                    Text("Cancel download")
+                }
             } else if (!modelReady) {
                 Button(
                     onClick = {
@@ -214,28 +264,29 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
                                 withContext(Dispatchers.IO) {
                                     target.parentFile?.mkdirs()
                                     partial.delete()
-                                    val connection = (URL(MODEL_URL).openConnection() as HttpURLConnection).apply {
+                                    val connection = (URL(selected.url).openConnection() as HttpURLConnection).apply {
                                         connectTimeout = 20_000
-                                        readTimeout = 30_000
+                                        readTimeout = 45_000
                                         instanceFollowRedirects = true
                                         setRequestProperty("User-Agent", "Rocket-Launcher-Soul-Space")
                                     }
                                     try {
                                         if (connection.responseCode !in 200..299) {
-                                            throw IOException("Model host returned HTTP ${connection.responseCode}")
+                                            throw IOException("Model host returned HTTP ${connection.responseCode}. Some model repositories may require license acceptance.")
                                         }
                                         val total = connection.contentLengthLong
-                                        val digest = MessageDigest.getInstance("SHA-256")
+                                        if (total > 0L && total < selected.expectedBytes * 0.75) {
+                                            throw IOException("The model host returned a file smaller than expected.")
+                                        }
+                                        var downloaded = 0L
                                         connection.inputStream.use { input ->
                                             FileOutputStream(partial).use { output ->
-                                                val buffer = ByteArray(64 * 1024)
-                                                var downloaded = 0L
+                                                val buffer = ByteArray(128 * 1024)
                                                 while (true) {
                                                     currentCoroutineContext().ensureActive()
                                                     val count = input.read(buffer)
                                                     if (count < 0) break
                                                     output.write(buffer, 0, count)
-                                                    digest.update(buffer, 0, count)
                                                     downloaded += count
                                                     if (total > 0L) {
                                                         withContext(Dispatchers.Main) {
@@ -246,30 +297,23 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
                                                 output.fd.sync()
                                             }
                                         }
-                                        val actualHash = digest.digest().joinToString("") {
-                                            "%02x".format(it.toInt() and 0xff)
+                                        if (downloaded < selected.expectedBytes * 0.75) {
+                                            throw IOException("Download was incomplete; the partial file was rejected.")
                                         }
-                                        if (!actualHash.equals(MODEL_SHA256, ignoreCase = true)) {
-                                            throw IOException("Checksum mismatch. The incomplete model was rejected.")
-                                        }
-                                        if (target.exists() && !target.delete()) {
-                                            throw IOException("Could not replace the existing model file.")
-                                        }
-                                        if (!partial.renameTo(target)) {
-                                            throw IOException("Could not save the downloaded model.")
-                                        }
+                                        if (target.exists() && !target.delete()) throw IOException("Could not replace existing model.")
+                                        if (!partial.renameTo(target)) throw IOException("Could not save downloaded model.")
                                     } finally {
                                         connection.disconnect()
                                     }
                                 }
                                 modelReady = true
                                 progress = 1f
-                                status = "Model downloaded and checksum verified. Local inference is not enabled yet; the on-device runtime integration is the next step."
+                                status = "Model download completed and size checked. The runtime will now be tested locally."
                             } catch (cancelled: CancellationException) {
-                                status = "Download cancelled. Partial data will be removed."
+                                status = "Download cancelled."
                                 throw cancelled
                             } catch (error: Exception) {
-                                status = "Download failed: ${error.message ?: "unknown error"}. You can try again."
+                                status = "Download failed: ${error.message ?: "unknown error"}"
                             } finally {
                                 withContext(NonCancellable + Dispatchers.IO) { partial.delete() }
                                 downloading = false
@@ -278,35 +322,78 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
                         }
                     },
                     modifier = Modifier.padding(horizontal = 16.dp),
-                ) { Text("Download model · 429 MB") }
+                ) { Text("Download ${selected.name}") }
             } else {
                 Text(
-                    text = "✓ Model downloaded and verified",
+                    "✓ ${selected.name} is downloaded",
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 )
+                Button(
+                    enabled = !testing,
+                    onClick = {
+                        scope.launch {
+                            testing = true
+                            testResponse = ""
+                            status = "Loading model and running a real local inference test…"
+                            try {
+                                testResponse = withContext(Dispatchers.IO) {
+                                    Engine.setNativeMinLogSeverity(LogSeverity.ERROR)
+                                    Engine(EngineConfig(
+                                        modelPath = target.absolutePath,
+                                        backend = Backend.CPU(),
+                                        cacheDir = context.cacheDir.absolutePath,
+                                    )).use { engine ->
+                                        engine.initialize()
+                                        engine.createConversation().use { conversation ->
+                                            var answer = ""
+                                            conversation.sendMessageAsync(
+                                                "Reply in Bengali with one short sentence: say that Soul Space local AI is working."
+                                            ).collect { message ->
+                                                answer = message.toString()
+                                            }
+                                            answer
+                                        }
+                                    }
+                                }
+                                status = "Real on-device inference completed. This test ran locally."
+                            } catch (error: Exception) {
+                                status = "Runtime test failed: ${error.message ?: error.javaClass.simpleName}"
+                            } finally {
+                                testing = false
+                            }
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                ) { Text(if (testing) "Testing local AI…" else "Test real on-device AI") }
                 TextButton(
                     onClick = {
                         if (target.delete()) {
                             modelReady = false
-                            progress = 0f
+                            testResponse = ""
                             status = "Model deleted. Wisdom cards still work without AI."
-                        } else {
-                            status = "Could not delete the model file."
-                        }
+                        } else status = "Could not delete model file."
                     },
                     modifier = Modifier.padding(horizontal = 8.dp),
                 ) { Text("Delete downloaded model") }
             }
-
+            if (testing) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+            }
+            if (testResponse.isNotBlank()) {
+                Text(
+                    testResponse,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
+            }
             Text(
-                text = status,
+                status,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
             Text(
-                text = "Privacy: downloads fetch only public model weights. No mood, quote history, or personal text is sent to the model host.",
+                "Privacy: device capability checks and inference run locally. No mood, quote history or personal text is uploaded. Downloading sends a request to the selected public model host. Larger models can use substantial RAM, heat the phone and drain battery; use the recommendation as a guide, not a guarantee.",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )

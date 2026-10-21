@@ -456,6 +456,7 @@ dependencies {
 
     coreLibraryDesugaring libs.android.desugarJdkLibs
 
+    implementation("com.google.ai.edge.litertlm:litertlm-android:0.18.0")
     implementation libs.androidx.profileinstaller
     baselineProfile projects.baselineProfile
 
