@@ -20,6 +20,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -141,7 +142,7 @@ private fun modelFile(context: Context, model: SoulSpaceModel) =
     File(context.filesDir, "soul-space/models/${model.fileName}")
 
 @Composable
-fun SoulSpaceAiSettings(onBack: () -> Unit) {
+fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) {
     val context = LocalContext.current
     val prefs = preferenceManager2()
     val scope = rememberCoroutineScope()
@@ -166,6 +167,77 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
     var downloadJob by remember { mutableStateOf<Job?>(null) }
     var testing by remember { mutableStateOf(false) }
     var testResponse by remember { mutableStateOf("") }
+
+    val startDownload: () -> Unit = {
+                                downloadJob = scope.launch {
+                                    downloading = true
+                                    progress = 0f
+                                    status = "Connecting to the model host…"
+                                    val partial = File(target.parentFile, target.name + ".part")
+                                    try {
+                                        withContext(Dispatchers.IO) {
+                                            target.parentFile?.mkdirs()
+                                            partial.delete()
+                                            val connection = (URL(selected.url).openConnection() as HttpURLConnection).apply {
+                                                connectTimeout = 20_000
+                                                readTimeout = 45_000
+                                                instanceFollowRedirects = true
+                                                setRequestProperty("User-Agent", "Rocket-Launcher-Soul-Space")
+                                            }
+                                            try {
+                                                if (connection.responseCode !in 200..299) {
+                                                    throw IOException("Model host returned HTTP ${connection.responseCode}. Some model repositories may require license acceptance.")
+                                                }
+                                                val total = connection.contentLengthLong
+                                                if (total > 0L && total < selected.expectedBytes * 0.75) {
+                                                    throw IOException("The model host returned a file smaller than expected.")
+                                                }
+                                                var downloaded = 0L
+                                                connection.inputStream.use { input ->
+                                                    FileOutputStream(partial).use { output ->
+                                                        val buffer = ByteArray(128 * 1024)
+                                                        while (true) {
+                                                            currentCoroutineContext().ensureActive()
+                                                            val count = input.read(buffer)
+                                                            if (count < 0) break
+                                                            output.write(buffer, 0, count)
+                                                            downloaded += count
+                                                            if (total > 0L) {
+                                                                withContext(Dispatchers.Main) {
+                                                                    progress = downloaded.toFloat() / total.toFloat()
+                                                                }
+                                                            }
+                                                        }
+                                                        output.fd.sync()
+                                                    }
+                                                }
+                                                if (downloaded < selected.expectedBytes * 0.75) {
+                                                    throw IOException("Download was incomplete; the partial file was rejected.")
+                                                }
+                                                if (target.exists() && !target.delete()) throw IOException("Could not replace existing model.")
+                                                if (!partial.renameTo(target)) throw IOException("Could not save downloaded model.")
+                                            } finally {
+                                                connection.disconnect()
+                                            }
+                                        }
+                                        modelReady = true
+                                        progress = 1f
+                                        status = "Model download completed and size checked. The runtime will now be tested locally."
+                                    } catch (cancelled: CancellationException) {
+                                        status = "Download cancelled."
+                                        throw cancelled
+                                    } catch (error: Exception) {
+                                        status = "Download failed: ${error.message ?: "unknown error"}"
+                                    } finally {
+                                        withContext(NonCancellable + Dispatchers.IO) { partial.delete() }
+                                        downloading = false
+                                        downloadJob = null
+                                    }
+                                }
+    }
+    LaunchedEffect(autoStartDownload) {
+        if (autoStartDownload && !modelReady) startDownload()
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -254,73 +326,7 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
                 }
             } else if (!modelReady) {
                 Button(
-                    onClick = {
-                        downloadJob = scope.launch {
-                            downloading = true
-                            progress = 0f
-                            status = "Connecting to the model host…"
-                            val partial = File(target.parentFile, target.name + ".part")
-                            try {
-                                withContext(Dispatchers.IO) {
-                                    target.parentFile?.mkdirs()
-                                    partial.delete()
-                                    val connection = (URL(selected.url).openConnection() as HttpURLConnection).apply {
-                                        connectTimeout = 20_000
-                                        readTimeout = 45_000
-                                        instanceFollowRedirects = true
-                                        setRequestProperty("User-Agent", "Rocket-Launcher-Soul-Space")
-                                    }
-                                    try {
-                                        if (connection.responseCode !in 200..299) {
-                                            throw IOException("Model host returned HTTP ${connection.responseCode}. Some model repositories may require license acceptance.")
-                                        }
-                                        val total = connection.contentLengthLong
-                                        if (total > 0L && total < selected.expectedBytes * 0.75) {
-                                            throw IOException("The model host returned a file smaller than expected.")
-                                        }
-                                        var downloaded = 0L
-                                        connection.inputStream.use { input ->
-                                            FileOutputStream(partial).use { output ->
-                                                val buffer = ByteArray(128 * 1024)
-                                                while (true) {
-                                                    currentCoroutineContext().ensureActive()
-                                                    val count = input.read(buffer)
-                                                    if (count < 0) break
-                                                    output.write(buffer, 0, count)
-                                                    downloaded += count
-                                                    if (total > 0L) {
-                                                        withContext(Dispatchers.Main) {
-                                                            progress = downloaded.toFloat() / total.toFloat()
-                                                        }
-                                                    }
-                                                }
-                                                output.fd.sync()
-                                            }
-                                        }
-                                        if (downloaded < selected.expectedBytes * 0.75) {
-                                            throw IOException("Download was incomplete; the partial file was rejected.")
-                                        }
-                                        if (target.exists() && !target.delete()) throw IOException("Could not replace existing model.")
-                                        if (!partial.renameTo(target)) throw IOException("Could not save downloaded model.")
-                                    } finally {
-                                        connection.disconnect()
-                                    }
-                                }
-                                modelReady = true
-                                progress = 1f
-                                status = "Model download completed and size checked. The runtime will now be tested locally."
-                            } catch (cancelled: CancellationException) {
-                                status = "Download cancelled."
-                                throw cancelled
-                            } catch (error: Exception) {
-                                status = "Download failed: ${error.message ?: "unknown error"}"
-                            } finally {
-                                withContext(NonCancellable + Dispatchers.IO) { partial.delete() }
-                                downloading = false
-                                downloadJob = null
-                            }
-                        }
-                    },
+                    onClick = startDownload,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) { Text("Download ${selected.name}") }
             } else {

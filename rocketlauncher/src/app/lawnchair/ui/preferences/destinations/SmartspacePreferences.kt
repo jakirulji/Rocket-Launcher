@@ -354,15 +354,22 @@ fun SoulSpaceSettings(
     }
 
     val context = LocalContext.current
+    var autoStartSoulSpaceAiDownload by remember { mutableStateOf(false) }
     LaunchedEffect(context) {
-        if ((context as? Activity)?.intent?.getBooleanExtra("open_soul_space_ai", false) == true) {
+        val activity = context as? Activity
+        if (activity?.intent?.getBooleanExtra("open_soul_space_ai", false) == true) {
             selectedSavedList = "soul_space_ai"
-            (context as? Activity)?.intent?.removeExtra("open_soul_space_ai")
+            autoStartSoulSpaceAiDownload = activity.intent.getBooleanExtra("auto_download_soul_space_ai", false)
+            activity.intent.removeExtra("open_soul_space_ai")
+            activity.intent.removeExtra("auto_download_soul_space_ai")
         }
     }
     Column(modifier.padding(top = 8.dp)) {
         if (selectedSavedList == "soul_space_ai") {
-            SoulSpaceAiSettings(onBack = { selectedSavedList = null })
+            SoulSpaceAiSettings(
+                onBack = { selectedSavedList = null },
+                autoStartDownload = autoStartSoulSpaceAiDownload,
+            )
         } else if (selectedSavedList != null) {
             val key = selectedSavedList!!
             val title = if (key == "soul_space_favorites") "Favorites" else "History"

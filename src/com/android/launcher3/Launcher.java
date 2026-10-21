@@ -1291,14 +1291,15 @@ public class Launcher extends StatefulActivity<LauncherState>
                                     + "\n\nThe model must be downloaded once before local AI can run. The download is optional; offline wisdom cards remain available without it.")
                             .setCancelable(false)
                             .setNegativeButton("Later", (d, w) -> setupPrefs.edit().putBoolean("completed", true).apply())
-                            .setPositiveButton("Choose & download", (d, w) -> {
+                            .setPositiveButton("Download recommended model", (d, w) -> {
                                 setupPrefs.edit().putBoolean("completed", true).apply();
                                 try {
                                     Intent intent = PreferenceActivity.createIntent(this, Smartspace.INSTANCE);
                                     intent.putExtra("open_soul_space_ai", true);
+                                    intent.putExtra("auto_download_soul_space_ai", true);
                                     startActivity(intent);
                                 } catch (Exception e) {
-                                    Toast.makeText(this, "Open Settings → At a Glance → Soul Space → AI Settings to download the model.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(this, "Could not open the Soul Space AI download screen. Open At a Glance → Soul Space → AI Settings to retry.", Toast.LENGTH_LONG).show();
                                 }
                             }).show();
                 }).show();
