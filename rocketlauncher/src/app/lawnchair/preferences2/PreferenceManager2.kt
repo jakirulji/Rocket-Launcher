@@ -728,7 +728,7 @@ class PreferenceManager2 @Inject constructor(
 
     val smartspaceMode = preference(
         key = stringPreferencesKey("smartspace_mode"),
-        defaultValue = SmartspaceMode.SoulSpace,
+        defaultValue = SoulSpace,
         parse = { SmartspaceMode.fromString(it) },
         save = { it.toString() },
         onSet = { reloadHelper.recreate() },
@@ -799,6 +799,10 @@ class PreferenceManager2 @Inject constructor(
     val soulSpaceAiModel = preference(
         key = stringPreferencesKey("soul_space_ai_model"),
         defaultValue = "auto",
+    )
+    val soulSpaceOnboardingCompleted = preference(
+        key = booleanPreferencesKey("soul_space_onboarding_completed"),
+        defaultValue = false,
     )
 
     // Independent source toggles: users can combine several traditions.

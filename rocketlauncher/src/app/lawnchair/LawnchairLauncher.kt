@@ -17,12 +17,16 @@
 package app.lawnchair
 
 import android.animation.AnimatorSet
+import android.app.ActivityManager
+import android.app.AlertDialog
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.os.StatFs
 import android.util.Pair
 import android.view.Display
 import android.view.View
@@ -31,6 +35,7 @@ import android.window.SplashScreen
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import app.lawnchair.LawnchairApp.Companion.showQuickstepWarningIfNecessary
 import app.lawnchair.compat.LawnchairQuickstepCompat
 import app.lawnchair.data.AppDatabase
@@ -42,14 +47,19 @@ import app.lawnchair.gestures.ui.LawnchairShortcutActivity
 import app.lawnchair.nexuslauncher.OverlayCallbackImpl
 import app.lawnchair.preferences.PreferenceManager
 import app.lawnchair.preferences2.PreferenceManager2
+import app.lawnchair.preferences2.preferenceManager2
 import app.lawnchair.preferences2.firstCached
 import app.lawnchair.root.RootHelperManager
 import app.lawnchair.root.RootNotAvailableException
+import app.lawnchair.smartspace.model.SoulSpace
+import app.lawnchair.ui.preferences.PreferenceActivity
+import app.lawnchair.ui.preferences.navigation.SmartspaceWidget
 import app.lawnchair.theme.ThemeProvider
 import app.lawnchair.ui.popup.LauncherOptionsPopup
 import app.lawnchair.ui.popup.LawnchairShortcut
 import app.lawnchair.util.getThemedIconPacksInstalled
 import app.lawnchair.util.unsafeLazy
+import com.patrykmichalik.opto.core.setBlocking
 import app.lawnchair.views.LawnchairFloatingSurfaceView
 import com.android.launcher3.AbstractFloatingView
 import com.android.launcher3.BaseActivity
@@ -160,6 +170,7 @@ class LawnchairLauncher : QuickstepLauncher() {
     override fun onCreate(savedInstanceState: Bundle?) {
         layoutInflater.factory2 = LawnchairLayoutFactory(this)
         super.onCreate(savedInstanceState)
+        applySoulSpaceDefaultsAndMaybeOnboard(savedInstanceState)
 
         prefs.launcherTheme.subscribeChanges(this, ::updateTheme)
         prefs.feedProvider.subscribeChanges(this, defaultOverlay::reconnect)
@@ -465,6 +476,97 @@ class LawnchairLauncher : QuickstepLauncher() {
         options.launchDisplayId = if (v.display != null) v.display.displayId else Display.DEFAULT_DISPLAY
         val callback = RunnableList()
         return ActivityOptionsWrapper(options, callback)
+    }
+
+
+    /**
+     * Make Soul Space the first-run At a Glance experience and guide the user through
+     * a local device-capability check before opening the model download screen.
+     */
+    private fun applySoulSpaceDefaultsAndMaybeOnboard(savedInstanceState: Bundle?) {
+        val completedKey = booleanPreferencesKey("soul_space_defaults_applied")
+        if (preferenceManager2.getCachedPreferences()[completedKey] != true) {
+            preferenceManager2.smartspaceMode.setBlocking(SoulSpace)
+            preferenceManager2.soulSpaceSourceQuran.setBlocking(true)
+            preferenceManager2.soulSpaceSourceHindu.setBlocking(true)
+            preferenceManager2.soulSpaceSourceBuddhist.setBlocking(true)
+            preferenceManager2.soulSpaceSourceSikh.setBlocking(true)
+            preferenceManager2.soulSpaceSourceSufi.setBlocking(true)
+            preferenceManager2.soulSpaceSourcePhilosophy.setBlocking(true)
+            preferenceManager2.soulSpaceSourceGeneral.setBlocking(true)
+            runCatching {
+                kotlinx.coroutines.runBlocking {
+                    preferenceManager2.preferencesDataStore.edit { it[completedKey] = true }
+                }
+            }
+        }
+
+        if (savedInstanceState != null ||
+            preferenceManager2.soulSpaceOnboardingCompleted.getBlockingValue()) {
+            return
+        }
+        dragLayer.post {
+            if (isFinishing || isDestroyed) return@post
+            AlertDialog.Builder(this)
+                .setTitle("Soul Space · Device check")
+                .setMessage(
+                    "Before downloading on-device AI, Soul Space will check your phone's RAM, free storage, Android version and CPU support. " +
+                        "This check runs locally and does not need access to contacts, messages or location."
+                )
+                .setPositiveButton("Check device") { dialog, _ ->
+                    dialog.dismiss()
+                    showSoulSpaceAiDownloadPrompt()
+                }
+                .setNegativeButton("Later") { dialog, _ ->
+                    preferenceManager2.soulSpaceOnboardingCompleted.setBlocking(true)
+                    dialog.dismiss()
+                }
+                .setOnCancelListener { }
+                .show()
+        }
+    }
+
+    private fun showSoulSpaceAiDownloadPrompt() {
+        val activityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val memory = ActivityManager.MemoryInfo().also(activityManager::getMemoryInfo)
+        val freeMb = StatFs(filesDir.absolutePath).availableBytes / (1024L * 1024L)
+        val totalMb = memory.totalMem / (1024L * 1024L)
+        val availableMb = memory.availMem / (1024L * 1024L)
+        val is64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
+        val (modelName, reason) = when {
+            is64Bit && totalMb >= 12_000L && availableMb >= 5_000L && freeMb >= 3_200L ->
+                "Qwen3 4B · Advanced" to "Your phone meets the higher memory and storage checks."
+            is64Bit && totalMb >= 8_000L && availableMb >= 3_000L && freeMb >= 3_000L ->
+                "Gemma 4 E2B · Mobile candidate" to "Your phone meets the larger model's initial resource checks."
+            is64Bit && totalMb >= 6_000L && availableMb >= 2_000L && freeMb >= 1_500L ->
+                "Qwen3 1.7B · Balanced" to "This is a balance between language capability and available resources."
+            else ->
+                "Qwen3 0.6B · Lite" to "The smaller model is the safer starting point for this device."
+        }
+        val details = "Recommended: $modelName\n$reason\n\n" +
+            "RAM: ${totalMb / 1024} GB total, ${availableMb} MB currently free\n" +
+            "Storage: ${freeMb} MB free · CPU: ${Runtime.getRuntime().availableProcessors()} cores\n" +
+            "64-bit support: ${if (is64Bit) "yes" else "not detected"} · Android API ${Build.VERSION.SDK_INT}\n\n" +
+            "The AI model is a separate download. You can keep using regular Soul Space wisdom cards without downloading it."
+        AlertDialog.Builder(this)
+            .setTitle("Soul Space · AI download")
+            .setMessage(details)
+            .setPositiveButton("Choose / download AI") { dialog, _ ->
+                preferenceManager2.soulSpaceOnboardingCompleted.setBlocking(true)
+                dialog.dismiss()
+                startActivity(
+                    PreferenceActivity.createIntent(this, SmartspaceWidget)
+                        .putExtra("open_soul_space_ai", true)
+                )
+            }
+            .setNegativeButton("Later") { dialog, _ ->
+                preferenceManager2.soulSpaceOnboardingCompleted.setBlocking(true)
+                dialog.dismiss()
+            }
+            .setOnCancelListener {
+                preferenceManager2.soulSpaceOnboardingCompleted.setBlocking(true)
+            }
+            .show()
     }
 
     override fun onResume() {
