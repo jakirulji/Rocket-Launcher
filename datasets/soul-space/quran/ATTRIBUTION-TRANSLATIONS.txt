@@ -1,0 +1,28 @@
+QURAN DATASET ATTRIBUTION AND RE-PUBLICATION TERMS
+
+Arabic text
+- File: quran-simple-clean.txt
+- Source: Tanzil Project — https://tanzil.net
+- License: Creative Commons Attribution 3.0; verbatim copies may be redistributed, but the text must not be changed.
+- Keep the copyright/license block and provide the Tanzil source/update links.
+- Official terms: https://tanzil.net/docs/text_license
+
+Bengali translation
+- File: bengali_rowwad_quranenc_v1.1.2.json
+- Title: Bengali Translation — Rowwad Translation Center
+- Publisher/source: Rowwad Translation Center / QuranEnc.com
+- Version: 1.1.2
+- Source snapshot: https://github.com/risan/quran-json/blob/main/data/quranenc/bengali_rwwad.json
+- Terms: https://quranenc.com/en/home/api
+- Preserve the file content exactly. Do not add, remove, or modify text or footnotes. Credit publisher and QuranEnc.com, display version 1.1.2, retain transcript information, report translation notes to QuranEnc, keep the copy updated to the latest release, and do not display with inappropriate advertising.
+
+English translation
+- File: english_saheeh_quranenc_v1.1.2.json
+- Title: English Translation — Noor International Center (Saheeh International)
+- Publisher/source: Noor International Center / QuranEnc.com
+- Version: 1.1.2
+- Source snapshot: https://github.com/risan/quran-json/blob/main/data/quranenc/english_saheeh.json
+- Terms: https://quranenc.com/en/home/api
+- Preserve the file content exactly. Do not add, remove, or modify text or footnotes. Credit publisher and QuranEnc.com, display version 1.1.2, retain transcript information, report translation notes to QuranEnc, keep the copy updated to the latest release, and do not display with inappropriate advertising.
+
+This app is free and open source, but the above source-specific terms still apply. These files are source datasets; application integration and verification are separate work.

@@ -31,3 +31,28 @@ IMPORTANT
 - These are complete source texts, not yet normalized into individual app-ready quote records.
 - Do not label the English translations as Bengali translations.
 - Other category files and any translations must be checked independently; no blanket license is implied by this file.
+
+
+5) Quran Arabic text
+File: datasets/soul-space/quran/quran-simple-clean.txt
+Source: Tanzil Project, Quran Simple Clean text.
+License: Creative Commons Attribution 3.0, verbatim redistribution only. Do not change the text; preserve the Tanzil copyright/license notice and link to https://tanzil.net and https://tanzil.net/updates/.
+Official terms: https://tanzil.net/docs/text_license
+
+6) Quran Bengali translation — Rowwad Translation Center
+File: datasets/soul-space/quran/bengali_rowwad_quranenc_v1.1.2.json
+Source snapshot: https://github.com/risan/quran-json/blob/main/data/quranenc/bengali_rwwad.json
+Publisher/source: Rowwad Translation Center / QuranEnc.com.
+Version: 1.1.2 (source catalogue checked 2026-09-20).
+Re-publication terms: https://quranenc.com/en/home/api
+The source permits download and re-publication subject to its seven conditions: do not modify, add to, or delete content; clearly credit the publisher and QuranEnc.com; mention the version; preserve transcript information; report translation notes to the source; keep the translation updated to the latest version; and do not display it with inappropriate advertisements. The JSON source snapshot is kept verbatim.
+
+7) Quran English translation — Saheeh International / Noor International Center
+File: datasets/soul-space/quran/english_saheeh_quranenc_v1.1.2.json
+Source snapshot: https://github.com/risan/quran-json/blob/main/data/quranenc/english_saheeh.json
+Publisher/source: Noor International Center / QuranEnc.com.
+Version: 1.1.2 (source catalogue checked 2026-10-21).
+Re-publication terms: https://quranenc.com/en/home/api
+The source permits download and re-publication subject to the same seven conditions above. The JSON source snapshot is kept verbatim, including translation footnotes.
+
+License note: a free-to-use source does not mean all translation files have the same license. Keep each translation's own terms and attribution; do not replace these files with Tanzil translations, whose translation list has separate restrictions.
