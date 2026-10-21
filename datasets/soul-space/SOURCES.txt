@@ -114,7 +114,8 @@ License status: Project Gutenberg labels the edition public domain in the USA; r
 
 
 Sa'di — The Bustān of Sadi (additional structured selections, 2026-10-21)
-File: datasets/soul-space/sufi-wisdom/records.jsonl
-10 selections from A. Hart Edwards's 1911 English translation of The Bustān of Sadi were added with source line anchors and AI-assisted Bengali translations.
+Files:
+- datasets/soul-space/sufi-wisdom/sources/saadi_bustan_edwards_1911.txt (full historical English source, header/license preserved)
+- datasets/soul-space/sufi-wisdom/records.jsonl (10 selections with source line anchors and AI-assisted Bengali translations)
 Source: https://www.gutenberg.org/ebooks/60471
 The translation is from Persian into English; the Bengali field is an AI-assisted rendering of the English text, not a direct Persian-to-Bengali translation or expert-certified published translation. Project Gutenberg labels the edition public domain in the USA; Bangladesh/local status remains unconfirmed.
