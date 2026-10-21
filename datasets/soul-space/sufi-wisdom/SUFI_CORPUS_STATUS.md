@@ -31,6 +31,9 @@ These source files preserve Project Gutenberg headers, edition details, and lice
 
 ## Additional imports (2026-10-21)
 
-The structured Sufi/wisdom records now contain 150 records in total: 120 Rumi selections, 20 Kabir songs, and 10 Sa'di/Gulistan wisdom selections. The newly added Rumi selections are from William Hastie's 1903 English rendering of the Dīván (Project Gutenberg #57068); Kabir selections are from Rabindranath Tagore's 1915 English translation (Project Gutenberg #6519); Sa'di selections are from James Ross's English translation in Project Gutenberg #13060.
+The structured Sufi/wisdom records now contain 160 records in total: 120 Jalal al-Din Rumi selections, 20 Kabir selections, 10 Sa'di selections, 10 Hafiz of Shiraz selections.
 
 All new Bengali fields are AI-assisted plain renderings; Sa'di story entries are summaries rather than certified literal translations. They are explicitly labelled as such and should not be presented as published Bengali translations. The source English text and source references are retained. Project Gutenberg marks these editions public domain in the USA; copyright status in Bangladesh and any other target jurisdiction must be reviewed before redistribution. This is an initial expansion, not a complete 200-per-author corpus. No full build was run because only data files and documentation changed.
+
+
+Additional Hafiz import: 10 selections from Gertrude Lowthian Bell's 1897 English translation, *Poems from the Divan of Hafiz* (Project Gutenberg eBook #74883), were added with AI-assisted Bengali plain renderings/summaries. The Bengali text is not a published translation or expert-certified. Source English and links are retained. Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local copyright status before redistribution.
