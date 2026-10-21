@@ -797,7 +797,7 @@ class PreferenceManager2 @Inject constructor(
     )
     val soulSpaceAiModel = preference(
         key = stringPreferencesKey("soul_space_ai_model"),
-        defaultValue = "qwen3_0_6b_q4_0",
+        defaultValue = "auto",
     )
 
     // Independent source toggles: users can combine several traditions.

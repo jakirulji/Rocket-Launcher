@@ -4,7 +4,10 @@
  */
 package app.lawnchair.ui.preferences.destinations
 
+import android.app.ActivityManager
 import android.content.Context
+import android.os.Build
+import android.os.StatFs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,12 +57,54 @@ private const val MODEL_SHA256 =
 private fun modelFile(context: Context) =
     File(context.filesDir, "soul-space/models/$MODEL_FILE")
 
+private data class AiDeviceReport(
+    val totalRamMb: Long,
+    val availableRamMb: Long,
+    val freeStorageMb: Long,
+    val cpuCores: Int,
+    val is64Bit: Boolean,
+    val androidVersion: Int,
+    val recommendedModel: String,
+    val explanation: String,
+    val caution: String?,
+)
+
+private fun inspectAiDevice(context: Context): AiDeviceReport {
+    val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val memory = ActivityManager.MemoryInfo().also(activityManager::getMemoryInfo)
+    val storage = StatFs(context.filesDir.absolutePath)
+    val totalRamMb = memory.totalMem / (1024L * 1024L)
+    val availableRamMb = memory.availMem / (1024L * 1024L)
+    val freeStorageMb = storage.availableBytes / (1024L * 1024L)
+    val is64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
+    val canRecommendLite = totalRamMb >= 3000L && availableRamMb >= 1000L &&
+        freeStorageMb >= 900L && is64Bit
+
+    return AiDeviceReport(
+        totalRamMb = totalRamMb,
+        availableRamMb = availableRamMb,
+        freeStorageMb = freeStorageMb,
+        cpuCores = Runtime.getRuntime().availableProcessors(),
+        is64Bit = is64Bit,
+        androidVersion = Build.VERSION.SDK_INT,
+        recommendedModel = if (canRecommendLite) "Qwen3 0.6B · Q4_0" else "Qwen3 0.6B · Q4_0 (Lite, with caution)",
+        explanation = if (canRecommendLite) {
+            "The device meets the basic memory, storage and 64-bit checks for the currently supported Lite model."
+        } else {
+            "Only the Lite model is currently available. This device may still run it, but low available memory, storage or 32-bit support can cause slowdowns or prevent inference."
+        },
+        caution = if (canRecommendLite) null else
+            "Recommendation is provisional: this app currently has only one downloadable model, and on-device inference runtime is not integrated yet.",
+    )
+}
+
 @Composable
 fun SoulSpaceAiSettings(onBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = preferenceManager2()
     val scope = rememberCoroutineScope()
     val target = remember { modelFile(context) }
+    val deviceReport = remember(context) { inspectAiDevice(context) }
     var modelReady by remember { mutableStateOf(target.isFile && target.length() > 0L) }
     var downloading by remember { mutableStateOf(false) }
     var progress by remember { mutableStateOf(0f) }
@@ -94,7 +139,8 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
 
             val modelEntries = remember {
                 listOf(
-                    ListPreferenceEntry(MODEL_ID) { "Qwen3 0.6B · Q4_0 · 429 MB (Lite)" },
+                    ListPreferenceEntry("auto") { "Automatic · recommended for this device" },
+                    ListPreferenceEntry(MODEL_ID) { "Qwen3 0.6B · Q4_0 · 429 MB (Lite, currently supported)" },
                     ListPreferenceEntry("qwen3_1_7b_q4", label = { "Qwen3 1.7B · not available yet" }, enabled = false),
                     ListPreferenceEntry("qwen3_4b_q4", label = { "Qwen3 4B · heavy · not available yet" }, enabled = false),
                     ListPreferenceEntry("gemma_mobile", label = { "Mobile Gemma candidate · not available yet" }, enabled = false),
@@ -105,6 +151,34 @@ fun SoulSpaceAiSettings(onBack: () -> Unit) {
                 entries = modelEntries,
                 label = "AI model",
             )
+
+            Text(
+                text = "Device compatibility check",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+            Text(
+                text = "RAM: ${deviceReport.totalRamMb / 1024} GB total · ${deviceReport.availableRamMb} MB currently available\n" +
+                    "Free storage: ${deviceReport.freeStorageMb} MB\n" +
+                    "CPU cores: ${deviceReport.cpuCores} · 64-bit ABI: ${if (deviceReport.is64Bit) "supported" else "not detected"}\n" +
+                    "Android: ${deviceReport.androidVersion}",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            )
+            Text(
+                text = "Best match: ${deviceReport.recommendedModel}\n${deviceReport.explanation}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+            deviceReport.caution?.let { caution ->
+                Text(
+                    text = caution,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                )
+            }
         }
 
         PreferenceGroup(heading = "Model Manager") {
