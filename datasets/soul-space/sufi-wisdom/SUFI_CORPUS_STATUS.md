@@ -41,7 +41,7 @@ Additional Hafiz import: 10 selections from Gertrude Lowthian Bell's 1897 Englis
 
 ## Additional Sa'di import — The Bustān of Sadi
 
-- Added 10 short excerpts from A. Hart Edwards's 1911 English translation, Project Gutenberg eBook #60471.
+- Preserved the full historical source as `sources/saadi_bustan_edwards_1911.txt`, including its source header, and added 10 short excerpts from A. Hart Edwards's 1911 English translation, Project Gutenberg eBook #60471.
 - Each record includes the exact English excerpt (line wrapping normalized only), a Bengali rendering, a section label, a source URL, and line anchors in the downloaded source text.
 - Bengali fields are AI-assisted translations of the English translation, not direct translations from Persian and not expert-certified.
 - Project Gutenberg labels the edition public domain in the USA. Bangladesh/local copyright status is not independently confirmed; review before redistribution.
