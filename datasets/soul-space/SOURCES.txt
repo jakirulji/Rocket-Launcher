@@ -78,7 +78,7 @@ Sources: Project Gutenberg eBooks #45159, #61724, and #57068.
 The original Project Gutenberg headers and license text are preserved in each raw text file. These are historical English translations/selections, not the original Persian text. The 1920 Project Gutenberg edition of Davis's book includes translations by multiple contributors as stated in its preface; do not attribute all passages to one English translator without checking the source.
 Structured records: datasets/soul-space/sufi-wisdom/records.jsonl contains 100 titled selections extracted from the Davis volume, with source line anchors and AI-assisted simple Bengali translations in `text_bn`. These Bengali renderings are not published translations or expert-certified; retain source English and label the Bengali text as AI-assisted. Source lines and the source header remain available for review.
 Status and scope: datasets/soul-space/sufi-wisdom/SUFI_CORPUS_STATUS.md. This is an initial import, not the final 200+ per-sector target.
-License note: Project Gutenberg identifies these editions as public domain in the USA and asks users outside the USA to check local law. The historical contributors' relevant terms are understood to have expired in Bangladesh by 2026, but keep the source license text and attribution with all redistributed copies.
+License note: Project Gutenberg identifies these editions as public domain in the USA and asks users outside the USA to check local law. Bangladesh/local copyright status has not been independently confirmed for this project. Do not treat the USA public-domain label as a definitive Bangladesh clearance; keep source notices and attribution, and review local law before redistribution.
 
 
 SUFI WISDOM DATASET — ADDITIONAL STRUCTURED RECORDS (2026-10-21)
@@ -111,3 +111,10 @@ Work: Poems from the Divan of Hafiz
 Translator: Gertrude Lowthian Bell; 1897 edition
 Source: https://www.gutenberg.org/ebooks/74883
 License status: Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local jurisdiction before redistribution. Bengali fields are AI-assisted plain renderings/summaries, not certified published translations.
+
+
+Sa'di — The Bustān of Sadi (additional structured selections, 2026-10-21)
+File: datasets/soul-space/sufi-wisdom/records.jsonl
+10 selections from A. Hart Edwards's 1911 English translation of The Bustān of Sadi were added with source line anchors and AI-assisted Bengali translations.
+Source: https://www.gutenberg.org/ebooks/60471
+The translation is from Persian into English; the Bengali field is an AI-assisted rendering of the English text, not a direct Persian-to-Bengali translation or expert-certified published translation. Project Gutenberg labels the edition public domain in the USA; Bangladesh/local status remains unconfirmed.
