@@ -529,7 +529,7 @@ fun SoulSpaceSettings(
 }
 
 @Composable
-fun SmartspacerSettings,
+fun SmartspacerSettings(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
