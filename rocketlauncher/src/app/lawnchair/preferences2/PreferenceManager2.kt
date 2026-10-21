@@ -789,6 +789,17 @@ class PreferenceManager2 @Inject constructor(
         onSet = { reloadHelper.recreate() },
     )
 
+    // Soul Space AI preferences. No private text or mood data is sent to a server.
+    // The switch defaults ON, but AI is not considered ready until a local model exists.
+    val soulSpaceAiEnabled = preference(
+        key = booleanPreferencesKey("soul_space_ai_enabled"),
+        defaultValue = true,
+    )
+    val soulSpaceAiModel = preference(
+        key = stringPreferencesKey("soul_space_ai_model"),
+        defaultValue = "qwen3_0_6b_q4_0",
+    )
+
     // Independent source toggles: users can combine several traditions.
     val soulSpaceSourceQuran = preference(
         key = booleanPreferencesKey("soul_space_source_quran"),
