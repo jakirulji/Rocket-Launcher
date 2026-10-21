@@ -1,10 +1,10 @@
 # Sufi Wisdom — initial corpus import
 
-Updated: 2026-10-21
+Updated: 2026-10-21 (100 Bengali translations added)
 
 ## Imported source texts
 
-These source files preserve Project Gutenberg headers, edition details, and license text. They are raw English source texts, not yet a full Bengali translation.
+These source files preserve Project Gutenberg headers, edition details, and license text. They are raw historical English translations/selections, not original Persian texts.
 
 1. `sources/rumi_persian_mystics_davis_1907.txt`
    - Project Gutenberg eBook #45159, *The Persian Mystics: Jalálu'd-dín Rúmí*.
@@ -23,7 +23,7 @@ These source files preserve Project Gutenberg headers, edition details, and lice
 
 - `records.jsonl` contains 100 titled selections extracted from the poetry-selection portion of eBook #45159.
 - The English source text is retained for each record; section title and source line anchors are included.
-- Bengali translations are currently null and marked `pending_ai_simple_translation`. This is deliberate: no unreviewed machine translation is falsely labelled as verified. The intended app behavior is to create a plain Bengali translation using the selected on-device model, clearly label it as AI-assisted, and never alter the source text.
-- These 100 records are a first import, not the promised 200+ verified passages per Sufi sub-sector. Avoid inflating the count by splitting one poem into multiple records.
+- All 100 records now include `text_bn` with an AI-assisted plain Bengali translation; `translation_status` is `ai_assisted_simple_bengali_translation`. These are newly prepared translations, not published Bengali translations and not expert-certified. Keep the English text unchanged, retain source line anchors, and label the Bengali field as AI-assisted in the app.
+- These 100 records are an initial Rumi selection, not the promised 200+ passages per Sufi sub-sector. Avoid inflating the count by splitting one poem into multiple records.
 - The text includes editorial selections and translations credited to different translators inside the 1907 book. Consult the preserved source header and book text for individual translator acknowledgements; do not attribute every line exclusively to Rumi's original-language wording.
 - Project Gutenberg says the ebook is public domain in the USA and asks users outside the USA to check local law. This source was selected because the historical contributors' terms are expired under the general Bangladesh life-plus-60-year rule as understood for this project; recheck if legal advice is required.
