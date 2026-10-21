@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
@@ -353,6 +354,12 @@ fun SoulSpaceSettings(
     }
 
     val context = LocalContext.current
+    LaunchedEffect(context) {
+        if ((context as? Activity)?.intent?.getBooleanExtra("open_soul_space_ai", false) == true) {
+            selectedSavedList = "soul_space_ai"
+            (context as? Activity)?.intent?.removeExtra("open_soul_space_ai")
+        }
+    }
     Column(modifier.padding(top = 8.dp)) {
         if (selectedSavedList == "soul_space_ai") {
             SoulSpaceAiSettings(onBack = { selectedSavedList = null })

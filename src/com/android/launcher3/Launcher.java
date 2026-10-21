@@ -21,6 +21,8 @@
 package com.android.launcher3;
 
 import com.android.launcher3.wellbeing.DigitalWellbeing;
+import app.lawnchair.ui.preferences.PreferenceActivity;
+import app.lawnchair.ui.preferences.navigation.Smartspace;
 
 import static android.content.pm.ActivityInfo.CONFIG_UI_MODE;
 import static android.view.WindowInsetsAnimation.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE;
@@ -114,6 +116,8 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetHostView;
+import android.app.ActivityManager;
+import android.os.StatFs;
 import android.appwidget.AppWidgetManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentCallbacks2;
@@ -1237,6 +1241,7 @@ public class Launcher extends StatefulActivity<LauncherState>
     protected void onResume() {
         TraceHelper.INSTANCE.beginSection(ON_RESUME_EVT);
         super.onResume();
+        getWorkspace().post(() -> showSoulSpaceFirstRunSetup());
 
         if (mDeferOverlayCallbacks) {
             scheduleDeferredCheck();
@@ -1246,6 +1251,57 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         DragView.removeAllViews(this);
         TraceHelper.INSTANCE.endSection();
+    }
+
+    private void showSoulSpaceFirstRunSetup() {
+        android.content.SharedPreferences setupPrefs = getSharedPreferences("soul_space_first_run", MODE_PRIVATE);
+        if (setupPrefs.getBoolean("completed", false) || isFinishing()) return;
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memory = new ActivityManager.MemoryInfo();
+        am.getMemoryInfo(memory);
+        long totalRamMb = memory.totalMem / (1024L * 1024L);
+        long availableRamMb = memory.availMem / (1024L * 1024L);
+        long freeStorageMb = new StatFs(getFilesDir().getAbsolutePath()).getAvailableBytes() / (1024L * 1024L);
+        boolean is64Bit = Build.SUPPORTED_64_BIT_ABIS.length > 0;
+        String recommended;
+        if (is64Bit && totalRamMb >= 12288 && availableRamMb >= 5120 && freeStorageMb >= 3200) {
+            recommended = "Qwen3 4B · Advanced";
+        } else if (is64Bit && totalRamMb >= 8000 && availableRamMb >= 3000 && freeStorageMb >= 3000) {
+            recommended = "Gemma 4 E2B · Mobile candidate";
+        } else if (is64Bit && totalRamMb >= 6000 && availableRamMb >= 2000 && freeStorageMb >= 1500) {
+            recommended = "Qwen3 1.7B · Balanced";
+        } else {
+            recommended = "Qwen3 0.6B · Lite";
+        }
+        String report = "Device ability check (runs locally)\n"
+                + "RAM: " + (totalRamMb / 1024) + " GB total; " + availableRamMb + " MB available\n"
+                + "Free storage: " + freeStorageMb + " MB\n"
+                + "CPU cores: " + Runtime.getRuntime().availableProcessors() + " · 64-bit: " + (is64Bit ? "Yes" : "No")
+                + "\nAndroid API: " + Build.VERSION.SDK_INT
+                + "\n\nRAM, CPU architecture and storage do not require a runtime permission. No contacts, SMS or location access is requested.";
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Welcome to Soul Space")
+                .setMessage(report)
+                .setCancelable(false)
+                .setNegativeButton("Not now", (dialog, which) -> setupPrefs.edit().putBoolean("completed", true).apply())
+                .setPositiveButton("Continue", (dialog, which) -> {
+                    new android.app.AlertDialog.Builder(this)
+                            .setTitle("Set up on-device AI")
+                            .setMessage("Recommended model for this device: " + recommended
+                                    + "\n\nThe model must be downloaded once before local AI can run. The download is optional; offline wisdom cards remain available without it.")
+                            .setCancelable(false)
+                            .setNegativeButton("Later", (d, w) -> setupPrefs.edit().putBoolean("completed", true).apply())
+                            .setPositiveButton("Choose & download", (d, w) -> {
+                                setupPrefs.edit().putBoolean("completed", true).apply();
+                                try {
+                                    Intent intent = PreferenceActivity.createIntent(this, Smartspace.INSTANCE);
+                                    intent.putExtra("open_soul_space_ai", true);
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    Toast.makeText(this, "Open Settings → At a Glance → Soul Space → AI Settings to download the model.", Toast.LENGTH_LONG).show();
+                                }
+                            }).show();
+                }).show();
     }
 
     @Override

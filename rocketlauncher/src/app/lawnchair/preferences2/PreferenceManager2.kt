@@ -727,7 +727,7 @@ class PreferenceManager2 @Inject constructor(
 
     val smartspaceMode = preference(
         key = stringPreferencesKey("smartspace_mode"),
-        defaultValue = SmartspaceMode.fromString(context.getString(R.string.config_default_smartspace_mode)),
+        defaultValue = SmartspaceMode.SoulSpace,
         parse = { SmartspaceMode.fromString(it) },
         save = { it.toString() },
         onSet = { reloadHelper.recreate() },
@@ -803,32 +803,32 @@ class PreferenceManager2 @Inject constructor(
     // Independent source toggles: users can combine several traditions.
     val soulSpaceSourceQuran = preference(
         key = booleanPreferencesKey("soul_space_source_quran"),
-        defaultValue = false,
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
     val soulSpaceSourceHindu = preference(
         key = booleanPreferencesKey("soul_space_source_hindu"),
-        defaultValue = false,
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
     val soulSpaceSourceBuddhist = preference(
         key = booleanPreferencesKey("soul_space_source_buddhist"),
-        defaultValue = false,
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
     val soulSpaceSourceSikh = preference(
         key = booleanPreferencesKey("soul_space_source_sikh"),
-        defaultValue = false,
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
     val soulSpaceSourceSufi = preference(
         key = booleanPreferencesKey("soul_space_source_sufi"),
-        defaultValue = false,
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
     val soulSpaceSourcePhilosophy = preference(
         key = booleanPreferencesKey("soul_space_source_philosophy"),
-        defaultValue = false,
+        defaultValue = true,
         onSet = { reloadHelper.recreate() },
     )
     val soulSpaceSourceGeneral = preference(
