@@ -17,6 +17,10 @@
 package app.lawnchair.ui.preferences.destinations
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
 import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -31,6 +35,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
@@ -323,7 +328,7 @@ fun SoulSpaceSettings(
     val fontSizeAdapter = prefs.soulSpaceCardFontSize.getAdapter()
     val fontStyleAdapter = prefs.soulSpaceCardFontStyle.getAdapter()
     var showColorPalette by remember { mutableStateOf(false) }
-    var savedListDialog by remember { mutableStateOf<String?>(null) }
+    var selectedSavedList by remember { mutableStateOf<String?>(null) }
     var paletteTarget by remember { mutableStateOf("background") }
     val palette = remember { listOf(0xFF172554.toInt(), 0xFF1E293B.toInt(), 0xFF064E3B.toInt(), 0xFF3F1D5B.toInt(), 0xFF7F1D1D.toInt(), 0xFFFFFFFF.toInt(), 0xFFF8FAFC.toInt(), 0xFFE2E8F0.toInt(), 0xFF000000.toInt(), 0xFF334155.toInt(), 0xFF0F766E.toInt(), 0xFF1D4ED8.toInt(), 0xFFFCD34D.toInt(), 0xFFBAE6FD.toInt(), 0xFFBBF7D0.toInt(), 0xFFFBCFE8.toInt(), 0xFF111827.toInt(), 0xFFDC2626.toInt(), 0xFF7C3AED.toInt(), 0xFFEA580C.toInt()) }
     val radiusEntries = remember { listOf(0, 6, 12, 18, 24, 32).map { value -> ListPreferenceEntry(value) { "$value dp" } } }
@@ -350,7 +355,54 @@ fun SoulSpaceSettings(
         )
     }
 
+    val context = LocalContext.current
     Column(modifier.padding(top = 8.dp)) {
+        if (selectedSavedList != null) {
+            val key = selectedSavedList!!
+            val title = if (key == "soul_space_favorites") "Favorites" else "History"
+            val items = savedItems(key)
+            PreferenceGroup(heading = title) {
+                TextButton(onClick = { selectedSavedList = null }) {
+                    Text("← Back to Soul Space settings")
+                }
+                if (items.isEmpty()) {
+                    Text(
+                        text = if (key == "soul_space_favorites") "No favorites saved yet." else "No wisdom history yet.",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        items.forEachIndexed { index, entry ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = entry,
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                                TextButton(onClick = {
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    clipboard.setPrimaryClip(ClipData.newPlainText(title, entry))
+                                    Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+                                }) {
+                                    Text("Copy")
+                                }
+                            }
+                            if (index < items.lastIndex) {
+                                androidx.compose.material3.HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
         PreferenceGroup(heading = stringResource(id = R.string.soul_space_settings)) {
             androidx.compose.material3.Text(
                 text = stringResource(id = R.string.soul_space_settings_intro),
@@ -365,12 +417,12 @@ fun SoulSpaceSettings(
             ClickablePreference(
                 label = "Favorites",
                 subtitle = "View your saved wisdom",
-                onClick = { savedListDialog = "soul_space_favorites" },
+                onClick = { selectedSavedList = "soul_space_favorites" },
             )
             ClickablePreference(
                 label = "History",
                 subtitle = "View recently displayed wisdom",
-                onClick = { savedListDialog = "soul_space_history" },
+                onClick = { selectedSavedList = "soul_space_history" },
             )
             ClickablePreference(
                 label = "Card background color",
@@ -467,44 +519,18 @@ fun SoulSpaceSettings(
                 entries = scheduleEntries,
                 label = stringResource(R.string.soul_space_schedule_label),
             )
-            savedListDialog?.let { key ->
-                val title = if (key == "soul_space_favorites") "Favorites" else "History"
-                val items = savedItems(key)
-                AlertDialog(
-                    onDismissRequest = { savedListDialog = null },
-                    title = { Text(title) },
-                    text = {
-                        if (items.isEmpty()) {
-                            Text(if (key == "soul_space_favorites") "No favorites saved yet." else "No wisdom history yet.")
-                        } else {
-                            Column(
-                                modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                            ) {
-                                items.forEach { entry ->
-                                    Text(entry, style = MaterialTheme.typography.bodyMedium)
-                                }
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { savedListDialog = null }) {
-                            Text(stringResource(android.R.string.ok))
-                        }
-                    },
-                )
-            }
             androidx.compose.material3.Text(
                 text = stringResource(id = R.string.soul_space_privacy_note),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }
+        }
     }
 }
 
 @Composable
-fun SmartspacerSettings(
+fun SmartspacerSettings,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
