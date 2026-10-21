@@ -79,3 +79,28 @@ The original Project Gutenberg headers and license text are preserved in each ra
 Structured records: datasets/soul-space/sufi-wisdom/records.jsonl contains 100 titled selections extracted from the Davis volume, with source line anchors and AI-assisted simple Bengali translations in `text_bn`. These Bengali renderings are not published translations or expert-certified; retain source English and label the Bengali text as AI-assisted. Source lines and the source header remain available for review.
 Status and scope: datasets/soul-space/sufi-wisdom/SUFI_CORPUS_STATUS.md. This is an initial import, not the final 200+ per-sector target.
 License note: Project Gutenberg identifies these editions as public domain in the USA and asks users outside the USA to check local law. The historical contributors' relevant terms are understood to have expired in Bangladesh by 2026, but keep the source license text and attribution with all redistributed copies.
+
+
+SUFI WISDOM DATASET — ADDITIONAL STRUCTURED RECORDS (2026-10-21)
+File: datasets/soul-space/sufi-wisdom/records.jsonl
+Current structured-record count at this update: 150
+
+Rumi selections:
+Work: The Festival of Spring, from the Díván of Jeláleddín
+Translator/renderer: William Hastie, after Rückert's versions, 1903
+Source: https://www.gutenberg.org/ebooks/57068
+License status: Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local jurisdiction before redistribution.
+
+Kabir selections:
+Work: Songs of Kabir
+Translator: Rabindranath Tagore; introduction by Evelyn Underhill, 1915
+Source: https://www.gutenberg.org/ebooks/6519
+License status: Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local jurisdiction before redistribution.
+
+Sa'di selections:
+Work: The Gulistan, in Persian Literature, Volume 2
+Translator: James Ross; 1900 edition
+Source: https://www.gutenberg.org/ebooks/13060
+License status: Project Gutenberg labels the edition public domain in the USA; review Bangladesh/local jurisdiction before redistribution. The current Bengali fields are AI-assisted story summaries, not literal certified translations.
+
+Translation note: all AI-assisted Bengali text is marked in each record. It is not represented as a published or expert-certified Bengali translation. Retain the English source and source URL; do not imply the Persian originals were directly translated by AI from Persian.
