@@ -562,7 +562,7 @@ class SoulSpaceView @JvmOverloads constructor(
     }
 
     private fun itemSnapshot(item: WisdomItem): String =
-        "${item.sourceLabel} • ${item.reference}\\n${item.bengali.ifBlank { item.english }}\\n${item.english}"
+        "${item.sourceLabel} • ${item.reference}\n${item.bengali.ifBlank { item.english }}\n${item.english}"
 
     private fun toggleFavorite() {
         val item = currentItem() ?: return
