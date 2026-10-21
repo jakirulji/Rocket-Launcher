@@ -41,3 +41,9 @@ Sufi corpus update — 2026-10-21
 - These are English translations/selections, not the original Persian text. The Davis volume credits multiple translators; consult its preface and local passage context before assigning translator-level attribution.
 - Bengali AI-assisted simple translations are still pending. No unreviewed translation is labelled as verified. The app currently displays a clear fallback notice plus English source when Bengali is selected for a record without Bengali text.
 - This import does not meet the 200+ records per Sufi sub-sector target. Do not claim the Sufi dataset is complete.
+
+
+ADDITIONAL SUFI SOURCE — ADDED 2026-10-21
+- Sa'di, The Bustān of Sadi, translated from Persian by A. Hart Edwards (1911), Project Gutenberg eBook #60471. 10 short English excerpts and AI-assisted Bengali renderings are now in `sufi-wisdom/records.jsonl`.
+- Project Gutenberg labels the edition public domain in the USA. Bangladesh/local copyright status is not independently confirmed. The Bengali is rendered from English, not directly from Persian; not a certified published translation.
+- Lalon Shah O Lalon Geetika (1899) scan at Wikimedia Commons is a potential source for Bengali Sufi/fakir poetry. It is not yet integrated because it needs machine-readable transcription and page-by-page proofreading; do not extract or publish unverified OCR as final text.
