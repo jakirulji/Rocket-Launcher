@@ -149,3 +149,9 @@ Scripture expansion pass 2 — 2026-10-21
 - Dhammapada: 54 new distinct verse-number records added, for 76 normalized records total, from the bundled ETCBC Pāli text under MIT. English and Bengali are Soul Space-authored renderings, not published translations. Verify Pāli punctuation and verse-number mapping upstream before production.
 - Duplicate guard: each new record was checked against the existing reference strings before insertion; the three target files have unique IDs and unique reference strings after the update.
 - No narrative/story records were added in this pass. Guru Granth Sahib was not expanded because the approved original-text and Bengali-translation clearance remains unresolved.
+
+Scripture expansion pass 3 — 2026-10-21
+- Bhagavad Gita: 50 additional distinct references added, total 117. Sanskrit text sourced from gita/gita data/verse.json under its Unlicense/public-domain dedication. English/Bengali are Soul Space-authored renderings; review for theological/language accuracy.
+- Dhammapada: 50 additional distinct verse-number records added, total 126. Pāli text drawn from bundled ETCBC source under MIT; English/Bengali are Soul Space-authored renderings. Verse-number mapping and Pāli excerpts require specialist proofreading.
+- Qur'an: no additional records in this pass. The bundled quran-simple-clean text has 28 more non-empty lines than the standard 6,236-ayah count, so verse-to-line mapping cannot safely be inferred by simple indexing. Do not add references until a verified verse-indexed source is available.
+- Duplicate check: new entries were excluded by existing reference; IDs and reference strings are unique within each updated JSON file. This is not a substitute for a semantic duplicate review or expert review.
