@@ -47,3 +47,11 @@ ADDITIONAL SUFI SOURCE — ADDED 2026-10-21
 - Sa'di, The Bustān of Sadi, translated from Persian by A. Hart Edwards (1911), Project Gutenberg eBook #60471. 10 short English excerpts and AI-assisted Bengali renderings are now in `sufi-wisdom/records.jsonl`.
 - Project Gutenberg labels the edition public domain in the USA. Bangladesh/local copyright status is not independently confirmed. The Bengali is rendered from English, not directly from Persian; not a certified published translation.
 - Lalon Shah O Lalon Geetika (1899) scan at Wikimedia Commons is a potential source for Bengali Sufi/fakir poetry. It is not yet integrated because it needs machine-readable transcription and page-by-page proofreading; do not extract or publish unverified OCR as final text.
+
+
+7) Primary scripture quote expansion — 2026-10-21
+- Qur'an: added 12 selected ayah records using unchanged Arabic lines from the bundled Tanzil Simple Clean text; keep attribution and CC BY 3.0 notice. English/Bengali are original Soul Space renderings, not published QuranEnc translations. Do not alter the source translation snapshots.
+- Bhagavad Gita: added 15 Sanskrit verse excerpts for mood-based retrieval. The bundled source is an English translation, so Sanskrit text and verse references require verification against a critical Sanskrit edition before production release. Soul Space translations are not published/expert-certified.
+- Dhammapada: added 20 Pāli verse records from the bundled ETCBC source under MIT. English/Bengali are original Soul Space renderings; retain upstream license/attribution and verify verse anchors.
+- Guru Granth Sahib: no new verbatim records added; Bengali translation eligibility and original text verification remain unresolved. Existing two records are paraphrases, not verbatim quotes.
+- No story summaries were added in this scripture expansion. Sufi/Gulistan story-summary records elsewhere in the corpus remain classified as summaries and should not be surfaced as direct quotations.
