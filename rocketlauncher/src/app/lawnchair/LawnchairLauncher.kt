@@ -484,8 +484,7 @@ class LawnchairLauncher : QuickstepLauncher() {
      * a local device-capability check before opening the model download screen.
      */
     private fun applySoulSpaceDefaultsAndMaybeOnboard(savedInstanceState: Bundle?) {
-        val completedKey = booleanPreferencesKey("soul_space_defaults_applied")
-        if (preferenceManager2.getCachedPreferences()[completedKey] != true) {
+        if (!preferenceManager2.soulSpaceDefaultsApplied.get()) {
             preferenceManager2.smartspaceMode.setBlocking(SoulSpace)
             preferenceManager2.soulSpaceSourceQuran.setBlocking(true)
             preferenceManager2.soulSpaceSourceHindu.setBlocking(true)
@@ -494,15 +493,10 @@ class LawnchairLauncher : QuickstepLauncher() {
             preferenceManager2.soulSpaceSourceSufi.setBlocking(true)
             preferenceManager2.soulSpaceSourcePhilosophy.setBlocking(true)
             preferenceManager2.soulSpaceSourceGeneral.setBlocking(true)
-            runCatching {
-                kotlinx.coroutines.runBlocking {
-                    preferenceManager2.preferencesDataStore.edit { it[completedKey] = true }
-                }
-            }
+            preferenceManager2.soulSpaceDefaultsApplied.setBlocking(true)
         }
 
-        if (savedInstanceState != null ||
-            preferenceManager2.soulSpaceOnboardingCompleted.getBlockingValue()) {
+        if (savedInstanceState != null || preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_onboarding_completed")] == true) {
             return
         }
         dragLayer.post {

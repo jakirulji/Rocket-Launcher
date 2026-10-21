@@ -804,6 +804,10 @@ class PreferenceManager2 @Inject constructor(
         key = booleanPreferencesKey("soul_space_onboarding_completed"),
         defaultValue = false,
     )
+    val soulSpaceDefaultsApplied = preference(
+        key = booleanPreferencesKey("soul_space_defaults_applied"),
+        defaultValue = false,
+    )
 
     // Independent source toggles: users can combine several traditions.
     val soulSpaceSourceQuran = preference(
