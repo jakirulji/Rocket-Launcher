@@ -31,6 +31,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -54,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import app.lawnchair.preferences.PreferenceAdapter
 import app.lawnchair.preferences.getAdapter
+import androidx.datastore.preferences.core.stringPreferencesKey
+import org.json.JSONArray
 import app.lawnchair.preferences2.preferenceManager2
 import app.lawnchair.smartspace.SmartspaceViewContainer
 import app.lawnchair.smartspace.model.LawnchairSmartspace
@@ -319,6 +323,7 @@ fun SoulSpaceSettings(
     val fontSizeAdapter = prefs.soulSpaceCardFontSize.getAdapter()
     val fontStyleAdapter = prefs.soulSpaceCardFontStyle.getAdapter()
     var showColorPalette by remember { mutableStateOf(false) }
+    var savedListDialog by remember { mutableStateOf<String?>(null) }
     var paletteTarget by remember { mutableStateOf("background") }
     val palette = remember { listOf(0xFF172554.toInt(), 0xFF1E293B.toInt(), 0xFF064E3B.toInt(), 0xFF3F1D5B.toInt(), 0xFF7F1D1D.toInt(), 0xFFFFFFFF.toInt(), 0xFFF8FAFC.toInt(), 0xFFE2E8F0.toInt(), 0xFF000000.toInt(), 0xFF334155.toInt(), 0xFF0F766E.toInt(), 0xFF1D4ED8.toInt(), 0xFFFCD34D.toInt(), 0xFFBAE6FD.toInt(), 0xFFBBF7D0.toInt(), 0xFFFBCFE8.toInt(), 0xFF111827.toInt(), 0xFFDC2626.toInt(), 0xFF7C3AED.toInt(), 0xFFEA580C.toInt()) }
     val radiusEntries = remember { listOf(0, 6, 12, 18, 24, 32).map { value -> ListPreferenceEntry(value) { "$value dp" } } }
@@ -332,6 +337,12 @@ fun SoulSpaceSettings(
             ListPreferenceEntry("original_bengali") { stringResource(R.string.soul_space_language_original_bengali) },
         )
     }
+    fun savedItems(key: String): List<String> = runCatching {
+        val raw = prefs.getCachedPreferences()[stringPreferencesKey(key)] ?: "[]"
+        val array = JSONArray(raw)
+        List(array.length()) { index -> array.getString(index) }
+    }.getOrDefault(emptyList())
+
     val scheduleEntries = remember {
         listOf(
             ListPreferenceEntry("each_unlock") { stringResource(R.string.soul_space_schedule_unlock) },
@@ -350,6 +361,16 @@ fun SoulSpaceSettings(
                 adapter = prefs.soulSpaceLanguage.getAdapter(),
                 entries = languageEntries,
                 label = stringResource(R.string.soul_space_language_label),
+            )
+            ClickablePreference(
+                label = "Favorites",
+                subtitle = "View your saved wisdom",
+                onClick = { savedListDialog = "soul_space_favorites" },
+            )
+            ClickablePreference(
+                label = "History",
+                subtitle = "View recently displayed wisdom",
+                onClick = { savedListDialog = "soul_space_history" },
             )
             ClickablePreference(
                 label = "Card background color",
@@ -446,6 +467,33 @@ fun SoulSpaceSettings(
                 entries = scheduleEntries,
                 label = stringResource(R.string.soul_space_schedule_label),
             )
+            savedListDialog?.let { key ->
+                val title = if (key == "soul_space_favorites") "Favorites" else "History"
+                val items = savedItems(key)
+                AlertDialog(
+                    onDismissRequest = { savedListDialog = null },
+                    title = { Text(title) },
+                    text = {
+                        if (items.isEmpty()) {
+                            Text(if (key == "soul_space_favorites") "No favorites saved yet." else "No wisdom history yet.")
+                        } else {
+                            Column(
+                                modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                            ) {
+                                items.forEach { entry ->
+                                    Text(entry, style = MaterialTheme.typography.bodyMedium)
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { savedListDialog = null }) {
+                            Text(stringResource(android.R.string.ok))
+                        }
+                    },
+                )
+            }
             androidx.compose.material3.Text(
                 text = stringResource(id = R.string.soul_space_privacy_note),
                 style = MaterialTheme.typography.bodySmall,
