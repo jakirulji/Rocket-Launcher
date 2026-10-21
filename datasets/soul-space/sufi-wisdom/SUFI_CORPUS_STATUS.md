@@ -1,6 +1,6 @@
 # Sufi Wisdom — corpus status
 
-Updated: 2026-10-21 (170 records; includes 10 Bustān selections)
+Updated: 2026-10-21 (160 quote records; includes 10 Bustān selections; Gulistan story summaries excluded)
 
 ## Imported source texts
 
@@ -51,3 +51,9 @@ Additional Hafiz import: 10 selections from Gertrude Lowthian Bell's 1897 Englis
 - This is not a complete Sufi corpus and does not meet the 200-record target. More Bengali and South Asian Sufi figures remain to be researched.
 - Bengali Lalon material: Wikimedia Commons has a scan of *Lalon Shah O Lalon Geetika* (1899) marked public domain, but it is a scan, not proofread machine-readable text. Do not claim song-level integration until transcription and page-by-page checking are complete.
 - Do not run a build for this data-only change; app integration and all other sector targets remain separate unfinished work.
+
+
+## Quote-only filtering (2026-10-21)
+- Removed 10 `Gulistan` narrative/story records from `records.jsonl` so the quote feed does not present story passages as stand-alone wisdom quotes.
+- Kept 10 selected `Bustān` excerpts, which are verse/wisdom selections rather than story summaries.
+- Current `records.jsonl` count after filtering: 160. Do not count the removed narrative records as quotes.
