@@ -33,3 +33,11 @@ IMPORTANT
 - This file records source decisions; it is not itself a scripture dataset.
 - Do not claim a source text has been integrated until the full source file is committed.
 - Do not modify verbatim scripture/translation text unless the source license expressly permits it.
+
+
+Sufi corpus update — 2026-10-21
+- Imported three historical Rumi English source texts from Project Gutenberg eBooks #45159, #61724, and #57068. Original Project Gutenberg notices are preserved.
+- Added 100 titled passage records extracted from the selections section of eBook #45159. Each record has a source line range and source URL.
+- These are English translations/selections, not the original Persian text. The Davis volume credits multiple translators; consult its preface and local passage context before assigning translator-level attribution.
+- Bengali AI-assisted simple translations are still pending. No unreviewed translation is labelled as verified. The app currently displays a clear fallback notice plus English source when Bengali is selected for a record without Bengali text.
+- This import does not meet the 200+ records per Sufi sub-sector target. Do not claim the Sufi dataset is complete.
