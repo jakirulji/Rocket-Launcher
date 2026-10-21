@@ -484,7 +484,7 @@ class LawnchairLauncher : QuickstepLauncher() {
      * a local device-capability check before opening the model download screen.
      */
     private fun applySoulSpaceDefaultsAndMaybeOnboard(savedInstanceState: Bundle?) {
-        if (!preferenceManager2.soulSpaceDefaultsApplied.get()) {
+        if (preferenceManager2.getCachedPreferences()[booleanPreferencesKey("soul_space_defaults_applied")] != true) {
             preferenceManager2.smartspaceMode.setBlocking(SoulSpace)
             preferenceManager2.soulSpaceSourceQuran.setBlocking(true)
             preferenceManager2.soulSpaceSourceHindu.setBlocking(true)
