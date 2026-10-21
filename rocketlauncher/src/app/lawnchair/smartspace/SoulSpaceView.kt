@@ -14,6 +14,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import org.json.JSONObject
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -302,7 +303,31 @@ class SoulSpaceView @JvmOverloads constructor(
             "জীবনের সংগ্রামশালা থেকে: যা আমাকে মেরে ফেলে না, তা আমাকে আরও শক্তিশালী করে। (জার্মান মূল থেকে Soul Space-এর অনুবাদ।)",
             "Twilight of the Idols, “Maxims and Arrows,” §8 • German original; translation by Soul Space",
             "https://www.gutenberg.org/ebooks/52263"),
-    ) + supplementalWisdom.flatten()
+    ) + supplementalWisdom.flatten() + loadSufiSelections()
+
+    /**
+     * Loads source-verified Rumi selections packaged with the launcher.
+     * Until an on-device translation engine is available, missing Bengali
+     * translations are labelled clearly and the English source is preserved.
+     */
+    private fun loadSufiSelections(): List<WisdomItem> = runCatching {
+        resources.openRawResource(R.raw.sufi_wisdom).bufferedReader(Charsets.UTF_8).useLines { lines ->
+            lines.mapNotNull { line ->
+                runCatching {
+                    val item = JSONObject(line)
+                    WisdomItem(
+                        item.getString("sourceKey"),
+                        item.getString("sourceLabel"),
+                        item.optString("original").takeIf { it.isNotBlank() && it != "null" },
+                        item.getString("english"),
+                        item.optString("bengali"),
+                        item.getString("reference"),
+                        item.optString("sourceUrl").takeIf { it.isNotBlank() && it != "null" },
+                    )
+                }.getOrNull()
+            }.toList()
+        }
+    }.getOrDefault(emptyList())
 
     private var currentIndex = 0
     private var receiverRegistered = false
@@ -474,11 +499,16 @@ class SoulSpaceView @JvmOverloads constructor(
             sourceView.text = context.getString(R.string.soul_space_source_pack_status)
             sourceView.setOnClickListener(null)
         } else {
+            val bengaliText = item.bengali.ifBlank {
+                "বাংলা অনুবাদ এখনও প্রস্তুত নয়; আপাতত ইংরেজি মূল পাঠ দেখানো হচ্ছে."
+            }
             quoteView.text = when (language) {
-                "bengali" -> item.bengali
+                "bengali" -> if (item.bengali.isBlank()) bengaliText + "\n\n" + item.english else item.bengali
                 "english" -> item.english
-                "original_bengali" -> listOfNotNull(item.original, item.bengali).joinToString("\n")
-                else -> item.bengali + "\n" + item.english
+                "original_bengali" -> listOfNotNull(item.original, item.bengali.takeIf { it.isNotBlank() })
+                    .ifEmpty { listOf(bengaliText + "\n\n" + item.english) }
+                    .joinToString("\n")
+                else -> bengaliText + "\n" + item.english
             }
             sourceView.text = if (item.sourceUrl == null) {
                 "Source: ${item.sourceLabel}\nReference: ${item.reference}"
