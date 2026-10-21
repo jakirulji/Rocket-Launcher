@@ -354,7 +354,9 @@ fun SoulSpaceSettings(
 
     val context = LocalContext.current
     Column(modifier.padding(top = 8.dp)) {
-        if (selectedSavedList != null) {
+        if (selectedSavedList == "soul_space_ai") {
+            SoulSpaceAiSettings(onBack = { selectedSavedList = null })
+        } else if (selectedSavedList != null) {
             val key = selectedSavedList!!
             val title = if (key == "soul_space_favorites") "Favorites" else "History"
             val items = savedItems(key)
@@ -410,6 +412,11 @@ fun SoulSpaceSettings(
                 adapter = prefs.soulSpaceLanguage.getAdapter(),
                 entries = languageEntries,
                 label = stringResource(R.string.soul_space_language_label),
+            )
+            ClickablePreference(
+                label = "AI Settings",
+                subtitle = "On-device AI model and download manager",
+                onClick = { selectedSavedList = "soul_space_ai" },
             )
             ClickablePreference(
                 label = "Favorites",
