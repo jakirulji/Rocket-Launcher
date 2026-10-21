@@ -8,7 +8,7 @@ These source files preserve Project Gutenberg headers, edition details, and lice
 
 1. `sources/rumi_persian_mystics_davis_1907.txt`
    - Project Gutenberg eBook #45159, *The Persian Mystics: Jalálu'd-dín Rúmí*.
-   - F. Hadland Davis, 1907 edition; includes selected passages from the Dīvān and Masnavi plus editorial commentary.
+   - Project Gutenberg's 1920 edition of F. Hadland Davis's book; includes selected passages from the Dīvān and Masnavi plus editorial commentary. The original Gutenberg title page identifies London, 1920.
    - Source: https://www.gutenberg.org/ebooks/45159
 2. `sources/rumi_mesnevi_redhouse_book1_1881.txt`
    - Project Gutenberg eBook #61724, *The Mesnevi*, Book I.
