@@ -1,0 +1,34 @@
+TANZIL QURAN TEXT — ATTRIBUTION AND TERMS
+
+Text file:
+quran-simple-clean.txt
+
+Source:
+Tanzil Project — https://tanzil.net/
+Official text download and license:
+https://tanzil.net/docs/Text_License
+https://tanzil.net/pub/download/v1.0/
+
+Tanzil Quran Text
+Copyright (C) 2007-2021 Tanzil Project
+License: Creative Commons Attribution 3.0
+
+This copy of the Quran text is carefully produced, highly verified and continuously monitored by a group of specialists in Tanzil Project.
+
+TERMS OF USE:
+- Permission is granted to copy and distribute verbatim copies of this text, but CHANGING IT IS NOT ALLOWED.
+- This Quran text can be used in any website or application, provided that its source (Tanzil Project) is clearly indicated, and a link is made to tanzil.net to enable users to keep track of changes.
+- This copyright notice shall be included in all verbatim copies of the text, and shall be reproduced appropriately in all files derived from or containing substantial portion of this text.
+- Please check updates at: https://tanzil.net/updates/
+
+Mirror used to retrieve this verbatim text:
+https://github.com/gptforjoomla/Tanzil/blob/master/Packages/com_tanzil/site/resources/quran/quran-simple-clean.txt
+
+Important:
+This repository copy of the Arabic text must remain unchanged. Keep this notice with the file and show Tanzil attribution plus a clickable link to https://tanzil.net/ in the app.
+
+TRANSLATIONS:
+Tanzil's translation download page says translations are for non-commercial use, and redistribution on another website is not allowed unless direct permission is granted by the Tanzil Project. A free/open-source app may fit non-commercial use, but committing the English and Bengali translation files to a public GitHub repository would still redistribute them. Therefore those two files are not included pending direct permission from Tanzil Project and/or the relevant translators/publishers.
+
+Translation terms:
+https://tanzil.net/trans/
