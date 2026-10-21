@@ -1,0 +1,35 @@
+SOUL SPACE — LICENSE REVIEW DECISIONS
+Reviewed: 2026-10-21
+Target use: offline display of unchanged source text and mood-based selection of pre-existing passages. No AI explanation, analysis, rewriting, or training on scripture translations.
+
+ACCEPTED / ALREADY PRESENT
+1. Qur'an Arabic: Tanzil, CC BY 3.0. Verbatim redistribution only; retain Tanzil attribution and license links.
+   https://tanzil.net/docs/text_license
+2. Qur'an Bengali: Rowwad Translation Center via QuranEnc, version 1.1.2. Re-publication allowed subject to QuranEnc's conditions; preserve the source JSON unchanged, credit publisher and QuranEnc, identify version, preserve notes/transcript metadata, report notes, keep updated, and avoid inappropriate advertising.
+   https://quranenc.com/en/home/api
+3. Qur'an English: Saheeh International / Noor International Center via QuranEnc, version 1.1.2. Same QuranEnc conditions as above.
+   https://quranenc.com/en/home/api
+4. Bhagavad Gita English: K.T. Telang, Sacred Books of the East Vol. 8 (1882), already present in datasets/soul-space/bhagavad-gita/bhagavad_gita_telang_sbe08.txt. The upstream corpus identifies the historic edition as public domain. Preserve the source header and attribution.
+   https://github.com/sharanharsoor/antardarshan/blob/main/CORPUS.md
+5. Dhammapada Pali and Latin text, already present in datasets/soul-space/dhammapada/. ETCBC repository license is MIT; preserve source/license notice.
+   https://github.com/ETCBC/dhammapada
+
+APPROVED CANDIDATE — SOURCE TEXT NOT YET IMPORTED
+6. Dhammapada English: F. Max Müller, Project Gutenberg eBook #2017 (translation from Pali; Sacred Books of the East Vol. X, Part I). Project Gutenberg labels it public domain in the USA and requires users outside the USA to check local law. The translator died in 1900; based on Bangladesh's general life-plus-60 term, the translation appears to be out of copyright locally, but the source file still needs to be imported with its complete header and local status rechecked before release.
+   https://www.gutenberg.org/ebooks/2017
+   Plain text: https://www.gutenberg.org/cache/epub/2017/pg2017.txt
+7. Bhagavad Gita English: Edwin Arnold, The Song Celestial (Project Gutenberg #2388, 1885). This is an additional public-domain candidate, but the repository already has the Telang translation; importing a second English edition is optional, not required to satisfy the current source criterion.
+   https://www.gutenberg.org/ebooks/2388
+
+EXCLUDED FROM AI-BASED MOOD SELECTION
+- Bhikkhu Sujato, Sayings of the Dhamma (CC0): despite the CC0 dedication, the author requests no use in AI training or AI-derived technologies. Because it is unclear whether mood-based AI selection falls within that request, do not import/use this translation for Soul Space's AI-assisted selection.
+
+NOT APPROVED YET
+- Charuchandra Basu's Bengali Dhammapada scan (1916): India-specific public-domain marking is not enough to establish Bangladesh status; author death/copyright facts need verification.
+- Bengali Bhagavad Gita translations: verify the exact edition and full text's reuse status before import.
+- Guru Granth Sahib translations: Shabad OS project is CC BY-SA 4.0, but individual source provenance and third-party translations must be verified; no fully verified Bengali translation identified yet.
+
+IMPORTANT
+- This file records source decisions; it is not itself a scripture dataset.
+- Do not claim a source text has been integrated until the full source file is committed.
+- Do not modify verbatim scripture/translation text unless the source license expressly permits it.
