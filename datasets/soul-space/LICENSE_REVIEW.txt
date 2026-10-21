@@ -62,3 +62,9 @@ ADDITIONAL SUFI SOURCE — ADDED 2026-10-21
 - Bhagavad Gita: 50 additional verse records sourced from gita/gita data/verse.json. Its LICENSE declares Unlicense/public-domain dedication for the repository data. English/Bengali fields are Soul Space renderings and need religious/language review.
 - Dhammapada: 54 additional verse records from bundled ETCBC Pāli source (MIT); retain attribution/license. Translation fields are Soul Space-authored renderings.
 - Validation checks confirm no duplicate IDs or reference strings within each of the three updated scripture JSON files. This does not replace theological or specialist proofreading.
+
+9) Scripture expansion pass 3 — 2026-10-21
+- Bhagavad Gita: +50 distinct verse records, total 117. Sanskrit source from gita/gita under Unlicense/public-domain dedication; translations are Soul Space-authored and need review.
+- Dhammapada: +50 distinct verse records, total 126. Pāli source from ETCBC under MIT; translations are Soul Space-authored and verse alignment needs specialist review.
+- Qur'an: unchanged at 66 in this pass. Additional records held because the bundled Arabic text line count does not align one-to-one with the canonical ayah count; incorrect verse labels must be avoided.
+- Unique IDs and references validated for the two updated files. No APK build performed; this was a dataset-only change.
