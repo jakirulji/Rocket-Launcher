@@ -368,7 +368,11 @@ class SoulSpaceView @JvmOverloads constructor(
             if (schedule == "each_unlock") {
                 val items = selectedItems()
                 if (items.isNotEmpty()) {
-                    currentIndex = ((prefs[intPreferencesKey("soul_space_rotation_index")] ?: currentIndex) + 1) % items.size
+                    currentIndex = Math.floorMod(
+                        prefs[intPreferencesKey("soul_space_rotation_index")] ?: currentIndex,
+                        items.size,
+                    )
+                    currentIndex = nextRandomIndex(items)
                     manager.soulSpaceRotationIndex.setBlocking(currentIndex)
                     updateReflection()
                 }
@@ -495,10 +499,26 @@ class SoulSpaceView @JvmOverloads constructor(
         return items[currentIndex]
     }
 
+    /**
+     * Pick a random item, preferring a different source pack from the currently displayed item.
+     * If only one source pack is enabled, still randomize within that pack.
+     */
+    private fun nextRandomIndex(items: List<WisdomItem>): Int {
+        if (items.size <= 1) return 0
+        val previousSource = items.getOrNull(Math.floorMod(currentIndex, items.size))?.sourceKey
+        val otherSources = items.indices.filter { items[it].sourceKey != previousSource }
+        val candidates = if (otherSources.isNotEmpty()) {
+            otherSources
+        } else {
+            items.indices.filter { it != Math.floorMod(currentIndex, items.size) }
+        }
+        return candidates.random()
+    }
+
     private fun showNextReflection() {
         val items = selectedItems()
         if (items.isNotEmpty()) {
-            currentIndex = (currentIndex + 1) % items.size
+            currentIndex = nextRandomIndex(items)
             PreferenceManager2.getInstance(context).soulSpaceRotationIndex.setBlocking(currentIndex)
         }
         updateReflection()
