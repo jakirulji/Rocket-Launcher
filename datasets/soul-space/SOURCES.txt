@@ -83,7 +83,7 @@ License note: Project Gutenberg identifies these editions as public domain in th
 
 SUFI WISDOM DATASET — ADDITIONAL STRUCTURED RECORDS (2026-10-21)
 File: datasets/soul-space/sufi-wisdom/records.jsonl
-Current structured-record count at this update: 170
+Current structured-record count before quote-only filtering: 170
 
 Rumi selections:
 Work: The Festival of Spring, from the Díván of Jeláleddín
@@ -138,3 +138,6 @@ Dhammapada: 20 Pāli verse records were selected from datasets/soul-space/dhamma
 Guru Granth Sahib: no new verbatim quotations were added in this pass because the current source/licensing review does not establish an eligible verified original-language passage and approved Bengali translation. Existing entries remain explicitly marked as paraphrases, not verbatim Gurbani.
 
 This selection is a starter expansion, not completion of the requested per-sector target. Public-domain status of historic editions in the USA does not establish copyright clearance in Bangladesh.
+
+
+Quote-only filter update (2026-10-21): removed the 10 `saadi-gulistan-ross-1900-*` narrative/story records from `datasets/soul-space/sufi-wisdom/records.jsonl`. Current Sufi quote-record count is 160; the 10 Bustān wisdom selections remain. Do not surface story summaries as direct quotations.
