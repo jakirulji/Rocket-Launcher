@@ -55,3 +55,10 @@ ADDITIONAL SUFI SOURCE — ADDED 2026-10-21
 - Dhammapada: added 20 Pāli verse records from the bundled ETCBC source under MIT. English/Bengali are original Soul Space renderings; retain upstream license/attribution and verify verse anchors.
 - Guru Granth Sahib: no new verbatim records added; Bengali translation eligibility and original text verification remain unresolved. Existing two records are paraphrases, not verbatim quotes.
 - No story summaries were added in this scripture expansion. Sufi/Gulistan story-summary records elsewhere in the corpus remain classified as summaries and should not be surfaced as direct quotations.
+
+
+8) Scripture expansion pass 2 — 2026-10-21
+- Qur'an: 52 additional selected ayah records; Arabic text matched against the bundled Tanzil Simple Clean file. Preserve source notice/license. Translations are Soul Space-authored renderings.
+- Bhagavad Gita: 50 additional verse records sourced from gita/gita data/verse.json. Its LICENSE declares Unlicense/public-domain dedication for the repository data. English/Bengali fields are Soul Space renderings and need religious/language review.
+- Dhammapada: 54 additional verse records from bundled ETCBC Pāli source (MIT); retain attribution/license. Translation fields are Soul Space-authored renderings.
+- Validation checks confirm no duplicate IDs or reference strings within each of the three updated scripture JSON files. This does not replace theological or specialist proofreading.
