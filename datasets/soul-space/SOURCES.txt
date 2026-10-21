@@ -60,3 +60,7 @@ License note: a free-to-use source does not mean all translation files have the 
 8) License review and source eligibility
 File: datasets/soul-space/LICENSE_REVIEW.txt
 This register records which sources meet the current Soul Space use case, which have only been approved as candidates, and which remain excluded pending verification. Do not treat an approved candidate as integrated until its full source text is committed. Bhikkhu Sujato's Dhammapada translation is excluded from AI-assisted mood selection due to its request against AI-derived technologies.
+
+9) Bengali translation eligibility and integration status
+File: datasets/soul-space/BENGALI_TRANSLATIONS_STATUS.md
+This tracks the Bengali translation already present (QuranEnc Rowwad), the historical Gita source requiring complete OCR/proofing, and sources not yet cleared for redistribution. Source URLs alone do not count as offline dataset integration.
