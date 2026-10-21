@@ -303,7 +303,7 @@ class SoulSpaceView @JvmOverloads constructor(
             "জীবনের সংগ্রামশালা থেকে: যা আমাকে মেরে ফেলে না, তা আমাকে আরও শক্তিশালী করে। (জার্মান মূল থেকে Soul Space-এর অনুবাদ।)",
             "Twilight of the Idols, “Maxims and Arrows,” §8 • German original; translation by Soul Space",
             "https://www.gutenberg.org/ebooks/52263"),
-    ) + supplementalWisdom.flatten() + loadSufiSelections()
+    ) + supplementalWisdom.flatten() + loadSufiSelections() + loadScriptureSelections()
 
     /**
      * Loads source-verified Rumi selections packaged with the launcher.
@@ -322,6 +322,29 @@ class SoulSpaceView @JvmOverloads constructor(
                         item.getString("english"),
                         item.optString("bengali"),
                         item.getString("reference"),
+                        item.optString("sourceUrl").takeIf { it.isNotBlank() && it != "null" },
+                    )
+                }.getOrNull()
+            }.toList()
+        }
+    }.getOrDefault(emptyList())
+
+    /**
+     * Loads the normalized offline scripture, philosophy and reflection datasets bundled
+     * from datasets/soul-space. Source preferences remain compatible with existing settings.
+     */
+    private fun loadScriptureSelections(): List<WisdomItem> = runCatching {
+        resources.openRawResource(R.raw.soul_space_scriptures).bufferedReader(Charsets.UTF_8).useLines { lines ->
+            lines.mapNotNull { line ->
+                runCatching {
+                    val item = JSONObject(line)
+                    WisdomItem(
+                        item.getString("sourceKey"),
+                        item.optString("sourceLabel", "Soul Space source"),
+                        item.optString("original").takeIf { it.isNotBlank() && it != "null" },
+                        item.optString("english"),
+                        item.optString("bengali"),
+                        item.optString("reference", "Reference not provided"),
                         item.optString("sourceUrl").takeIf { it.isNotBlank() && it != "null" },
                     )
                 }.getOrNull()
@@ -441,8 +464,24 @@ class SoulSpaceView @JvmOverloads constructor(
         if (prefs[booleanPreferencesKey("soul_space_source_general")] ?: true) {
             selected.addAll(generalReflections)
         }
-        selected.addAll(sourcedWisdom.filter { item -> prefs[booleanPreferencesKey(item.sourceKey)] == true })
-        return selected
+        selected.addAll(sourcedWisdom.filter { item ->
+            if (item.sourceKey == "soul_space_source_general") {
+                prefs[booleanPreferencesKey("soul_space_source_general")] ?: true
+            } else {
+                prefs[booleanPreferencesKey(item.sourceKey)] == true
+            }
+        })
+        // The bundled datasets overlap older hand-curated cards. Avoid repeated verse references
+        // and identical renderings without altering the source files or their stable IDs.
+        return selected.distinctBy { item ->
+            val normalizedReference = item.reference.lowercase()
+                .replace(Regex("[^\\p{L}\\p{N}]+"), " ")
+                .replace(Regex("\\s+"), " ")
+                .trim()
+            "${item.sourceKey}:$normalizedReference"
+        }.distinctBy { item ->
+            "${item.sourceKey}:${item.english.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), " ").replace(Regex("\\s+"), " ").trim()}"
+        }
     }
 
     private fun currentItem(): WisdomItem? {
