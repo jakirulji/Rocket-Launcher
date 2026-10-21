@@ -491,7 +491,7 @@ class SoulSpaceView @JvmOverloads constructor(
             if (item.sourceKey == "soul_space_source_general") {
                 prefs[booleanPreferencesKey("soul_space_source_general")] ?: true
             } else {
-                prefs[booleanPreferencesKey(item.sourceKey)] == true
+                prefs[booleanPreferencesKey(item.sourceKey)] ?: true
             }
         })
         // The bundled datasets overlap older hand-curated cards. Avoid repeated verse references
