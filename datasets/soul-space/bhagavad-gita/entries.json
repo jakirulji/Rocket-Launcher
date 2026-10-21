@@ -802,5 +802,65 @@
     "sourceUrl": "https://github.com/gita/gita/blob/main/data/verse.json",
     "recordType": "Sanskrit verse; Soul Space translation",
     "translationNote": "Sanskrit source from gita/gita repository under Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings; interpretation should be reviewed before production."
+  },
+  {
+    "id": "gita-068",
+    "sourceKey": "bhagavad-gita",
+    "originalLanguage": "Sanskrit",
+    "original": "श्री भगवानुवाच कालोऽस्मि लोकक्षयकृत्प्रवृद्धो लोकान्समाहर्तुमिह प्रवृत्तः। ऋतेऽपि त्वां न भविष्यन्ति सर्वे येऽवस्थिताः प्रत्यनीकेषु योधाः",
+    "english": "Time am I, the great destroyer of worlds, engaged in bringing these worlds to their end.",
+    "bengali": "আমি কাল, জগতের মহাসংহারক, জগৎসমূহের অবসান ঘটাতে প্রবৃত্ত।",
+    "reference": "Bhagavad Gita 11.32",
+    "sourceUrl": "https://github.com/gita/gita/blob/main/data/verse.json",
+    "recordType": "Sanskrit verse; Soul Space translation",
+    "translationNote": "Sanskrit source from gita/gita repository under Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings; specialist review recommended."
+  },
+  {
+    "id": "gita-069",
+    "sourceKey": "bhagavad-gita",
+    "originalLanguage": "Sanskrit",
+    "original": "मां च योऽव्यभिचारेण भक्ितयोगेन सेवते।स गुणान्समतीत्यैतान् ब्रह्मभूयाय कल्पते",
+    "english": "One who serves Me with unwavering devotion transcends the qualities and becomes fit for Brahman.",
+    "bengali": "অবিচল ভক্তিতে আমার সেবা করলে মানুষ গুণত্রয় অতিক্রম করে ব্রহ্মের যোগ্য হয়।",
+    "reference": "Bhagavad Gita 14.26",
+    "sourceUrl": "https://github.com/gita/gita/blob/main/data/verse.json",
+    "recordType": "Sanskrit verse; Soul Space translation",
+    "translationNote": "Sanskrit source from gita/gita repository under Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings; specialist review recommended."
+  },
+  {
+    "id": "gita-070",
+    "sourceKey": "bhagavad-gita",
+    "originalLanguage": "Sanskrit",
+    "original": "त्रिविधं नरकस्येदं द्वारं नाशनमात्मनः।कामः क्रोधस्तथा लोभस्तस्मादेतत्त्रयं त्यजेत्",
+    "english": "Desire, anger and greed are three gates to self-destruction; abandon them.",
+    "bengali": "কামনা, ক্রোধ ও লোভ আত্মবিনাশের তিন দ্বার; এগুলো ত্যাগ করো।",
+    "reference": "Bhagavad Gita 16.21",
+    "sourceUrl": "https://github.com/gita/gita/blob/main/data/verse.json",
+    "recordType": "Sanskrit verse; Soul Space translation",
+    "translationNote": "Sanskrit source from gita/gita repository under Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings; specialist review recommended."
+  },
+  {
+    "id": "gita-071",
+    "sourceKey": "bhagavad-gita",
+    "originalLanguage": "Sanskrit",
+    "original": "सत्त्वानुरूपा सर्वस्य श्रद्धा भवति भारत।श्रद्धामयोऽयं पुरुषो यो यच्छ्रद्धः स एव सः",
+    "english": "A person's faith accords with their inner nature; a person is shaped by their faith.",
+    "bengali": "মানুষের বিশ্বাস তার অন্তঃপ্রকৃতির অনুরূপ; বিশ্বাসই তার গঠনকে প্রভাবিত করে।",
+    "reference": "Bhagavad Gita 17.3",
+    "sourceUrl": "https://github.com/gita/gita/blob/main/data/verse.json",
+    "recordType": "Sanskrit verse; Soul Space translation",
+    "translationNote": "Sanskrit source from gita/gita repository under Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings; specialist review recommended."
+  },
+  {
+    "id": "gita-072",
+    "sourceKey": "bhagavad-gita",
+    "originalLanguage": "Sanskrit",
+    "original": "अधिष्ठानं तथा कर्ता करणं च पृथग्विधम्।विविधाश्च पृथक्चेष्टा दैवं चैवात्र पञ्चमम्",
+    "english": "The factors of action are the body, the doer, the instruments, the various efforts and the divine factor.",
+    "bengali": "কর্মের উপাদান হলো দেহ, কর্তা, ইন্দ্রিয়-উপকরণ, নানা প্রচেষ্টা এবং দৈব উপাদান।",
+    "reference": "Bhagavad Gita 18.14",
+    "sourceUrl": "https://github.com/gita/gita/blob/main/data/verse.json",
+    "recordType": "Sanskrit verse; Soul Space translation",
+    "translationNote": "Sanskrit source from gita/gita repository under Unlicense/public-domain dedication. English and Bengali are Soul Space-authored renderings; specialist review recommended."
   }
 ]
