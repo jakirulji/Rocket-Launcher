@@ -360,7 +360,7 @@ fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) 
                                             conversation.sendMessageAsync(
                                                 "Reply in Bengali with one short sentence: say that Soul Space local AI is working."
                                             ).collect { message ->
-                                                answer = message.toString()
+                                                answer += message.toString()
                                             }
                                             answer
                                         }
