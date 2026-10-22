@@ -15,6 +15,18 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.ai.edge.litertlm.Backend
+import com.google.ai.edge.litertlm.Engine
+import com.google.ai.edge.litertlm.EngineConfig
+import com.google.ai.edge.litertlm.LogSeverity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import java.io.File
 import org.json.JSONArray
 import org.json.JSONObject
 import androidx.core.content.ContextCompat
@@ -363,6 +375,7 @@ class SoulSpaceView @JvmOverloads constructor(
     private val cardContainer = LinearLayout(context)
     private val actionRow = LinearLayout(context)
     private val favoriteButton = TextView(context)
+    private val aiButton = TextView(context)
     private val cardBackground = GradientDrawable()
 
     private val unlockReceiver = object : BroadcastReceiver() {
@@ -438,7 +451,7 @@ class SoulSpaceView @JvmOverloads constructor(
         actionRow.orientation = HORIZONTAL
         actionRow.gravity = Gravity.END
         actionRow.setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
-        listOf(favoriteButton).forEach { button ->
+        listOf(favoriteButton, aiButton).forEach { button ->
             button.setTextColor(Color.WHITE)
             button.textSize = 12f
             button.setPadding((10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt(), (10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt())
@@ -447,6 +460,9 @@ class SoulSpaceView @JvmOverloads constructor(
             actionRow.addView(button, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
         }
         favoriteButton.setOnClickListener { toggleFavorite() }
+        aiButton.text = "✧ AI ব্যাখ্যা"
+        aiButton.contentDescription = "বর্তমান উদ্ধৃতির বাংলা ব্যাখ্যা তৈরি করুন"
+        aiButton.setOnClickListener { explainCurrentWisdomWithAi() }
         cardContainer.addView(actionRow, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         addView(cardContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         setOnClickListener { showNextReflection() }
@@ -541,6 +557,111 @@ class SoulSpaceView @JvmOverloads constructor(
             PreferenceManager2.getInstance(context).soulSpaceRotationIndex.setBlocking(currentIndex)
         }
         updateReflection()
+    }
+
+    /**
+     * Runs a short, source-aware explanation with the downloaded local model.
+     * This is optional and never sends the quote or prompt to a network service.
+     */
+    private fun explainCurrentWisdomWithAi() {
+        val item = currentItem() ?: return
+        val manager = PreferenceManager2.getInstance(context)
+        val prefs = manager.getCachedPreferences()
+        if (prefs[booleanPreferencesKey("soul_space_ai_enabled")] != true) {
+            android.app.AlertDialog.Builder(context)
+                .setTitle("Soul Space AI বন্ধ আছে")
+                .setMessage("Settings → Soul Space AI থেকে on-device AI চালু করে মডেল ডাউনলোড করুন।")
+                .setPositiveButton("ঠিক আছে", null)
+                .show()
+            return
+        }
+
+        val modelFiles = listOf(
+            "qwen3_0_6b_q4_0" to "qwen3_0_6b_mixed_int4.litertlm",
+            "qwen3_1_7b_q4" to "Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+            "qwen3_4b_q4" to "qwen3_4b_mixed_int4.litertlm",
+            "gemma_mobile" to "gemma-4-E2B-it.litertlm",
+        )
+        val selectedModel = prefs[stringPreferencesKey("soul_space_ai_model")] ?: "auto"
+        val modelDirectory = File(context.filesDir, "soul-space/models")
+        val modelFile = if (selectedModel != "auto") {
+            modelFiles.firstOrNull { it.first == selectedModel }
+                ?.second?.let { File(modelDirectory, it) }
+                ?.takeIf { it.isFile && it.length() > 0L }
+        } else {
+            modelFiles.firstNotNullOfOrNull { (_, name) ->
+                File(modelDirectory, name).takeIf { it.isFile && it.length() > 0L }
+            }
+        }
+        if (modelFile == null) {
+            android.app.AlertDialog.Builder(context)
+                .setTitle("AI মডেল পাওয়া যায়নি")
+                .setMessage("Soul Space AI settings-এ গিয়ে নির্বাচিত মডেলটি ডাউনলোড করুন।")
+                .setPositiveButton("ঠিক আছে", null)
+                .show()
+            return
+        }
+
+        val prompt = """
+            এই উদ্ধৃতির সহজ, সংক্ষিপ্ত বাংলা ব্যাখ্যা দাও (২–৩টি বাক্য)।
+            ব্যাখ্যাটি যেন উদ্ধৃতির অর্থের সঙ্গে সম্পর্কিত হয়। উৎস বা ধর্মগ্রন্থের বক্তব্য
+            হিসেবে নতুন কোনো দাবি বানিয়ে লিখবে না। এটি ব্যাখ্যা, মূল উদ্ধৃতি বা অনুমোদিত
+            অনুবাদ নয়।
+            উৎস: ${item.sourceLabel}
+            রেফারেন্স: ${item.reference}
+            উদ্ধৃতি/অনুবাদ: ${item.bengali.ifBlank { item.english }}
+        """.trimIndent()
+        val dialog = android.app.AlertDialog.Builder(context)
+            .setTitle("Soul Space · AI ব্যাখ্যা")
+            .setMessage("ফোনেই AI মডেল চালু হচ্ছে… প্রথমবার কিছুটা সময় লাগতে পারে।")
+            .setPositiveButton("বন্ধ", null)
+            .create()
+        dialog.setCancelable(false)
+        dialog.show()
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).isEnabled = false
+
+        CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate).launch {
+            try {
+                val explanation = withTimeout(120_000) {
+                    withContext(Dispatchers.IO) {
+                        Engine.setNativeMinLogSeverity(LogSeverity.ERROR)
+                        Engine(
+                            EngineConfig(
+                                modelPath = modelFile.absolutePath,
+                                backend = Backend.CPU(),
+                                cacheDir = context.cacheDir.absolutePath,
+                            ),
+                        ).use { engine ->
+                            engine.initialize()
+                            engine.createConversation().use { conversation ->
+                                val answer = StringBuilder()
+                                conversation.sendMessageAsync(prompt).collect { message ->
+                                    answer.append(message.toString())
+                                }
+                                answer.toString().trim()
+                            }
+                        }
+                    }
+                }
+                dialog.setTitle("Soul Space · AI ব্যাখ্যা")
+                dialog.setMessage(
+                    if (explanation.isNotBlank()) explanation
+                    else "AI কোনো পাঠযোগ্য ব্যাখ্যা দেয়নি। মডেল বা runtime পরীক্ষা করুন.",
+                )
+            } catch (error: Exception) {
+                dialog.setTitle("AI ব্যাখ্যা তৈরি হয়নি")
+                dialog.setMessage(
+                    "এই ফোনে স্থানীয় AI চালাতে সমস্যা হয়েছে.\n\n" +
+                        (error.message ?: error.javaClass.simpleName),
+                )
+            } catch (error: LinkageError) {
+                dialog.setTitle("AI runtime সমস্যা")
+                dialog.setMessage(error.message ?: "Native AI runtime লোড করা যায়নি।")
+            } finally {
+                dialog.setCancelable(true)
+                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).isEnabled = true
+            }
+        }
     }
 
     private fun savedEntries(key: String): MutableList<String> {
