@@ -38,6 +38,9 @@ import app.lawnchair.preferences2.PreferenceManager2
 import com.patrykmichalik.opto.core.setBlocking
 import kotlinx.coroutines.runBlocking
 import com.android.launcher3.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * Offline Soul Space surface. Sourced entries show their source and reference in the visible UI.
@@ -384,7 +387,25 @@ class SoulSpaceView @JvmOverloads constructor(
             val manager = PreferenceManager2.getInstance(this@SoulSpaceView.context)
             val prefs = manager.getCachedPreferences()
             val schedule = prefs[stringPreferencesKey("soul_space_schedule")] ?: "each_unlock"
-            if (schedule == "each_unlock") {
+            val shouldRotate = when (schedule) {
+                "each_unlock" -> true
+                "daily" -> {
+                    val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                    val lastRotation = prefs[stringPreferencesKey("soul_space_last_daily_rotation")]
+                    if (lastRotation != today) {
+                        runBlocking {
+                            manager.preferencesDataStore.edit {
+                                it[stringPreferencesKey("soul_space_last_daily_rotation")] = today
+                            }
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                }
+                else -> false // Manual mode changes only when the user taps the card.
+            }
+            if (shouldRotate) {
                 val items = selectedItems()
                 if (items.isNotEmpty()) {
                     currentIndex = Math.floorMod(
