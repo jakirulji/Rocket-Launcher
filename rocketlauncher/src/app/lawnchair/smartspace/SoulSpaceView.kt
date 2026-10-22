@@ -35,6 +35,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import app.lawnchair.preferences2.PreferenceManager2
+import app.lawnchair.ui.preferences.PreferenceActivity
+import app.lawnchair.ui.preferences.navigation.PreferenceRoute
+import app.lawnchair.ui.preferences.navigation.Smartspace
 import com.patrykmichalik.opto.core.setBlocking
 import kotlinx.coroutines.runBlocking
 import com.android.launcher3.R
@@ -610,17 +613,31 @@ class SoulSpaceView @JvmOverloads constructor(
             .show()
     }
 
+    private fun openSoulSpaceAiSettings() {
+        runCatching {
+            val intent = PreferenceActivity.createIntent(context, Smartspace).apply {
+                putExtra("open_soul_space_ai", true)
+                putExtra("auto_download_soul_space_ai", true)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        }.onFailure {
+            android.app.AlertDialog.Builder(context)
+                .setTitle("AI Settings খোলা যায়নি")
+                .setMessage(it.message ?: it.javaClass.simpleName)
+                .setPositiveButton("ঠিক আছে", null)
+                .show()
+        }
+    }
+
     private fun explainCurrentWisdomWithAi(mood: String? = null) {
         val item = currentItem() ?: return
         val manager = PreferenceManager2.getInstance(context)
         val prefs = manager.getCachedPreferences()
+        // Tapping an AI action is an explicit request to use the feature, so enable the
+        // existing preference rather than stopping at an informational popup.
         if (prefs[booleanPreferencesKey("soul_space_ai_enabled")] != true) {
-            android.app.AlertDialog.Builder(context)
-                .setTitle("Soul Space AI বন্ধ আছে")
-                .setMessage("Settings → Soul Space AI থেকে on-device AI চালু করে মডেল ডাউনলোড করুন।")
-                .setPositiveButton("ঠিক আছে", null)
-                .show()
-            return
+            manager.soulSpaceAiEnabled.setBlocking(true)
         }
 
         val modelFiles = listOf(
@@ -642,9 +659,15 @@ class SoulSpaceView @JvmOverloads constructor(
         }
         if (modelFile == null) {
             android.app.AlertDialog.Builder(context)
-                .setTitle("AI মডেল পাওয়া যায়নি")
-                .setMessage("Soul Space AI settings-এ গিয়ে নির্বাচিত মডেলটি ডাউনলোড করুন।")
-                .setPositiveButton("ঠিক আছে", null)
+                .setTitle("AI মডেল ডাউনলোড দরকার")
+                .setMessage(
+                    "এই ফোনে এখনো কোনো চালানোর মতো Soul Space AI মডেল পাওয়া যায়নি। " +
+                        "AI Settings খুলে মডেল ডাউনলোড শুরু করুন। ডাউনলোড শেষ হলে এই বোতামে আবার চাপুন।"
+                )
+                .setPositiveButton("AI Settings খুলুন") { _, _ ->
+                    openSoulSpaceAiSettings()
+                }
+                .setNegativeButton("এখন নয়", null)
                 .show()
             return
         }
