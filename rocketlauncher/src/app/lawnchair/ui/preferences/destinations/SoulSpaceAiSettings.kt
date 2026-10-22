@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -49,6 +50,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -167,6 +169,7 @@ fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) 
     var downloadJob by remember { mutableStateOf<Job?>(null) }
     var testing by remember { mutableStateOf(false) }
     var testResponse by remember { mutableStateOf("") }
+    var showTestDialog by remember { mutableStateOf(false) }
 
     val startDownload: () -> Unit = {
                                 downloadJob = scope.launch {
@@ -342,8 +345,9 @@ fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) 
                             testing = true
                             testResponse = ""
                             status = "Loading model and running a real local inference test…"
+                            showTestDialog = true
                             try {
-                                testResponse = withContext(Dispatchers.IO) {
+                                testResponse = withTimeout(90_000) { withContext(Dispatchers.IO) {
                                     Engine.setNativeMinLogSeverity(LogSeverity.ERROR)
                                     Engine(EngineConfig(
                                         modelPath = target.absolutePath,
@@ -361,14 +365,18 @@ fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) 
                                             answer
                                         }
                                     }
+                                } }
+                                if (testResponse.isBlank()) {
+                                    status = "TEST FAILED — the model returned no readable text. Runtime/output handling needs further checking."
+                                } else {
+                                    status = "TEST SUCCESS — real on-device inference completed locally."
                                 }
-                                status = "Real on-device inference completed. This test ran locally."
                             } catch (error: UnsatisfiedLinkError) {
-                                status = "Native AI runtime could not link its JNI implementation. This release build may have renamed JNI classes or omitted a compatible native library. Please update the app after the runtime fix; no model data was sent."
+                                status = "TEST FAILED — native AI runtime could not link its JNI implementation: ${error.message ?: "UnsatisfiedLinkError"}. No model data was sent."
                             } catch (error: LinkageError) {
-                                status = "Native AI runtime is incompatible with this build: ${error.message ?: error.javaClass.simpleName}. The device test stopped safely."
+                                status = "TEST FAILED — native AI runtime is incompatible: ${error.message ?: error.javaClass.simpleName}. The device test stopped safely."
                             } catch (error: Exception) {
-                                status = "Runtime test failed: ${error.message ?: error.javaClass.simpleName}"
+                                status = "TEST FAILED — ${error.message ?: error.javaClass.simpleName}"
                             } finally {
                                 testing = false
                             }
@@ -408,5 +416,28 @@ fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) 
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }
+    }
+
+    if (showTestDialog) {
+        AlertDialog(
+            onDismissRequest = { if (!testing) showTestDialog = false },
+            title = { Text(if (testing) "Testing on-device AI…" else if (status.startsWith("TEST SUCCESS")) "AI test successful" else "AI test result") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (testing) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    Text(if (testing) "The model is loading and generating a short Bengali response on this phone. This may take a while." else status)
+                    if (!testing && testResponse.isNotBlank()) {
+                        Text("Model response:", style = MaterialTheme.typography.titleSmall)
+                        Text(testResponse, style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = !testing,
+                    onClick = { showTestDialog = false },
+                ) { Text(if (testing) "Please wait…" else "Close") }
+            },
+        )
     }
 }
