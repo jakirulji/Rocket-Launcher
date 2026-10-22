@@ -349,6 +349,7 @@ fun SoulSpaceSettings(
     val scheduleEntries = remember {
         listOf(
             ListPreferenceEntry("each_unlock") { stringResource(R.string.soul_space_schedule_unlock) },
+            ListPreferenceEntry("daily") { "Once per day (first unlock)" },
             ListPreferenceEntry("manual") { stringResource(R.string.soul_space_schedule_manual) },
         )
     }
