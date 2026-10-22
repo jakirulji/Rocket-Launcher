@@ -379,6 +379,7 @@ class SoulSpaceView @JvmOverloads constructor(
     private val actionRow = LinearLayout(context)
     private val favoriteButton = TextView(context)
     private val aiButton = TextView(context)
+    private val moodButton = TextView(context)
     private val cardBackground = GradientDrawable()
 
     private val unlockReceiver = object : BroadcastReceiver() {
@@ -472,7 +473,7 @@ class SoulSpaceView @JvmOverloads constructor(
         actionRow.orientation = HORIZONTAL
         actionRow.gravity = Gravity.END
         actionRow.setPadding(0, (8 * resources.displayMetrics.density).toInt(), 0, 0)
-        listOf(favoriteButton, aiButton).forEach { button ->
+        listOf(favoriteButton, aiButton, moodButton).forEach { button ->
             button.setTextColor(Color.WHITE)
             button.textSize = 12f
             button.setPadding((10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt(), (10 * resources.displayMetrics.density).toInt(), (6 * resources.displayMetrics.density).toInt())
@@ -484,6 +485,9 @@ class SoulSpaceView @JvmOverloads constructor(
         aiButton.text = "✧ AI ব্যাখ্যা"
         aiButton.contentDescription = "বর্তমান উদ্ধৃতির বাংলা ব্যাখ্যা তৈরি করুন"
         aiButton.setOnClickListener { explainCurrentWisdomWithAi() }
+        moodButton.text = "☼ মুড সহায়তা"
+        moodButton.contentDescription = "আপনার বেছে নেওয়া অনুভূতি অনুযায়ী স্থানীয় AI সহায়তা নিন"
+        moodButton.setOnClickListener { showMoodAwareGuidance() }
         cardContainer.addView(actionRow, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         addView(cardContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         setOnClickListener { showNextReflection() }
@@ -584,7 +588,29 @@ class SoulSpaceView @JvmOverloads constructor(
      * Runs a short, source-aware explanation with the downloaded local model.
      * This is optional and never sends the quote or prompt to a network service.
      */
-    private fun explainCurrentWisdomWithAi() {
+    private fun showMoodAwareGuidance() {
+        val moods = arrayOf(
+            "মন খারাপ",
+            "দুশ্চিন্তা",
+            "একাকিত্ব",
+            "ক্লান্তি",
+            "রাগ বা অস্থিরতা",
+            "পড়াশোনা বা কাজের চাপ",
+            "কৃতজ্ঞতা",
+            "অনুপ্রেরণা চাই",
+        )
+        android.app.AlertDialog.Builder(context)
+            .setTitle("এখন আপনার কেমন লাগছে?")
+            .setMessage("একটি অনুভূতি বেছে নিন। আপনার পছন্দ ও উদ্ধৃতিটি এই ফোনেই AI-কে দেওয়া হবে; কোনো সার্ভারে পাঠানো হবে না।")
+            .setItems(moods) { dialog, which ->
+                dialog.dismiss()
+                explainCurrentWisdomWithAi(moods[which])
+            }
+            .setNegativeButton("বাতিল", null)
+            .show()
+    }
+
+    private fun explainCurrentWisdomWithAi(mood: String? = null) {
         val item = currentItem() ?: return
         val manager = PreferenceManager2.getInstance(context)
         val prefs = manager.getCachedPreferences()
@@ -623,17 +649,32 @@ class SoulSpaceView @JvmOverloads constructor(
             return
         }
 
-        val prompt = """
-            এই উদ্ধৃতির সহজ, সংক্ষিপ্ত বাংলা ব্যাখ্যা দাও (২–৩টি বাক্য)।
-            ব্যাখ্যাটি যেন উদ্ধৃতির অর্থের সঙ্গে সম্পর্কিত হয়। উৎস বা ধর্মগ্রন্থের বক্তব্য
-            হিসেবে নতুন কোনো দাবি বানিয়ে লিখবে না। এটি ব্যাখ্যা, মূল উদ্ধৃতি বা অনুমোদিত
-            অনুবাদ নয়।
-            উৎস: ${item.sourceLabel}
-            রেফারেন্স: ${item.reference}
-            উদ্ধৃতি/অনুবাদ: ${item.bengali.ifBlank { item.english }}
-        """.trimIndent()
+        val prompt = if (mood == null) {
+            """
+                এই উদ্ধৃতির সহজ, সংক্ষিপ্ত বাংলা ব্যাখ্যা দাও (২–৩টি বাক্য)।
+                ব্যাখ্যাটি যেন উদ্ধৃতির অর্থের সঙ্গে সম্পর্কিত হয়। উৎস বা ধর্মগ্রন্থের বক্তব্য
+                হিসেবে নতুন কোনো দাবি বানিয়ে লিখবে না। এটি ব্যাখ্যা, মূল উদ্ধৃতি বা অনুমোদিত
+                অনুবাদ নয়।
+                উৎস: ${item.sourceLabel}
+                রেফারেন্স: ${item.reference}
+                উদ্ধৃতি/অনুবাদ: ${item.bengali.ifBlank { item.english }}
+            """.trimIndent()
+        } else {
+            """
+                উত্তরটি বাংলায় দাও। ব্যবহারকারী এখন "$mood" অনুভূতি বেছে নিয়েছেন।
+                সহানুভূতিশীল, শান্ত ও বাস্তবসম্মতভাবে ২–৩টি সংক্ষিপ্ত বাক্যে সহায়তা করো।
+                বর্তমান অনুভূতিকে অস্বীকার বা বিচার কোরো না, কোনো রোগ নির্ণয় কোরো না,
+                এবং চিকিৎসা-পরামর্শ দিও না। নিচের উদ্ধৃতির সঙ্গে সম্পর্কিত একটি অর্থপূর্ণ
+                ভাবনা ও সম্ভব হলে একটি ছোট, নিরাপদ পরবর্তী পদক্ষেপ বলো। ধর্মগ্রন্থ বা উৎসের
+                নামে নতুন বক্তব্য বানিয়ে লিখবে না। এটি AI-এর সাধারণ সহায়ক ব্যাখ্যা, মূল
+                উদ্ধৃতি বা অনুমোদিত অনুবাদ নয়।
+                উৎস: ${item.sourceLabel}
+                রেফারেন্স: ${item.reference}
+                উদ্ধৃতি/অনুবাদ: ${item.bengali.ifBlank { item.english }}
+            """.trimIndent()
+        }
         val dialog = android.app.AlertDialog.Builder(context)
-            .setTitle("Soul Space · AI ব্যাখ্যা")
+            .setTitle(if (mood == null) "Soul Space · AI ব্যাখ্যা" else "Soul Space · মুড অনুযায়ী সহায়তা")
             .setMessage("ফোনেই AI মডেল চালু হচ্ছে… প্রথমবার কিছুটা সময় লাগতে পারে।")
             .setPositiveButton("বন্ধ", null)
             .create()
@@ -664,7 +705,7 @@ class SoulSpaceView @JvmOverloads constructor(
                         }
                     }
                 }
-                dialog.setTitle("Soul Space · AI ব্যাখ্যা")
+                dialog.setTitle(if (mood == null) "Soul Space · AI ব্যাখ্যা" else "Soul Space · মুড অনুযায়ী সহায়তা")
                 dialog.setMessage(
                     if (explanation.isNotBlank()) explanation
                     else "AI কোনো পাঠযোগ্য ব্যাখ্যা দেয়নি। মডেল বা runtime পরীক্ষা করুন.",
