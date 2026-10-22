@@ -630,6 +630,30 @@ class SoulSpaceView @JvmOverloads constructor(
         }
     }
 
+    private fun showOfflineMoodGuidance(mood: String, item: WisdomItem) {
+        val guidance = when (mood) {
+            "মন খারাপ" -> "নিজের অনুভূতিকে অস্বীকার করবেন না। একটু পানি পান করুন, ধীরে কয়েকবার শ্বাস নিন, আর সম্ভব হলে বিশ্বাসের কাউকে মনের কথা বলুন।"
+            "দুশ্চিন্তা" -> "এখনই সব সমস্যার সমাধান দরকার নেই। যে কাজটি আপনার নিয়ন্ত্রণে আছে, সেটির একটি ছোট পরবর্তী পদক্ষেপ লিখে নিন।"
+            "একাকিত্ব" -> "একাকিত্ব অনুভব করা মানে আপনি মূল্যহীন নন। পরিচিত কাউকে ছোট একটি বার্তা পাঠানো বা কিছুক্ষণ মানুষের সান্নিধ্যে থাকা দিয়ে শুরু করতে পারেন।"
+            "ক্লান্তি" -> "ক্লান্তি হলে বিরতি নেওয়া যুক্তিসঙ্গত। পানি পান করুন, প্রয়োজন হলে বিশ্রাম নিন, তারপর কাজটিকে ছোট ধাপে ভাগ করুন।"
+            "রাগ বা অস্থিরতা" -> "উত্তর দেওয়ার আগে একটু থামুন এবং ধীরে শ্বাস নিন। নিরাপদ হলে পরিস্থিতি থেকে সাময়িক বিরতি নিয়ে পরে শান্তভাবে কথা বলুন।"
+            "পড়াশোনা বা কাজের চাপ" -> "সবকিছু একসঙ্গে করার চেষ্টা না করে ১০ মিনিটের একটি ছোট কাজ বেছে নিন। অল্প অগ্রগতিও অগ্রগতি।"
+            "কৃতজ্ঞতা" -> "আজ যে একটি ভালো বিষয় পেয়েছেন, সেটি মনে করুন বা লিখে রাখুন। সম্ভব হলে যিনি সাহায্য করেছেন তাঁকে ধন্যবাদ জানান।"
+            else -> "আপনার কাছে গুরুত্বপূর্ণ একটি ছোট লক্ষ্য বেছে নিন এবং আজই তার জন্য একটি বাস্তবসম্মত পদক্ষেপ নিন।"
+        }
+        android.app.AlertDialog.Builder(context)
+            .setTitle("মুড সহায়তা · অফলাইন")
+            .setMessage(
+                "আপনার নির্বাচিত অনুভূতি: $mood\n\n$guidance\n\n" +
+                    "বর্তমান বাণী: ${item.bengali.ifBlank { item.english }}\n" +
+                    "উৎস: ${item.sourceLabel} · ${item.reference}\n\n" +
+                    "এটি অফলাইন সহায়তা, AI-লিখিত উত্তর নয়। AI মডেল ডাউনলোড হলে একই বিষয় নিয়ে স্থানীয় AI-কে জিজ্ঞেস করতে পারবেন।"
+            )
+            .setPositiveButton("AI মডেল ডাউনলোড") { _, _ -> openSoulSpaceAiSettings() }
+            .setNegativeButton("বন্ধ", null)
+            .show()
+    }
+
     private fun explainCurrentWisdomWithAi(mood: String? = null) {
         val item = currentItem() ?: return
         val manager = PreferenceManager2.getInstance(context)
@@ -648,27 +672,30 @@ class SoulSpaceView @JvmOverloads constructor(
         )
         val selectedModel = prefs[stringPreferencesKey("soul_space_ai_model")] ?: "auto"
         val modelDirectory = File(context.filesDir, "soul-space/models")
-        val modelFile = if (selectedModel != "auto") {
-            modelFiles.firstOrNull { it.first == selectedModel }
-                ?.second?.let { File(modelDirectory, it) }
-                ?.takeIf { it.isFile && it.length() > 0L }
-        } else {
-            modelFiles.firstNotNullOfOrNull { (_, name) ->
-                File(modelDirectory, name).takeIf { it.isFile && it.length() > 0L }
-            }
+        val preferredModelFile = modelFiles.firstOrNull { it.first == selectedModel }
+            ?.second?.let { File(modelDirectory, it) }
+            ?.takeIf { it.isFile && it.length() > 0L }
+        // If the user changed the selected model after downloading another one, use the
+        // available local model rather than incorrectly claiming that no model exists.
+        val modelFile = preferredModelFile ?: modelFiles.firstNotNullOfOrNull { (_, name) ->
+            File(modelDirectory, name).takeIf { it.isFile && it.length() > 0L }
         }
         if (modelFile == null) {
-            android.app.AlertDialog.Builder(context)
-                .setTitle("AI মডেল ডাউনলোড দরকার")
-                .setMessage(
-                    "এই ফোনে এখনো কোনো চালানোর মতো Soul Space AI মডেল পাওয়া যায়নি। " +
-                        "AI Settings খুলে মডেল ডাউনলোড শুরু করুন। ডাউনলোড শেষ হলে এই বোতামে আবার চাপুন।"
-                )
-                .setPositiveButton("AI Settings খুলুন") { _, _ ->
-                    openSoulSpaceAiSettings()
-                }
-                .setNegativeButton("এখন নয়", null)
-                .show()
+            if (mood != null) {
+                showOfflineMoodGuidance(mood, item)
+            } else {
+                android.app.AlertDialog.Builder(context)
+                    .setTitle("AI মডেল ডাউনলোড দরকার")
+                    .setMessage(
+                        "এই ফোনে এখনো কোনো চালানোর মতো Soul Space AI মডেল পাওয়া যায়নি। " +
+                            "AI Settings খুললে মডেল ডাউনলোড শুরু হবে। ডাউনলোড শেষ হলে AI ব্যাখ্যায় আবার চাপুন।"
+                    )
+                    .setPositiveButton("AI Settings খুলুন") { _, _ ->
+                        openSoulSpaceAiSettings()
+                    }
+                    .setNegativeButton("এখন নয়", null)
+                    .show()
+            }
             return
         }
 
