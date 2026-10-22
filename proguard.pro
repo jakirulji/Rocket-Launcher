@@ -32,3 +32,6 @@
 # This shouldn't concern us much
 -dontwarn androidx.window.extensions.**
 -dontwarn androidx.window.sidecar.**
+
+# LiteRT-LM uses JNI entry points; preserve class and native method names in release builds.
+-keep class com.google.ai.edge.litertlm.** { *; }

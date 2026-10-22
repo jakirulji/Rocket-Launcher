@@ -363,6 +363,10 @@ fun SoulSpaceAiSettings(onBack: () -> Unit, autoStartDownload: Boolean = false) 
                                     }
                                 }
                                 status = "Real on-device inference completed. This test ran locally."
+                            } catch (error: UnsatisfiedLinkError) {
+                                status = "Native AI runtime could not link its JNI implementation. This release build may have renamed JNI classes or omitted a compatible native library. Please update the app after the runtime fix; no model data was sent."
+                            } catch (error: LinkageError) {
+                                status = "Native AI runtime is incompatible with this build: ${error.message ?: error.javaClass.simpleName}. The device test stopped safely."
                             } catch (error: Exception) {
                                 status = "Runtime test failed: ${error.message ?: error.javaClass.simpleName}"
                             } finally {
