@@ -21,25 +21,28 @@ import android.view.KeyEvent
 import com.topjohnwu.superuser.Shell
 
 /**
- * Executes a small, explicit set of system actions through Android's input
- * command when root is available. This lets rooted users keep global gesture
- * actions without enabling Rocket Launcher's Accessibility Service.
+ * Executes a small, explicit set of system actions through root when available.
+ * This lets rooted users keep global gesture actions without enabling Rocket
+ * Launcher's Accessibility Service.
  *
  * This is not an accessibility-service replacement on unrooted devices.
  */
 internal object RootGlobalAction {
 
     fun perform(action: Int): Boolean {
-        val keyCode = when (action) {
-            AccessibilityService.GLOBAL_ACTION_RECENTS -> KeyEvent.KEYCODE_APP_SWITCH
-            AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS -> KeyEvent.KEYCODE_NOTIFICATION
-            AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS -> KeyEvent.KEYCODE_QUICK_SETTINGS
+        val command = when (action) {
+            AccessibilityService.GLOBAL_ACTION_RECENTS ->
+                "input keyevent ${KeyEvent.KEYCODE_APP_SWITCH}"
+            AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS ->
+                "input keyevent ${KeyEvent.KEYCODE_NOTIFICATION}"
+            AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS ->
+                "cmd statusbar expand-settings"
             else -> return false
         }
 
         return runCatching {
             val shell = Shell.getShell()
-            shell.isRoot && Shell.cmd("input keyevent $keyCode").exec().isSuccess
+            shell.isRoot && Shell.cmd(command).exec().isSuccess
         }.getOrDefault(false)
     }
 }
