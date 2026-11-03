@@ -73,6 +73,11 @@ data object Folders : PreferenceRootRoute, PreferenceDeepLink {
 }
 
 @Serializable
+data object Recent : PreferenceRootRoute, PreferenceDeepLink {
+    override val deepLink = "$URI/recent"
+}
+
+@Serializable
 data object Quickstep : PreferenceRootRoute, PreferenceDeepLink {
     override val deepLink = "$URI/quickstep"
 }
