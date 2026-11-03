@@ -16,20 +16,16 @@
 
 package app.lawnchair.gestures.handlers
 
-import android.accessibilityservice.AccessibilityService
-import android.annotation.TargetApi
 import android.app.admin.DeviceAdminReceiver
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import app.lawnchair.LawnchairLauncher
 import app.lawnchair.preferences2.PreferenceManager2
 import app.lawnchair.util.requireSystemService
 import app.lawnchair.views.ComposeBottomSheet
 import com.android.launcher3.R
-import com.android.launcher3.Utilities
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.flow.first
 
@@ -40,7 +36,8 @@ class SleepGestureHandler(context: Context) : GestureHandler(context) {
         val method = when (pref) {
             SleepMode.AUTO -> methods.first { it.isSupported() }
             SleepMode.ROOT -> methods.filterIsInstance<SleepMethodRoot>().first()
-            SleepMode.ACCESSIBILITY -> methods.filterIsInstance<SleepMethodPieAccessibility>().first()
+            // Keep compatibility with previously saved preferences from older versions.
+            SleepMode.ACCESSIBILITY -> methods.first { it.isSupported() }
             SleepMode.DEVICE_ADMIN -> methods.filterIsInstance<SleepMethodDeviceAdmin>().first()
         }
 
@@ -54,7 +51,6 @@ class SleepGestureHandler(context: Context) : GestureHandler(context) {
 
     private val methods = listOf(
         SleepMethodRoot(context),
-        SleepMethodPieAccessibility(context),
         SleepMethodDeviceAdmin(context),
     )
 
@@ -70,19 +66,6 @@ class SleepMethodRoot(context: Context) : SleepGestureHandler.SleepMethod(contex
 
     override suspend fun sleep(launcher: LawnchairLauncher) {
         Shell.cmd("input keyevent 26").exec()
-    }
-}
-
-class SleepMethodPieAccessibility(context: Context) : SleepGestureHandler.SleepMethod(context) {
-    override suspend fun isSupported() = Utilities.ATLEAST_P
-
-    @TargetApi(Build.VERSION_CODES.P)
-    override suspend fun sleep(launcher: LawnchairLauncher) {
-        GestureWithAccessibilityHandler.onTrigger(
-            launcher,
-            R.string.sleep_a11y_hint,
-            AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN,
-        )
     }
 }
 
@@ -116,7 +99,7 @@ class SleepMethodDeviceAdmin(context: Context) : SleepGestureHandler.SleepMethod
     class SleepDeviceAdmin : DeviceAdminReceiver() {
 
         override fun onDisableRequested(context: Context, intent: Intent): CharSequence {
-            return context.getString(R.string.dt2s_admin_warning)
+            return context.getString(R.string.dt2ts_admin_warning)
         }
     }
 }
