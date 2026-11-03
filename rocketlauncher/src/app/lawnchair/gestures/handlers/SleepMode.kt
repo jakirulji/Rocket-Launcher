@@ -14,6 +14,7 @@ enum class SleepMode(
     ROOT(
         labelResourceId = R.string.sleep_mode_root,
     ),
+    // Retained for reading old saved values; no longer offered in the UI.
     ACCESSIBILITY(
         labelResourceId = R.string.sleep_mode_accessibility,
     ),
@@ -27,8 +28,10 @@ enum class SleepMode(
 
         fun fromString(string: String) = values().firstOrNull { it.toString() == string }
 
-        fun entries(): List<ListPreferenceEntry<SleepMode>> = values().map {
-            ListPreferenceEntry(value = it) { stringResource(id = it.labelResourceId) }
-        }
+        fun entries(): List<ListPreferenceEntry<SleepMode>> = values()
+            .filterNot { it == ACCESSIBILITY }
+            .map {
+                ListPreferenceEntry(value = it) { stringResource(id = it.labelResourceId) }
+            }
     }
 }
