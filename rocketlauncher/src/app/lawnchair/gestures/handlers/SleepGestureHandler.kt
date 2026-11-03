@@ -52,10 +52,12 @@ class SleepGestureHandler(context: Context) : GestureHandler(context) {
         method.sleep(launcher)
     }
 
+    // AUTO prefers root, then Device Admin. Accessibility remains an explicit
+    // opt-in because some financial apps reject apps with an enabled service.
     private val methods = listOf(
         SleepMethodRoot(context),
-        SleepMethodPieAccessibility(context),
         SleepMethodDeviceAdmin(context),
+        SleepMethodPieAccessibility(context),
     )
 
     sealed class SleepMethod(protected val context: Context) {
@@ -116,7 +118,7 @@ class SleepMethodDeviceAdmin(context: Context) : SleepGestureHandler.SleepMethod
     class SleepDeviceAdmin : DeviceAdminReceiver() {
 
         override fun onDisableRequested(context: Context, intent: Intent): CharSequence {
-            return context.getString(R.string.dt2s_admin_warning)
+            return context.getString(R.string.dt2ts_admin_warning)
         }
     }
 }
