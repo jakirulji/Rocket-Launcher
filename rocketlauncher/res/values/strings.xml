@@ -144,7 +144,7 @@
     <string name="sort_active_items_action">Sort active items</string>
 
     <!-- A11y description -->
-    <string name="accessibility_service_description">To perform certain actions when you use a gesture, such as locking your phone, Rocket Launcher requires accessibility access.\n\nRocket Launcher doesn\'t watch your actions, though all accessibility services require this privilege. Rocket Launcher discards any event sent by the system.\n\nTo lock your phone or open the Recents screen, Rocket Launcher uses the performGlobalAction accessibility service.</string>
+    <string name="accessibility_service_description">On devices without a supported alternative, Rocket Launcher can use Accessibility access to perform certain system actions from gestures.\n\nThis service does not inspect other apps or read their screen content. It does not subscribe to accessibility events; any event delivered by Android is discarded.\n\nOn rooted devices, Rocket Launcher can perform Recents, Notifications and Quick Settings gestures through root-backed key events instead. Screen locking can use Root or Device Admin. You can therefore leave this Accessibility Service disabled when those alternatives are available. Some banking apps may still block access whenever an Accessibility Service is enabled, regardless of whether it reads screen content.</string>
 
     <string name="iconPackPackageDefault" translatable="false">""</string>
 
