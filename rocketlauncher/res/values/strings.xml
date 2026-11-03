@@ -193,8 +193,10 @@
     <string name="gestures_label">Gestures</string>
     <string name="gestures_description">Taps and swipes</string>
 
-    <string name="quickstep_label">Recents screen</string>
-    <string name="quickstep_description">Clear all button, corner radius</string>
+    <string name="quickstep_label">Quickstep</string>
+    <string name="quickstep_description">Taskbar and Quickstep options</string>
+    <string name="recent_settings_label">Recent</string>
+    <string name="recent_settings_description">Customize the Recents screen, cards and quick actions</string>
 
     <string name="backup_and_restore_label">Backup and restore</string>
     <string name="backup_and_restore_description">Save current setup, restore backups</string>
