@@ -39,6 +39,7 @@ internal object RootGlobalAction {
 
             AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS ->
                 "cmd statusbar expand-settings"
+
             else -> return false
         }
 
