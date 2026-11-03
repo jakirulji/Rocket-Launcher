@@ -83,6 +83,7 @@ import app.lawnchair.ui.preferences.navigation.Gestures
 import app.lawnchair.ui.preferences.navigation.HomeScreen
 import app.lawnchair.ui.preferences.navigation.PreferenceRootRoute
 import app.lawnchair.ui.preferences.navigation.Quickstep
+import app.lawnchair.ui.preferences.navigation.Recent
 import app.lawnchair.ui.preferences.navigation.Search
 import app.lawnchair.ui.preferences.navigation.Smartspace
 import app.lawnchair.ui.util.addIf
@@ -212,6 +213,14 @@ fun PreferencesDashboard(
                 iconResource = R.drawable.ic_gestures,
                 onNavigate = { onNavigate(Gestures) },
                 isSelected = currentRoute is Gestures,
+            )
+
+            PreferenceCategory(
+                label = stringResource(id = R.string.recent_settings_label),
+                description = stringResource(id = R.string.recent_settings_description),
+                iconResource = R.drawable.ic_quickstep,
+                onNavigate = { onNavigate(Recent) },
+                isSelected = currentRoute is Recent,
             )
 
             ExpandAndShrink(
