@@ -50,34 +50,42 @@ class LawnchairOverviewActionsView @JvmOverloads constructor(
         updateVisibilities()
     }
 
+    /**
+     * Keep Screenshot and Clear All anchored to opposite ends, matching Launcher3's
+     * bottom action row. Optional actions occupy the space between them.
+     */
     private fun updateVisibilities() {
-        val order = prefs.recentActionOrder.get().split(",").map { it.toInt() }
+        val order = prefs.recentActionOrder.get().split(",").mapNotNull(String::toIntOrNull)
 
-        val buttonMap = mutableMapOf<Int, View>()
-        if (prefs.recentsActionScreenshot.get() && !isOnePlusStock) {
-            buttonMap[0] = screenshotAction
-        }
+        val middleActions = mutableMapOf<Int, View>()
         if (prefs.recentsActionShare.get()) {
-            buttonMap[1] = shareAction
+            middleActions[1] = shareAction
         }
         if (prefs.recentsActionLens.get() && isLensAvailable()) {
-            buttonMap[2] = lensAction
+            middleActions[2] = lensAction
         }
         if (prefs.recentsActionLocked.get()) {
-            buttonMap[3] = lockedAction
+            middleActions[3] = lockedAction
         }
-        if (prefs.recentsActionClearAll.get()) {
-            buttonMap[4] = clearAllAction
-        }
-
-        val buttonsInOrder = order.mapNotNull { buttonMap[it] }
 
         container.removeAllViews()
+
+        if (prefs.recentsActionScreenshot.get() && !isOnePlusStock) {
+            screenshotAction.isVisible = true
+            container.addView(screenshotAction)
+        }
+
         container.addView(createSpace())
-        buttonsInOrder.forEach { view ->
-            view.isVisible = true
-            container.addView(view)
+
+        order.filter { it in 1..3 }.mapNotNull(middleActions::get).distinct().forEach { action ->
+            action.isVisible = true
+            container.addView(action)
             container.addView(createSpace())
+        }
+
+        if (prefs.recentsActionClearAll.get()) {
+            clearAllAction.isVisible = true
+            container.addView(clearAllAction)
         }
     }
 
