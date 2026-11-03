@@ -25,13 +25,9 @@ class LawnchairAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         serviceInfo = AccessibilityServiceInfo().apply {
-            // Set the type of events that this service wants to listen to.  Others
-            // won't be passed to this service.
+            // This service only invokes performGlobalAction. It deliberately does not
+            // subscribe to accessibility events or inspect other apps.
             eventTypes = 0
-
-            // If you only want this service to work with specific applications, set their
-            // package names here.  Otherwise, when the service is activated, it will listen
-            // to events from all applications.
             packageNames = emptyArray()
         }
         lawnchairApp.accessibilityService = this
