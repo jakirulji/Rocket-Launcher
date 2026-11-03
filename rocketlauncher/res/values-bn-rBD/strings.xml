@@ -117,7 +117,7 @@
     <string name="my_folder_label">আমার ফোল্ডার</string>
     <string name="sort_active_items_action">সক্রিয় আইটেমগুলো ক্রমানুসারে সাজান</string>
     <!-- A11y description -->
-    <string name="accessibility_service_description">To perform certain actions when you use a gesture, such as locking your phone, Lawnchair requires accessibility access.\n\nLawnchair doesn\'t watch your actions, though all accessibility services require this privilege. Lawnchair discards any event sent by the system.\n\nTo lock your phone or open the Recents screen, Lawnchair uses the performGlobalAction accessibility service.</string>
+    <string name="accessibility_service_description">কিছু gesture থেকে নির্দিষ্ট system action চালাতে, বিকল্প পদ্ধতি না থাকলে Rocket Launcher Accessibility access ব্যবহার করতে পারে।\n\nএই service অন্য app-এর screen content পড়ে না বা inspect করে না। এটি কোনো Accessibility event subscribe করে না; Android থেকে event এলেও তা discard করা হয়।\n\nRoot access থাকলে Recents, Notifications ও Quick Settings gesture root-backed key event দিয়ে চালানো যায়। Screen lock-এর জন্য Root বা Device Admin ব্যবহার করা যায়। এসব বিকল্প থাকলে Accessibility Service বন্ধ রাখা যাবে। কোনো কোনো banking app service চালু থাকলেই access block করতে পারে—এটি screen content পড়ছে কি না, তা নির্বিশেষে।</string>
     <string name="x_with_y_count">%1$s (%2$d)</string>
     <string name="x_by_y">%1$d &#xd7; %2$d</string>
     <string name="x_and_y">%1$s&amp;%2$s</string>

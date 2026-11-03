@@ -25,6 +25,10 @@ import com.android.launcher3.R
 object GestureWithAccessibilityHandler {
 
     fun onTrigger(launcher: LawnchairLauncher, stringAction: Int, action: Int) {
+        // Prefer a root-backed system key event. On rooted devices this avoids
+        // requiring an enabled Accessibility Service for common global actions.
+        if (RootGlobalAction.perform(action)) return
+
         val app = launcher.lawnchairApp
         if (!app.isAccessibilityServiceBound()) {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
