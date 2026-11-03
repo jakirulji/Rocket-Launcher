@@ -1,7 +1,7 @@
 package app.lawnchair.gestures.handlers
 
 import android.content.Intent
-import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -17,28 +17,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.lawnchair.LawnchairLauncher
-import app.lawnchair.lawnchairApp
 import app.lawnchair.ui.ModalBottomSheetContent
 import app.lawnchair.views.ComposeBottomSheet
 import com.android.launcher3.R
 
 object GestureWithAccessibilityHandler {
 
+    // Kept as a compatibility fallback for old saved gesture configurations.
+    // This build deliberately does not request or enable an AccessibilityService.
     fun onTrigger(launcher: LawnchairLauncher, stringAction: Int, action: Int) {
-        val app = launcher.lawnchairApp
-        if (!app.isAccessibilityServiceBound()) {
-            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            ComposeBottomSheet.show(launcher) {
-                ServiceWarningDialog(
-                    title = R.string.d2ts_recents_a11y_hint_title,
-                    action = stringAction,
-                    settingsIntent = intent,
-                ) { close(true) }
-            }
-            return
-        }
-        app.performGlobalAction(action)
+        Toast.makeText(
+            launcher,
+            launcher.getString(stringAction),
+            Toast.LENGTH_LONG,
+        ).show()
     }
 }
 
