@@ -48,6 +48,7 @@ import app.lawnchair.ui.preferences.destinations.PickAppForGesture
 import app.lawnchair.ui.preferences.destinations.PredictionsPreferences
 import app.lawnchair.ui.preferences.destinations.PreferencesDashboard
 import app.lawnchair.ui.preferences.destinations.QuickstepPreferences
+import app.lawnchair.ui.preferences.destinations.RecentPreferences
 import app.lawnchair.ui.preferences.destinations.SearchPreferences
 import app.lawnchair.ui.preferences.destinations.SearchProviderPreferences
 import app.lawnchair.ui.preferences.destinations.SelectAppsForDrawerFolder
@@ -198,6 +199,10 @@ fun PreferenceNavigation(
             deepLinks = getDeepLink(Gestures),
         ) { GesturePreferences() }
         composable<GesturesPickApp> { PickAppForGesture() }
+
+        composable<Recent>(
+            deepLinks = getDeepLink(Recent),
+        ) { RecentPreferences() }
 
         composable<Quickstep>(
             deepLinks = getDeepLink(Quickstep),
