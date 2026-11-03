@@ -38,11 +38,8 @@ internal object RootGlobalAction {
         }
 
         return runCatching {
-            if (!Shell.getShell().isRoot) {
-                return false
-            }
-            Shell.cmd("input keyevent $keyCode").exec().isSuccess
+            val shell = Shell.getShell()
+            shell.isRoot && Shell.cmd("input keyevent $keyCode").exec().isSuccess
         }.getOrDefault(false)
     }
-
 }
