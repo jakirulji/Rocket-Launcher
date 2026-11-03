@@ -17,6 +17,7 @@
 package app.lawnchair.gestures.handlers
 
 import android.accessibilityservice.AccessibilityService
+import android.view.KeyEvent
 import com.topjohnwu.superuser.Shell
 
 /**
@@ -30,9 +31,9 @@ internal object RootGlobalAction {
 
     fun perform(action: Int): Boolean {
         val keyCode = when (action) {
-            AccessibilityService.GLOBAL_ACTION_RECENTS -> KEYCODE_APP_SWITCH
-            AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS -> KEYCODE_NOTIFICATION
-            AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS -> KEYCODE_QUICK_SETTINGS
+            AccessibilityService.GLOBAL_ACTION_RECENTS -> KeyEvent.KEYCODE_APP_SWITCH
+            AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS -> KeyEvent.KEYCODE_NOTIFICATION
+            AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS -> KeyEvent.KEYCODE_QUICK_SETTINGS
             else -> return false
         }
 
@@ -44,7 +45,4 @@ internal object RootGlobalAction {
         }.getOrDefault(false)
     }
 
-    private const val KEYCODE_APP_SWITCH = 187
-    private const val KEYCODE_NOTIFICATION = 83
-    private const val KEYCODE_QUICK_SETTINGS = 223
 }
