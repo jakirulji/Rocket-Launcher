@@ -33,8 +33,10 @@ internal object RootGlobalAction {
         val command = when (action) {
             AccessibilityService.GLOBAL_ACTION_RECENTS ->
                 "input keyevent ${KeyEvent.KEYCODE_APP_SWITCH}"
+
             AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS ->
                 "input keyevent ${KeyEvent.KEYCODE_NOTIFICATION}"
+
             AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS ->
                 "cmd statusbar expand-settings"
             else -> return false
