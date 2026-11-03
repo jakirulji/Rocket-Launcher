@@ -3,12 +3,11 @@ package app.lawnchair.gestures.config
 import android.app.Activity
 import android.content.Context
 
+// Global system actions that require an AccessibilityService are intentionally omitted
+// from this build so financial apps do not see an enabled launcher accessibility service.
 val gestureHandlerOptions = listOf(
     GestureHandlerOption.NoOp,
     GestureHandlerOption.Sleep,
-    GestureHandlerOption.Recents,
-    GestureHandlerOption.OpenNotifications,
-    GestureHandlerOption.OpenQuickSettings,
     GestureHandlerOption.OpenAppDrawer,
     GestureHandlerOption.OpenAppSearch,
     GestureHandlerOption.OpenSearch,
