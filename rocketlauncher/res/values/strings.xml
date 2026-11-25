@@ -1079,4 +1079,5 @@
     <string name="additional_features_label">Additional features</string>
     <string name="icons_and_general_label">Icons &amp; General</string>
     <string name="icons_and_general_description">Icon packs, shapes, themes and general launcher options</string>
+    <string name="settings_search_hint">Search settings</string>
 </resources>
