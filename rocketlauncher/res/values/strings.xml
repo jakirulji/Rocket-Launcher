@@ -1086,4 +1086,6 @@
     <string name="single_page_center_summary">Center the wallpaper when only one home-screen page is used</string>
     <string name="allow_wallpaper_zooming">Wallpaper zooming</string>
     <string name="allow_wallpaper_zooming_summary">Zoom the wallpaper when opening the app drawer or recent apps</string>
+    <string name="focus_mode_title">Focus mode</string>
+    <string name="focus_mode_summary">Blur the app drawer behind an app’s long-press menu</string>
 </resources>
