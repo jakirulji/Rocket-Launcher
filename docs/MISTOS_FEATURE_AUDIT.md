@@ -35,7 +35,7 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 | Background blur depth | Misc + BaseDepthController | Ported as a 0–60 dp control, shown only when cross-window blur is supported; apply with Restart Launcher |
 | Content suggestions shortcut | Misc | Ported conditionally when Google Device Personalization Services and its settings activity are available |
 | Restart launcher | Misc | Ported through Rocket's existing restart helper |
-| Overscroll tuning | Home Screen / Additional Features | Not ported yet; runtime integration still needs source/API audit |
+| Overscroll tuning | Home Screen | Adapted: live damping/strength control for Rocket's PagedView fling overscroll. MistOS's separate spring-stiffness, damping-ratio, max-stretch and velocity controls are not exposed because Rocket uses a different overscroll engine. |
 
 ## Missing or not-yet-verified MistOS features
 

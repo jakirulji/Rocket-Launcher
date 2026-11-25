@@ -21,7 +21,6 @@ import static com.android.launcher3.RemoveAnimationSettingsTracker.WINDOW_ANIMAT
 import static com.android.launcher3.compat.AccessibilityManagerCompat.isAccessibilityEnabled;
 import static com.android.launcher3.compat.AccessibilityManagerCompat.isObservedEventType;
 import static com.android.launcher3.testing.shared.TestProtocol.SCROLL_FINISHED_MESSAGE;
-import static com.android.launcher3.touch.OverScroll.OVERSCROLL_DAMP_FACTOR;
 import static com.android.launcher3.touch.PagedOrientationHandler.VIEW_SCROLL_BY;
 import static com.android.launcher3.touch.PagedOrientationHandler.VIEW_SCROLL_TO;
 
@@ -1549,7 +1548,7 @@ public abstract class PagedView<T extends View & PageIndicator> extends ViewGrou
                         int velocity1 = -velocity;
                         // Continue a scroll or fling in progress
                         mScroller.fling(initialScroll, 0, velocity1, 0, minScroll, maxScroll, 0, 0,
-                                Math.round(getWidth() * 0.5f * OVERSCROLL_DAMP_FACTOR), 0);
+                                Math.round(getWidth() * 0.5f * LauncherPrefs.OVERSCROLL_DAMP_FACTOR.get(getContext())), 0);
 
                         int finalPos = mScroller.getFinalX();
                         mNextPage = getDestinationPage(finalPos);

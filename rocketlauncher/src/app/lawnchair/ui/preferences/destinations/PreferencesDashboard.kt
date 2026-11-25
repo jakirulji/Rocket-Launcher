@@ -240,6 +240,7 @@ fun PreferencesDashboard(
             DashboardSearchTarget("Wallpaper short parallax", "Home Screen · Reduce wallpaper travel between workspace pages", HomeScreen, "wallpaper scrolling depth effect"),
             DashboardSearchTarget("Center wallpaper on one page", "Home Screen · Center wallpaper when there is only one page", HomeScreen, "single page center wallpaper"),
             DashboardSearchTarget("Wallpaper zooming", "Home Screen · Allow or disable wallpaper zoom animation", HomeScreen, "zoom wallpaper scale"),
+            DashboardSearchTarget("Overscroll strength", "Home Screen · Tune how far the workspace stretches during a fling", HomeScreen, "overscroll bounce stretch damping"),
             DashboardSearchTarget("Workspace grid", "Home Screen · Change home-screen rows and columns", HomeScreen, "home screen grid columns rows"),
             DashboardSearchTarget("Home-screen icon size and labels", "Home Screen · Adjust icon size, label visibility and text size", HomeScreen, "desktop icons text"),
             DashboardSearchTarget("Lock home screen", "Home Screen · Prevent accidental layout changes", HomeScreen, "workspace lock"),

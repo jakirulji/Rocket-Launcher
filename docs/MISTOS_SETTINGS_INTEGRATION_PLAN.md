@@ -50,6 +50,7 @@ The target is to reproduce the MistOS Home Settings UI as faithfully as practica
 - [x] Port short wallpaper parallax, single-page wallpaper centering, and wallpaper zooming into Home Screen settings and runtime code.
 - [x] Port Focus Mode into App Drawer settings and the long-press popup lifecycle, with a blur-disabled scrim fallback.
 - [x] Add the Mist-style Misc category with phone-only fixed landscape mode, background blur depth, and restart action.
+- [x] Adapt overscroll tuning to Rocket's PagedView overscroll engine with a persistent, live damping-strength control (the MistOS spring-specific parameters are not applicable to this engine).
 - [ ] Port the remaining audited App Library, pinned apps, Recents, extended Smartspace, and unported Misc features where compatible.
 - [ ] Reuse Rocket preference keys and implementations where behavior already matches.
 - [ ] Keep genuinely uncategorized extras in a clearly labeled category.

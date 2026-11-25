@@ -87,6 +87,12 @@ fun HomeScreenPreferences(
             set = { LauncherPrefs.get(context).put(LauncherPrefs.ALLOW_WALLPAPER_ZOOMING.to(it)) },
         )
     }
+    val overscrollDampingAdapter = remember {
+        PreferenceAdapterImpl(
+            get = { LauncherPrefs.OVERSCROLL_DAMP_FACTOR.get(context) },
+            set = { LauncherPrefs.get(context).put(LauncherPrefs.OVERSCROLL_DAMP_FACTOR.to(it)) },
+        )
+    }
     PreferenceLayout(
         label = stringResource(id = R.string.home_screen_label),
         backArrowVisible = !LocalIsExpandedScreen.current,
@@ -185,6 +191,16 @@ fun HomeScreenPreferences(
                     description = stringResource(id = R.string.allow_wallpaper_zooming_summary),
                 )
             }
+        }
+        PreferenceGroup(heading = stringResource(id = R.string.overscroll_effect)) {
+            SliderPreference(
+                label = stringResource(id = R.string.overscroll_strength),
+                description = stringResource(id = R.string.overscroll_strength_summary),
+                adapter = overscrollDampingAdapter,
+                step = 0.01f,
+                valueRange = 0.02f..0.20f,
+                showAsPercentage = true,
+            )
         }
         val columns by prefs.workspaceColumns.getAdapter()
         val rows by prefs.workspaceRows.getAdapter()

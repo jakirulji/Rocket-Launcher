@@ -1097,4 +1097,7 @@
     <string name="restart_launcher_confirmation">Restart the launcher now? Your home-screen layout and settings will remain saved.</string>
     <string name="background_blur_title">Background blur depth</string>
     <string name="suggestion_pref_screen_desc">Show suggestions in All Apps and on the Home screen</string>
+    <string name="overscroll_effect">Overscroll</string>
+    <string name="overscroll_strength">Overscroll strength</string>
+    <string name="overscroll_strength_summary">Adjust the stretch distance when reaching the edge of the home screen</string>
 </resources>

@@ -307,6 +307,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val ALLOW_WALLPAPER_ZOOMING = backedUpItem("pref_allow_wallpaper_zooming", true)
         @JvmField val FOCUS_MODE = backedUpItem("pref_focus_mode", true)
         @JvmField val BLUR_DEPTH = backedUpItem("pref_blur_depth", 30)
+        @JvmField val OVERSCROLL_DAMP_FACTOR = backedUpItem("pref_overscroll_damp_factor", 0.07f)
 
         @JvmField
         val NON_FIXED_LANDSCAPE_GRID_NAME =
