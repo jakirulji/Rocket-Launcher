@@ -77,6 +77,6 @@ class RestoreBackupViewModel(
     }
 
     fun setBackupContents(contents: Int) {
-        savedStateHandle["contents"] = contents
+        savedStateHandle["contents"] = contents or LawnchairBackup.INCLUDE_LAYOUT_AND_SETTINGS
     }
 }
