@@ -1084,4 +1084,6 @@
     <string name="short_parallax_summary">Use full wallpaper movement even with only a few home-screen pages</string>
     <string name="single_page_center_title">Center wallpaper on a single page</string>
     <string name="single_page_center_summary">Center the wallpaper when only one home-screen page is used</string>
+    <string name="allow_wallpaper_zooming">Wallpaper zooming</string>
+    <string name="allow_wallpaper_zooming_summary">Zoom the wallpaper when opening the app drawer or recent apps</string>
 </resources>
