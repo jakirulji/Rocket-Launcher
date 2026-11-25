@@ -327,7 +327,7 @@ fun PreferencesDashboard(
                     containerColor = Color(0xFFFFDADD),
                     contentColor = Color(0xFF762B35),
                     onClick = { onNavigate(Recent) },
-                    modifier = Modifier.weight(1f).height(144.dp),
+                    modifier = Modifier.weight(1f).height(132.dp),
                     shape = MistExpressiveShape.PENTAGON,
                     selected = currentRoute is Recent,
                 )
