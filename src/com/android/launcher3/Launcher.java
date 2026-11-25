@@ -1239,11 +1239,13 @@ public class Launcher extends StatefulActivity<LauncherState>
         TraceHelper.INSTANCE.beginSection(ON_RESUME_EVT);
         super.onResume();
 
-        int requestedOrientation = LauncherPrefs.FIXED_LANDSCAPE_MODE.get(this)
-                ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                : ActivityInfo.SCREEN_ORIENTATION_USER;
-        if (getRequestedOrientation() != requestedOrientation) {
-            setRequestedOrientation(requestedOrientation);
+        if (InvariantDeviceProfile.INSTANCE.get(this).deviceType == InvariantDeviceProfile.TYPE_PHONE) {
+            int requestedOrientation = LauncherPrefs.FIXED_LANDSCAPE_MODE.get(this)
+                    ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    : ActivityInfo.SCREEN_ORIENTATION_USER;
+            if (getRequestedOrientation() != requestedOrientation) {
+                setRequestedOrientation(requestedOrientation);
+            }
         }
 
         if (mDeferOverlayCallbacks) {
