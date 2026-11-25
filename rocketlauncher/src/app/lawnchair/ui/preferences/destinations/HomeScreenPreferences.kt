@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import app.lawnchair.LawnchairApp
 import app.lawnchair.data.iconoverride.IconOverrideRepository
 import app.lawnchair.nexuslauncher.OverlayCallbackImpl
+import app.lawnchair.preferences.PreferenceAdapterImpl
 import app.lawnchair.preferences.getAdapter
 import app.lawnchair.preferences.preferenceManager
 import app.lawnchair.preferences2.preferenceManager2
