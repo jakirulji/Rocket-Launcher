@@ -50,7 +50,7 @@ The target is to reproduce the MistOS Home Settings UI as faithfully as practica
 - [x] Port short wallpaper parallax, single-page wallpaper centering, and wallpaper zooming into Home Screen settings and runtime code.
 - [x] Port Focus Mode into App Drawer settings and the long-press popup lifecycle, with a blur-disabled scrim fallback.
 - [x] Add the Mist-style Misc category with phone-only fixed landscape mode, background blur depth, and restart action.
-- [ ] Port the remaining audited App Library, pinned apps, Recents, and Misc features where compatible.
+- [ ] Port the remaining audited App Library, pinned apps, Recents, extended Smartspace, and unported Misc features where compatible.
 - [ ] Reuse Rocket preference keys and implementations where behavior already matches.
 - [ ] Keep genuinely uncategorized extras in a clearly labeled category.
 - [ ] Add compatibility guards/fallbacks for ROM-specific capabilities.
