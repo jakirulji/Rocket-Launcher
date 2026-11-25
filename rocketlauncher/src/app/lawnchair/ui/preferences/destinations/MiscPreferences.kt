@@ -16,6 +16,7 @@
 
 package app.lawnchair.ui.preferences.destinations
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -38,6 +39,11 @@ fun MiscPreferences(
 ) {
     val context = LocalContext.current
     val isPhone = context.resources.configuration.smallestScreenWidthDp < 600
+    val hasDevicePersonalizationServices = remember(context) {
+        runCatching {
+            context.packageManager.getApplicationInfo("com.google.android.as", 0).enabled
+        }.getOrDefault(false)
+    }
     val blurDepthAdapter = remember {
         PreferenceAdapterImpl(
             get = { LauncherPrefs.BLUR_DEPTH.get(context) },
@@ -68,6 +74,18 @@ fun MiscPreferences(
                     adapter = fixedLandscapeAdapter,
                     label = stringResource(R.string.fixed_landscape_mode_title),
                     description = stringResource(R.string.fixed_landscape_mode_summary),
+                )
+            }
+            ExpandAndShrink(visible = hasDevicePersonalizationServices) {
+                ClickablePreference(
+                    label = stringResource(R.string.suggestion_pref_screen_title),
+                    subtitle = stringResource(R.string.suggestion_pref_screen_desc),
+                    onClick = {
+                        val intent = Intent("android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS")
+                        if (intent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(intent)
+                        }
+                    },
                 )
             }
             ClickablePreference(
