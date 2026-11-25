@@ -17,6 +17,7 @@ import app.lawnchair.preferences.PreferenceManager;
 import androidx.annotation.AnyThread;
 
 import com.android.app.animation.Interpolators;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.Workspace;
 
