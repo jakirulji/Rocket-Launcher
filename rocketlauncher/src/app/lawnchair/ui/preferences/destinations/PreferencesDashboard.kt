@@ -281,7 +281,6 @@ fun PreferencesDashboard(
                     contentColor = Color(0xFF183B70),
                     onClick = { onNavigate(General) },
                     modifier = Modifier.weight(1f).height(272.dp),
-                    large = true,
                     shape = MistExpressiveShape.COOKIE,
                     selected = currentRoute is General,
                 )
@@ -481,7 +480,6 @@ private fun MistSettingsTile(
     contentColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    large: Boolean = false,
     shape: MistExpressiveShape = MistExpressiveShape.CIRCLE,
     selected: Boolean = false,
 ) {
@@ -519,27 +517,27 @@ private fun MistSettingsTile(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
             Box(
-                modifier = Modifier.size(if (large) 76.dp else 48.dp),
+                modifier = Modifier.size(48.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 MistExpressiveGlyph(
                     shape = shape,
                     color = contentColor,
-                    size = if (large) 76.dp else 48.dp,
+                    size = 48.dp,
                 )
                 Icon(
                     painter = painterResource(iconResource),
                     contentDescription = null,
                     tint = containerColor,
                     modifier = Modifier
-                        .size(if (large) 36.dp else 24.dp)
+                        .size(24.dp)
                         .graphicsLayer(rotationZ = glyphRotation),
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = label,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 17.sp),
                 fontWeight = FontWeight.SemiBold,
                 color = contentColor,
                 maxLines = 2,
@@ -547,6 +545,7 @@ private fun MistSettingsTile(
             if (description.isNotBlank()) {
                 Text(
                     text = description,
+                    modifier = Modifier.padding(top = 2.dp),
                     style = MaterialTheme.typography.bodySmall,
                     color = contentColor.copy(alpha = 0.82f),
                     maxLines = 2,
