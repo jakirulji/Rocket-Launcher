@@ -13,7 +13,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -34,7 +33,8 @@ internal enum class MistExpressiveShape(
     CLOVER(4, 0.16f),
     BURST(8, 0.10f),
     PENTAGON(5, 0.12f),
-    FLOWER(6, 0.12f);
+    FLOWER(6, 0.12f),
+    ;
 
     fun buildPath(size: Size): Path {
         val path = Path()
