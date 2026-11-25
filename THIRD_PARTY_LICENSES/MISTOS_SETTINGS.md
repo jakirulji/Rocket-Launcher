@@ -11,6 +11,8 @@ The Rocket adaptation retains the original lobe-count/depth parameters and radia
 
 The app-drawer Focus Mode controller is also adapted from MistOS Launcher3's `src/com/android/launcher3/popup/FocusModeController.kt`. That source carries the Android Open Source Project Apache-2.0 copyright header, which is retained in Rocket's copied controller. Rocket adds popup lifecycle integration and the corresponding preference/resource wiring.
 
+The five expressive category glyph vectors under `res/drawable/ic_settings_*_mist.xml` are adapted from MistOS Launcher3's expressive category glyphs. Their original headers identify Copyright (C) 2025 crDroid Android Project and SPDX-License-Identifier: Apache-2.0; those notices are retained in each vector resource.
+
 Copyright (C) 2026 MistOS
 
 The original Apache-2.0 license text is included in the repository's root `LICENSE.txt`. Changes made for Rocket Launcher are documented in the adapted source file.
