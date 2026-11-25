@@ -20,6 +20,7 @@ This file documents release checks for Rocket Launcher. It is not a legal opinio
 - Lawnchair/AOSP-derived code: applicable Apache License 2.0 notices and terms; see `LICENSE.txt`.
 - Dragon Launcher Digital Wellbeing: GNU GPL version 3; see `COPYING` and `THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md`.
 - Calculator data/algorithm component: MIT License, Copyright (c) 2018 Keelar. The original license file must remain with the source.
+- MistOS expressive Settings shape algorithm: Apache License 2.0, Copyright (C) 2026 MistOS; adapted from Java to Jetpack Compose. See `THIRD_PARTY_LICENSES/MISTOS_SETTINGS.md` and the source-file notice.
 
 ## Important limitations
 
