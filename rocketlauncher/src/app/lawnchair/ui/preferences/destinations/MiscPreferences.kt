@@ -17,6 +17,8 @@
 package app.lawnchair.ui.preferences.destinations
 
 import android.content.Intent
+import android.os.Build
+import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,6 +41,8 @@ fun MiscPreferences(
 ) {
     val context = LocalContext.current
     val isPhone = context.resources.configuration.smallestScreenWidthDp < 600
+    val blurSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+        context.getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled == true
     val hasSuggestionsSettings = remember(context) {
         val isDpsEnabled = runCatching {
             context.packageManager.getApplicationInfo("com.google.android.as", 0).enabled
@@ -64,13 +68,15 @@ fun MiscPreferences(
         modifier = modifier,
     ) {
         PreferenceGroup(heading = stringResource(R.string.misc_label)) {
-            SliderPreference(
-                label = stringResource(R.string.background_blur_title),
-                adapter = blurDepthAdapter,
-                valueRange = 0..60,
-                step = 1,
-                showUnit = "dp",
-            )
+            ExpandAndShrink(visible = blurSupported) {
+                SliderPreference(
+                    label = stringResource(R.string.background_blur_title),
+                    adapter = blurDepthAdapter,
+                    valueRange = 0..60,
+                    step = 1,
+                    showUnit = "dp",
+                )
+            }
             ExpandAndShrink(visible = isPhone) {
                 SwitchPreference(
                     adapter = fixedLandscapeAdapter,
