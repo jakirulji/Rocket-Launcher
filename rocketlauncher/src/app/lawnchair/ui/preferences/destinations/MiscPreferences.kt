@@ -29,7 +29,6 @@ import app.lawnchair.ui.preferences.components.layout.ExpandAndShrink
 import app.lawnchair.ui.preferences.components.layout.PreferenceGroup
 import app.lawnchair.ui.preferences.components.layout.PreferenceLayout
 import app.lawnchair.util.restartLauncher
-import com.android.launcher3.InvariantDeviceProfile
 import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.R
 
@@ -38,7 +37,7 @@ fun MiscPreferences(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val isPhone = InvariantDeviceProfile.INSTANCE.get(context).deviceType == InvariantDeviceProfile.TYPE_PHONE
+    val isPhone = context.resources.configuration.smallestScreenWidthDp < 600
     val blurDepthAdapter = remember {
         PreferenceAdapterImpl(
             get = { LauncherPrefs.BLUR_DEPTH.get(context) },
@@ -75,7 +74,7 @@ fun MiscPreferences(
                 label = stringResource(R.string.restart_launcher_label),
                 subtitle = stringResource(R.string.restart_launcher_summary),
                 confirmationText = stringResource(R.string.restart_launcher_confirmation),
-                onClick = { context.restartLauncher() },
+                onClick = { restartLauncher(context) },
             )
         }
     }
