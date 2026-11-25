@@ -1089,7 +1089,7 @@
     <string name="focus_mode_title">Focus mode</string>
     <string name="focus_mode_summary">Blur the app drawer behind an app’s long-press menu</string>
     <string name="misc_label">Misc</string>
-    <string name="misc_description">System behavior and launcher maintenance</string>
+    <string name="misc_description">Landscape, blur, suggestions and launcher maintenance</string>
     <string name="fixed_landscape_mode_title">Fixed landscape mode</string>
     <string name="fixed_landscape_mode_summary">Keep the launcher in landscape orientation</string>
     <string name="restart_launcher_label">Restart launcher</string>
