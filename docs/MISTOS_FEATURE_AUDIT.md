@@ -1,0 +1,67 @@
+# MistOS Launcher Feature Audit
+
+**Compared branches:** MistOS Launcher3 `17.0` vs Rocket Launcher `16-dev`  
+**Status:** Initial source audit; runtime-level verification is still required.
+
+This audit compares MistOS's category preference XML/source with Rocket's current Compose destinations. A similarly named control is not automatically considered equivalent: the underlying behavior must also match.
+
+## Existing Rocket equivalents identified
+
+| MistOS feature | Rocket location | Audit result |
+|---|---|---|
+| Icon pack selection | General | Existing |
+| Notification dots | General | Existing |
+| Home-screen icon size and labels | Home Screen | Existing |
+| Home-screen grid and padding | Home Screen | Existing |
+| Workspace lock | Home Screen | Existing |
+| Auto-add shortcuts | Home Screen | Existing |
+| Double-tap gesture | Home Screen / Gestures | Existing equivalent; haptic parity needs checking |
+| Status-bar visibility and dark icons | Home Screen | Existing |
+| Top shadow / system UI scrim | Home Screen | Existing |
+| Wallpaper scrolling and depth effect | Home Screen | Existing equivalents |
+| Minus-one feed | Home Screen | Existing |
+| App drawer grid, labels and row height | App Drawer | Existing |
+| App drawer scrollbar | App Drawer | Existing |
+| Two-line app labels | App Drawer | Existing |
+| Hidden apps | App Drawer | Existing |
+| Recents screenshot/share/Lens/clear-all actions | Recents | Existing quick-action equivalents |
+| Recents translucent background and alpha | Recents | Existing equivalent |
+| Fixed landscape mode | LauncherPrefs | Preference key already exists; UI/runtime parity needs checking |
+| Overscroll / suggestions / restart | Existing Rocket settings and system flows | Needs exact route-by-route verification |
+
+## Missing or not-yet-verified MistOS features
+
+### Home Screen
+- Wallpaper zooming when opening App Drawer or Recents
+- Short wallpaper parallax for a small number of pages
+- Center wallpaper when only one page is used
+- Mist's extended Quickspace styling: clock style/font/colors, PSA, now playing, weather provider/city/text
+- Sleep-gesture haptic option parity
+
+### App Drawer
+- iOS-style App Library mode and single-page mode
+- Pinned apps and configurable pinned-row layout
+- Card layout for pinned apps and app list
+- Focus Mode blur behind the app long-press popup
+- Dedicated drawer search visibility, placement and appearance controls
+- App-library-specific behavior and category presentation
+
+### Recents
+- Recents style selector and style preview
+- Memory information / optional ZRAM information
+- Per-app Recents privacy protection
+
+### Miscellaneous
+- Trust Apps manager entry and behavior
+- Background blur depth control
+- Fixed landscape mode UI parity
+- Any ROM-only behavior must be adapted to public Android APIs or clearly marked unsupported.
+
+## Porting rules
+
+1. Reuse Rocket functionality where the behavior already matches.
+2. For missing behavior, port the MistOS algorithm as directly as compatible APIs allow; translate Java/XML implementations into Rocket's Compose/Kotlin architecture where required.
+3. Do not add a preference toggle until its runtime behavior is implemented and validated.
+4. Keep new preference keys stable and avoid collisions with existing Rocket keys.
+5. ROM/privileged-only behavior must have a safe fallback on ordinary Android.
+6. Keep the MistOS/AOSP attribution and license notices beside adapted source.
