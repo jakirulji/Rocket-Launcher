@@ -582,4 +582,5 @@
     <!-- App Title Pill -->
     <dimen name="app_title_pill_horizontal_padding">4dp</dimen>
     <dimen name="app_title_pill_round_rect_padding">2dp</dimen>
+    <dimen name="focus_mode_blur_radius">28dp</dimen>
 </resources>
