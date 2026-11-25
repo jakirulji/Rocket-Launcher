@@ -24,6 +24,7 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 | Wallpaper zooming | Home Screen + BaseDepthController | Ported: public WallpaperManager zoom is disabled by preference when off |
 | Minus-one feed | Home Screen | Existing |
 | App drawer grid, labels and row height | App Drawer | Existing |
+| Focus Mode behind app long-press popup | App Drawer + PopupContainerWithArrow | Ported: live RenderEffect blur with scrim fallback and lifecycle cleanup |
 | App drawer scrollbar | App Drawer | Existing |
 | Two-line app labels | App Drawer | Existing |
 | Hidden apps | App Drawer | Existing |
@@ -42,7 +43,6 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 - iOS-style App Library mode and single-page mode
 - Pinned apps and configurable pinned-row layout
 - Card layout for pinned apps and app list
-- Focus Mode blur behind the app long-press popup
 - Dedicated drawer search visibility, placement and appearance controls
 - App-library-specific behavior and category presentation
 
