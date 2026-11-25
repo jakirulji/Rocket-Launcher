@@ -220,27 +220,62 @@ fun PreferencesDashboard(
             }
         }
 
+        // Search indexes both destinations and individual controls. A control result opens
+        // its owning screen, keeping navigation compatible with Rocket's existing routes.
         val searchTargets = listOf(
-            DashboardSearchTarget(stringResource(R.string.icons_and_general_label), "Icon packs, shapes, themes and general options", General),
-            DashboardSearchTarget(stringResource(R.string.home_screen_label), "Wallpaper parallax and zoom, grid, widgets, labels and home layout", HomeScreen),
-            DashboardSearchTarget(stringResource(R.string.app_drawer_label), "Drawer layout, hidden apps, grid, labels and Focus Mode", AppDrawer),
-            DashboardSearchTarget(stringResource(R.string.recent_settings_label), "Recent apps, screenshot, share and clear all", Recent),
-            DashboardSearchTarget(stringResource(R.string.dock_label), "Dock layout, icons and background", Dock),
-            DashboardSearchTarget(stringResource(R.string.misc_label), stringResource(R.string.misc_description), Misc),
-            DashboardSearchTarget(stringResource(R.string.smartspace_widget), "At a glance and Smartspace widget", Smartspace),
-            DashboardSearchTarget(stringResource(R.string.search_bar_label), "Search providers and search bar settings", Search()),
-            DashboardSearchTarget(stringResource(R.string.folders_label), "Folder appearance and behavior", Folders),
-            DashboardSearchTarget(stringResource(R.string.gestures_label), "Launcher gesture actions", Gestures),
-            DashboardSearchTarget(stringResource(R.string.quickstep_label), "Taskbar and Quickstep options", Quickstep),
-            DashboardSearchTarget(stringResource(R.string.backup_and_restore_label), "Backup and restore launcher settings", BackupAndRestore),
-            DashboardSearchTarget(stringResource(R.string.about_label), aboutDescrption, About),
+            DashboardSearchTarget(stringResource(R.string.icons_and_general_label), "Icon packs, shapes, themes and general options", General, "general settings"),
+            DashboardSearchTarget(stringResource(R.string.home_screen_label), "Wallpaper parallax and zoom, grid, widgets, labels and home layout", HomeScreen, "workspace desktop home"),
+            DashboardSearchTarget(stringResource(R.string.app_drawer_label), "Drawer layout, hidden apps, grid, labels and Focus Mode", AppDrawer, "all apps application list"),
+            DashboardSearchTarget(stringResource(R.string.recent_settings_label), "Recent apps, screenshot, share and clear all", Recent, "overview multitasking"),
+            DashboardSearchTarget(stringResource(R.string.dock_label), "Dock layout, icons and background", Dock, "hotseat"),
+            DashboardSearchTarget(stringResource(R.string.misc_label), stringResource(R.string.misc_description), Misc, "other extra"),
+            DashboardSearchTarget(stringResource(R.string.smartspace_widget), "At a glance and Smartspace widget", Smartspace, "quickspace clock weather"),
+            DashboardSearchTarget(stringResource(R.string.search_bar_label), "Search providers and search bar settings", Search(), "launcher search"),
+            DashboardSearchTarget(stringResource(R.string.folders_label), "Folder appearance and behavior", Folders, "folder"),
+            DashboardSearchTarget(stringResource(R.string.gestures_label), "Launcher gesture actions", Gestures, "swipe double tap long press"),
+            DashboardSearchTarget(stringResource(R.string.quickstep_label), "Taskbar and Quickstep options", Quickstep, "taskbar"),
+            DashboardSearchTarget(stringResource(R.string.backup_and_restore_label), "Backup and restore launcher settings", BackupAndRestore, "export import"),
+            DashboardSearchTarget(stringResource(R.string.about_label), aboutDescrption, About, "version credits licenses"),
+
+            DashboardSearchTarget("Wallpaper short parallax", "Home Screen · Reduce wallpaper travel between workspace pages", HomeScreen, "wallpaper scrolling depth effect"),
+            DashboardSearchTarget("Center wallpaper on one page", "Home Screen · Center wallpaper when there is only one page", HomeScreen, "single page center wallpaper"),
+            DashboardSearchTarget("Wallpaper zooming", "Home Screen · Allow or disable wallpaper zoom animation", HomeScreen, "zoom wallpaper scale"),
+            DashboardSearchTarget("Workspace grid", "Home Screen · Change home-screen rows and columns", HomeScreen, "home screen grid columns rows"),
+            DashboardSearchTarget("Home-screen icon size and labels", "Home Screen · Adjust icon size, label visibility and text size", HomeScreen, "desktop icons text"),
+            DashboardSearchTarget("Lock home screen", "Home Screen · Prevent accidental layout changes", HomeScreen, "workspace lock"),
+            DashboardSearchTarget("Minus-one feed", "Home Screen · Configure the left-most home page", HomeScreen, "google feed left page"),
+            DashboardSearchTarget("Focus Mode", "App Drawer · Reduce distractions from selected apps in the drawer", AppDrawer, "focus distraction long press"),
+            DashboardSearchTarget("Hidden apps", "App Drawer · Manage apps hidden from the app list", AppDrawer, "hide application"),
+            DashboardSearchTarget("App drawer grid", "App Drawer · Change columns, row height and spacing", AppDrawer, "drawer columns rows layout"),
+            DashboardSearchTarget("App drawer icon labels", "App Drawer · Show labels and choose label size", AppDrawer, "drawer text names"),
+            DashboardSearchTarget("App drawer scrollbar", "App Drawer · Show or hide the scrolling indicator", AppDrawer, "scroll indicator"),
+            DashboardSearchTarget("App drawer search", "Search · Configure the drawer search bar", Search(), "search placement appearance"),
+            DashboardSearchTarget("Dock search bar", "Search · Configure the dock search bar", Search(), "qsb placement"),
+            DashboardSearchTarget("Recents screenshot action", "Recents · Show or hide the screenshot quick action", Recent, "overview screenshot"),
+            DashboardSearchTarget("Recents share action", "Recents · Show or hide the share quick action", Recent, "overview share"),
+            DashboardSearchTarget("Recents Lens action", "Recents · Show or hide the Google Lens quick action", Recent, "overview google lens"),
+            DashboardSearchTarget("Recents clear all", "Recents · Configure the clear-all quick action", Recent, "overview dismiss all"),
+            DashboardSearchTarget("Recents translucent background", "Recents · Control the translucent overview background", Recent, "opacity alpha blur"),
+            DashboardSearchTarget("Recents window corner radius", "Recents · Override recent-task card corner radius", Recent, "rounded cards"),
+            DashboardSearchTarget("Background blur depth", "Misc · Adjust launcher background blur where Android supports it", Misc, "blur dp"),
+            DashboardSearchTarget("Fixed landscape mode", "Misc · Keep the launcher in landscape on supported phones", Misc, "orientation rotate"),
+            DashboardSearchTarget("Restart launcher", "Misc · Restart Rocket Launcher after applying selected options", Misc, "reload relaunch"),
+            DashboardSearchTarget("Smartspace provider", "Smartspace · Choose the At a Glance data provider", Smartspace, "smartspacer lawnchair"),
+            DashboardSearchTarget("Smartspace date and time", "Smartspace · Configure date, time and calendar information", Smartspace, "clock calendar"),
+            DashboardSearchTarget("Icon pack", "General · Select an installed icon pack", General, "icons theme"),
+            DashboardSearchTarget("Themed icons", "General · Configure themed icon behavior", General, "monochrome"),
+            DashboardSearchTarget("Icon shape", "General · Choose the launcher icon shape", General, "adaptive icons"),
+            DashboardSearchTarget("Notification dots", "General · Configure notification dots and counters", General, "badges unread count"),
+            DashboardSearchTarget("Folder appearance", "Folders · Change folder layout and visual style", Folders, "folder grid background"),
+            DashboardSearchTarget("Launcher gestures", "Gestures · Assign actions to launcher gestures", Gestures, "double tap swipe"),
         )
         if (showSettingsSearch) {
+            val normalizedQuery = searchQuery.trim()
             val results = searchTargets.filter {
-                "${it.title} ${it.description}".contains(searchQuery.trim(), ignoreCase = true)
+                "${it.title} ${it.description} ${it.keywords}".contains(normalizedQuery, ignoreCase = true)
             }
             AlertDialog(
-                onDismissRequest = { showSettingsSearch = false },
+                onDismissRequest = { showSettingsSearch = false; searchQuery = "" },
                 title = { Text(stringResource(R.string.settings)) },
                 text = {
                     Column {
@@ -516,6 +551,7 @@ private data class DashboardSearchTarget(
     val title: String,
     val description: String,
     val route: PreferenceRootRoute,
+    val keywords: String = "",
 )
 
 @Composable

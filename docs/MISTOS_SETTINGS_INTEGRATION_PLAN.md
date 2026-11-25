@@ -42,7 +42,7 @@ The target is to reproduce the MistOS Home Settings UI as faithfully as practica
 - [x] Rework the existing dashboard into the Mist-inspired asymmetric card layout in Compose.
 - [x] Port the expressive radial shape algorithm and spring press motion.
 - [x] Add a collapsing Settings title and a working category search dialog.
-- [ ] Port the remaining expressive details and expand search from category-level to individual settings.
+- [x] Expand Settings search from category-only results to an indexed set of individual controls and common search synonyms. Results open the existing owning settings destination; direct control deep-links remain a future enhancement.
 - [ ] Adapt the remaining category screens while preserving Rocket preference behavior.
 - [x] Preserve Rocket branding and existing routes.
 
