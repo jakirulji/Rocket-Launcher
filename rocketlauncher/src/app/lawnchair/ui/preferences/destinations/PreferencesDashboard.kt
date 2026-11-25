@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Column
@@ -160,8 +159,8 @@ fun PreferencesDashboard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 MistSettingsTile(
-                    label = stringResource(R.string.general_label),
-                    description = stringResource(R.string.icons),
+                    label = stringResource(R.string.icons_and_general_label),
+                    description = stringResource(R.string.icons_and_general_description),
                     iconResource = R.drawable.ic_general,
                     containerColor = Color(0xFFDCE8FF),
                     contentColor = Color(0xFF183B70),
