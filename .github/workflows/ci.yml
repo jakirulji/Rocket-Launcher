@@ -30,6 +30,7 @@ jobs:
   build-release-apk:
     # Normal pushes/PRs do not produce APK artifacts. Request a signed APK by
     # manually dispatching this workflow, or by using [build-release] in a commit.
+    # This request marker keeps ordinary development commits artifact-free.
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[build-release]'))
     runs-on: ubuntu-latest
     steps:
