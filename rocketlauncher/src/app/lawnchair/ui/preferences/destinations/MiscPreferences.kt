@@ -39,10 +39,12 @@ fun MiscPreferences(
 ) {
     val context = LocalContext.current
     val isPhone = context.resources.configuration.smallestScreenWidthDp < 600
-    val hasDevicePersonalizationServices = remember(context) {
-        runCatching {
+    val hasSuggestionsSettings = remember(context) {
+        val isDpsEnabled = runCatching {
             context.packageManager.getApplicationInfo("com.google.android.as", 0).enabled
         }.getOrDefault(false)
+        isDpsEnabled && Intent("android.settings.ACTION_CONTENT_SUGGESTIONS_SETTINGS")
+            .resolveActivity(context.packageManager) != null
     }
     val blurDepthAdapter = remember {
         PreferenceAdapterImpl(
@@ -76,7 +78,7 @@ fun MiscPreferences(
                     description = stringResource(R.string.fixed_landscape_mode_summary),
                 )
             }
-            ExpandAndShrink(visible = hasDevicePersonalizationServices) {
+            ExpandAndShrink(visible = hasSuggestionsSettings) {
                 ClickablePreference(
                     label = stringResource(R.string.suggestion_pref_screen_title),
                     subtitle = stringResource(R.string.suggestion_pref_screen_desc),
