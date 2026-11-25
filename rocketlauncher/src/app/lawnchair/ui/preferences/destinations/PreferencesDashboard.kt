@@ -134,6 +134,17 @@ fun PreferencesDashboard(
     val scrollState = rememberScrollState()
     var showSettingsSearch by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
+    val searchInteractionSource = remember { MutableInteractionSource() }
+    val searchPressed by searchInteractionSource.collectIsPressedAsState()
+    val searchScale by animateFloatAsState(
+        targetValue = if (searchPressed) 0.97f else 1f,
+        animationSpec = if (searchPressed) {
+            spring(dampingRatio = 0.9f, stiffness = 1400f)
+        } else {
+            spring(dampingRatio = 0.62f, stiffness = 380f)
+        },
+        label = "Mist search press scale",
+    )
     val showCompactTitle = with(LocalDensity.current) { scrollState.value > 64.dp.roundToPx() }
 
     val aboutDescrption = if (prefs.hideVersionInfo.get()) {
@@ -178,7 +189,12 @@ fun PreferencesDashboard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .clickable { showSettingsSearch = true },
+                .graphicsLayer(scaleX = searchScale, scaleY = searchScale)
+                .clickable(
+                    interactionSource = searchInteractionSource,
+                    indication = null,
+                    onClick = { showSettingsSearch = true },
+                ),
             shape = CircleShape,
             color = MaterialTheme.colorScheme.surfaceContainerHighest,
         ) {
