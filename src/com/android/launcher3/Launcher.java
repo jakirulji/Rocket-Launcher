@@ -119,6 +119,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -1237,6 +1238,13 @@ public class Launcher extends StatefulActivity<LauncherState>
     protected void onResume() {
         TraceHelper.INSTANCE.beginSection(ON_RESUME_EVT);
         super.onResume();
+
+        int requestedOrientation = LauncherPrefs.FIXED_LANDSCAPE_MODE.get(this)
+                ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                : ActivityInfo.SCREEN_ORIENTATION_USER;
+        if (getRequestedOrientation() != requestedOrientation) {
+            setRequestedOrientation(requestedOrientation);
+        }
 
         if (mDeferOverlayCallbacks) {
             scheduleDeferredCheck();
