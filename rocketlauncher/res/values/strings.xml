@@ -1095,4 +1095,5 @@
     <string name="restart_launcher_label">Restart launcher</string>
     <string name="restart_launcher_summary">Restart Rocket Launcher to refresh its current state</string>
     <string name="restart_launcher_confirmation">Restart the launcher now? Your home-screen layout and settings will remain saved.</string>
+    <string name="background_blur_title">Background blur depth</string>
 </resources>
