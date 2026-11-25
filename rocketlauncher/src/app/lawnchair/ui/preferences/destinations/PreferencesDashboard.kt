@@ -202,11 +202,11 @@ fun PreferencesDashboard(
 
         val searchTargets = listOf(
             DashboardSearchTarget(stringResource(R.string.icons_and_general_label), "Icon packs, shapes, themes and general options", General),
-            DashboardSearchTarget(stringResource(R.string.home_screen_label), "Wallpaper, grid, widgets, labels and home layout", HomeScreen),
-            DashboardSearchTarget(stringResource(R.string.app_drawer_label), "Drawer layout, hidden apps, grid and labels", AppDrawer),
+            DashboardSearchTarget(stringResource(R.string.home_screen_label), "Wallpaper parallax and zoom, grid, widgets, labels and home layout", HomeScreen),
+            DashboardSearchTarget(stringResource(R.string.app_drawer_label), "Drawer layout, hidden apps, grid, labels and Focus Mode", AppDrawer),
             DashboardSearchTarget(stringResource(R.string.recent_settings_label), "Recent apps, screenshot, share and clear all", Recent),
             DashboardSearchTarget(stringResource(R.string.dock_label), "Dock layout, icons and background", Dock),
-            DashboardSearchTarget(stringResource(R.string.misc_label), "Landscape behavior and launcher maintenance", Misc),
+            DashboardSearchTarget(stringResource(R.string.misc_label), stringResource(R.string.misc_description), Misc),
             DashboardSearchTarget(stringResource(R.string.smartspace_widget), "At a glance and Smartspace widget", Smartspace),
             DashboardSearchTarget(stringResource(R.string.search_bar_label), "Search providers and search bar settings", Search()),
             DashboardSearchTarget(stringResource(R.string.folders_label), "Folder appearance and behavior", Folders),
