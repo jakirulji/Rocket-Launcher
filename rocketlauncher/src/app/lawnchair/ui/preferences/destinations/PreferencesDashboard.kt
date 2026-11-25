@@ -276,7 +276,7 @@ fun PreferencesDashboard(
                 MistSettingsTile(
                     label = stringResource(R.string.icons_and_general_label),
                     description = stringResource(R.string.icons_and_general_description),
-                    iconResource = R.drawable.ic_general,
+                    iconResource = R.drawable.ic_settings_icons_mist,
                     containerColor = Color(0xFFDCE8FF),
                     contentColor = Color(0xFF183B70),
                     onClick = { onNavigate(General) },
@@ -292,7 +292,7 @@ fun PreferencesDashboard(
                     MistSettingsTile(
                         label = stringResource(R.string.home_screen_label),
                         description = stringResource(R.string.home_screen_description),
-                        iconResource = R.drawable.ic_home_screen,
+                        iconResource = R.drawable.ic_settings_homescreen_mist,
                         containerColor = Color(0xFFFFE1CC),
                         contentColor = Color(0xFF713A18),
                         onClick = { onNavigate(HomeScreen) },
@@ -304,7 +304,7 @@ fun PreferencesDashboard(
                         MistSettingsTile(
                             label = stringResource(R.string.app_drawer_label),
                             description = stringResource(R.string.app_drawer_description),
-                            iconResource = R.drawable.ic_apps,
+                            iconResource = R.drawable.ic_settings_appdrawer_mist,
                             containerColor = Color(0xFFFFEFBF),
                             contentColor = Color(0xFF634B00),
                             onClick = { onNavigate(AppDrawer) },
@@ -323,7 +323,7 @@ fun PreferencesDashboard(
                 MistSettingsTile(
                     label = stringResource(R.string.recent_settings_label),
                     description = stringResource(R.string.recent_settings_description),
-                    iconResource = R.drawable.ic_quickstep,
+                    iconResource = R.drawable.ic_settings_recents_mist,
                     containerColor = Color(0xFFFFDADD),
                     contentColor = Color(0xFF762B35),
                     onClick = { onNavigate(Recent) },
@@ -334,7 +334,7 @@ fun PreferencesDashboard(
                 MistSettingsTile(
                     label = stringResource(R.string.misc_label),
                     description = stringResource(R.string.misc_description),
-                    iconResource = R.drawable.ic_general,
+                    iconResource = R.drawable.ic_settings_misc_mist,
                     containerColor = Color(0xFFD5F1F0),
                     contentColor = Color(0xFF174D4B),
                     onClick = { onNavigate(Misc) },
