@@ -157,6 +157,8 @@ fun CreateBackupScreen(
                 setFlags = viewModel::setBackupContents,
                 mask = LawnchairBackup.INCLUDE_LAYOUT_AND_SETTINGS,
                 label = stringResource(id = R.string.backup_content_layout_and_settings),
+                description = stringResource(id = R.string.backup_content_always_included),
+                enabled = false,
             )
             FlagSwitchPreference(
                 flags = contents,
