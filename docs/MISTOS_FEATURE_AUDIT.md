@@ -30,7 +30,7 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 | Hidden apps | App Drawer | Existing |
 | Recents screenshot/share/Lens/clear-all actions | Recents | Existing quick-action equivalents |
 | Recents translucent background and alpha | Recents | Existing equivalent |
-| Fixed landscape mode | LauncherPrefs | Preference key already exists; UI/runtime parity needs checking |
+| Fixed landscape mode | Misc + Launcher.onResume | Ported for phone devices; preference now applies launcher orientation |
 | Overscroll / suggestions / restart | Existing Rocket settings and system flows | Needs exact route-by-route verification |
 
 ## Missing or not-yet-verified MistOS features
@@ -54,7 +54,6 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 ### Miscellaneous
 - Trust Apps manager entry and behavior
 - Background blur depth control
-- Fixed landscape mode UI parity
 - Any ROM-only behavior must be adapted to public Android APIs or clearly marked unsupported.
 
 ## Porting rules
