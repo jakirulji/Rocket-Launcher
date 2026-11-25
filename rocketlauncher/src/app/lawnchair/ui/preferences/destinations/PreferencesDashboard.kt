@@ -24,6 +24,15 @@ import android.content.Intent
 import android.content.pm.LauncherApps
 import android.os.Process
 import android.provider.Settings
+import app.lawnchair.ui.preferences.components.layout.MistExpressiveShape
+import app.lawnchair.ui.preferences.components.layout.MistExpressiveGlyph
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
@@ -167,6 +176,7 @@ fun PreferencesDashboard(
                     onClick = { onNavigate(General) },
                     modifier = Modifier.weight(1f).height(272.dp),
                     large = true,
+                    shape = MistExpressiveShape.COOKIE,
                     selected = currentRoute is General,
                 )
                 Column(
@@ -181,6 +191,7 @@ fun PreferencesDashboard(
                         contentColor = Color(0xFF713A18),
                         onClick = { onNavigate(HomeScreen) },
                         modifier = Modifier.fillMaxWidth().height(132.dp),
+                        shape = MistExpressiveShape.CLOVER,
                         selected = currentRoute is HomeScreen,
                     )
                     ExpandAndShrink(visible = !deckLayout.state.value) {
@@ -192,6 +203,7 @@ fun PreferencesDashboard(
                             contentColor = Color(0xFF634B00),
                             onClick = { onNavigate(AppDrawer) },
                             modifier = Modifier.fillMaxWidth().height(132.dp),
+                            shape = MistExpressiveShape.BURST,
                             selected = currentRoute is AppDrawer,
                         )
                     }
@@ -210,6 +222,7 @@ fun PreferencesDashboard(
                     contentColor = Color(0xFF762B35),
                     onClick = { onNavigate(Recent) },
                     modifier = Modifier.weight(1f).height(144.dp),
+                    shape = MistExpressiveShape.PENTAGON,
                     selected = currentRoute is Recent,
                 )
                 MistSettingsTile(
@@ -220,6 +233,7 @@ fun PreferencesDashboard(
                     contentColor = Color(0xFF174D4B),
                     onClick = { onNavigate(Dock) },
                     modifier = Modifier.weight(1f).height(144.dp),
+                    shape = MistExpressiveShape.FLOWER,
                     selected = currentRoute is Dock,
                 )
             }
@@ -346,11 +360,36 @@ private fun MistSettingsTile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     large: Boolean = false,
+    shape: MistExpressiveShape = MistExpressiveShape.CIRCLE,
     selected: Boolean = false,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.95f else 1f,
+        animationSpec = spring(dampingRatio = 0.9f, stiffness = 1400f),
+        label = "Mist tile press scale",
+    )
+    val cornerRadius by animateDpAsState(
+        targetValue = if (pressed) 44.dp else 28.dp,
+        animationSpec = spring(dampingRatio = 0.62f, stiffness = 380f),
+        label = "Mist tile corner radius",
+    )
+    val glyphRotation by animateFloatAsState(
+        targetValue = if (pressed) 40f else 0f,
+        animationSpec = spring(dampingRatio = 0.5f, stiffness = 380f),
+        label = "Mist tile glyph rotation",
+    )
+
     Surface(
-        modifier = modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(28.dp),
+        modifier = modifier
+            .graphicsLayer(scaleX = scale, scaleY = scale)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+            ),
+        shape = RoundedCornerShape(cornerRadius),
         color = if (selected) containerColor.copy(alpha = 0.78f) else containerColor,
         tonalElevation = if (selected) 4.dp else 0.dp,
     ) {
@@ -358,17 +397,21 @@ private fun MistSettingsTile(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(if (large) 76.dp else 48.dp)
-                    .clip(RoundedCornerShape(if (large) 24.dp else 16.dp))
-                    .background(contentColor.copy(alpha = 0.12f)),
+                modifier = Modifier.size(if (large) 76.dp else 48.dp),
                 contentAlignment = Alignment.Center,
             ) {
+                MistExpressiveGlyph(
+                    shape = shape,
+                    color = contentColor,
+                    size = if (large) 76.dp else 48.dp,
+                )
                 Icon(
                     painter = painterResource(iconResource),
                     contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.size(if (large) 36.dp else 24.dp),
+                    tint = containerColor,
+                    modifier = Modifier
+                        .size(if (large) 36.dp else 24.dp)
+                        .graphicsLayer(rotationZ = glyphRotation),
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
