@@ -20,7 +20,9 @@ This file documents release checks for Rocket Launcher. It is not a legal opinio
 - Lawnchair/AOSP-derived code: applicable Apache License 2.0 notices and terms; see `LICENSE.txt`.
 - Dragon Launcher Digital Wellbeing: GNU GPL version 3; see `COPYING` and `THIRD_PARTY_LICENSES/DRAGON_LAUNCHER.md`.
 - Calculator data/algorithm component: MIT License, Copyright (c) 2018 Keelar. The original license file must remain with the source.
-- MistOS expressive Settings shape algorithm: Apache License 2.0, Copyright (C) 2026 MistOS; adapted from Java to Jetpack Compose. The expressive category glyph vectors retain the crDroid Android Project Apache-2.0 notices. See `THIRD_PARTY_LICENSES/MISTOS_SETTINGS.md` and the source-file notices.
+- MistOS expressive Settings shape algorithm: Apache License 2.0, Copyright (C) 2026 MistOS; adapted from Java to Jetpack Compose.
+- MistOS Focus Mode controller: original Android Open Source Project Apache-2.0 header retained; popup lifecycle integration is Rocket-specific.
+- Expressive category glyph vectors retain the crDroid Android Project Apache-2.0 notices. See `THIRD_PARTY_LICENSES/MISTOS_SETTINGS.md` and the source-file notices.
 
 ## Important limitations
 
