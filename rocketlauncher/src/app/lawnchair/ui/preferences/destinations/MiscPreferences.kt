@@ -24,9 +24,11 @@ import androidx.compose.ui.res.stringResource
 import app.lawnchair.preferences.PreferenceAdapterImpl
 import app.lawnchair.ui.preferences.components.controls.ClickablePreference
 import app.lawnchair.ui.preferences.components.controls.SwitchPreference
+import app.lawnchair.ui.preferences.components.layout.ExpandAndShrink
 import app.lawnchair.ui.preferences.components.layout.PreferenceGroup
 import app.lawnchair.ui.preferences.components.layout.PreferenceLayout
 import app.lawnchair.util.restartLauncher
+import com.android.launcher3.InvariantDeviceProfile
 import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.R
 
@@ -35,6 +37,7 @@ fun MiscPreferences(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val isPhone = InvariantDeviceProfile.INSTANCE.get(context).deviceType == InvariantDeviceProfile.TYPE_PHONE
     val fixedLandscapeAdapter = remember {
         PreferenceAdapterImpl(
             get = { LauncherPrefs.FIXED_LANDSCAPE_MODE.get(context) },
@@ -47,11 +50,13 @@ fun MiscPreferences(
         modifier = modifier,
     ) {
         PreferenceGroup(heading = stringResource(R.string.misc_label)) {
-            SwitchPreference(
-                adapter = fixedLandscapeAdapter,
-                label = stringResource(R.string.fixed_landscape_mode_title),
-                description = stringResource(R.string.fixed_landscape_mode_summary),
-            )
+            ExpandAndShrink(visible = isPhone) {
+                SwitchPreference(
+                    adapter = fixedLandscapeAdapter,
+                    label = stringResource(R.string.fixed_landscape_mode_title),
+                    description = stringResource(R.string.fixed_landscape_mode_summary),
+                )
+            }
             ClickablePreference(
                 label = stringResource(R.string.restart_launcher_label),
                 subtitle = stringResource(R.string.restart_launcher_summary),
