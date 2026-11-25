@@ -1,7 +1,7 @@
 # Rocket Launcher — MistOS Settings Integration Plan
 
 **Target branch:** `16-dev`  
-**Status:** Planned — implementation not yet started  
+**Status:** Implementation in progress — see [feature audit](MISTOS_FEATURE_AUDIT.md) for ported items and remaining gaps  
 **Reference:** [Project-Mist-OS/packages_apps_Launcher3 (17.0)](https://github.com/Project-Mist-OS/packages_apps_Launcher3/tree/17.0)
 
 ## Goal
@@ -33,29 +33,34 @@ The target is to reproduce the MistOS Home Settings UI as faithfully as practica
 ## Implementation phases
 
 ### Phase 1 — Source and feature audit
-- Review MistOS Launcher3 17.0 dashboard, category activities, preference XML/resources, and feature implementations.
-- Review Rocket's current Compose dashboard, destinations, preference models/keys, and platform capability checks.
-- Build an internal feature matrix: already present in Rocket, missing and portable, requires adaptation/public API, ROM-only/unavailable, or not applicable.
-- Check file-level licensing and dependencies before adapting code/assets.
+- [x] Review MistOS Launcher3 17.0 dashboard, category activities, preference XML/resources, and feature implementations.
+- [x] Review Rocket's current Compose dashboard, destinations, preference models/keys, and platform capability checks.
+- [x] Record the initial feature matrix in [MISTOS_FEATURE_AUDIT.md](MISTOS_FEATURE_AUDIT.md). The matrix remains open for deeper runtime verification.
+- [x] Check file-level licensing for the source already adapted; continue checking before each additional port.
 
 ### Phase 2 — Unified Mist-style Settings UI
-- Rework Rocket's existing Settings dashboard to match MistOS's expressive card-based design.
-- Adapt the relevant category screens, beginning with Home Settings, without changing their underlying preference behavior.
-- Preserve every existing Rocket route and entry point; ensure search and navigation continue to work.
-- Keep Rocket naming, app identity, and existing settings structure.
+- [x] Rework the existing dashboard into the Mist-inspired asymmetric card layout in Compose.
+- [x] Port the expressive radial shape algorithm and spring press motion.
+- [x] Add a collapsing Settings title and a working category search dialog.
+- [ ] Port the remaining expressive details and expand search from category-level to individual settings.
+- [ ] Adapt the remaining category screens while preserving Rocket preference behavior.
+- [x] Preserve Rocket branding and existing routes.
 
 ### Phase 3 — Missing feature integration
-- Add only the audited missing Mist features to their appropriate Rocket categories.
-- Reuse existing Rocket preference keys and implementations when equivalent functionality exists.
-- Put genuinely uncategorized extras in a separate, clearly labeled category.
-- Add compatibility guards/fallbacks for ROM-specific capabilities.
+- [x] Port short wallpaper parallax, single-page wallpaper centering, and wallpaper zooming into Home Screen settings and runtime code.
+- [x] Port Focus Mode into App Drawer settings and the long-press popup lifecycle, with a blur-disabled scrim fallback.
+- [ ] Port the remaining audited App Library, pinned apps, Recents, and Misc features where compatible.
+- [ ] Reuse Rocket preference keys and implementations where behavior already matches.
+- [ ] Keep genuinely uncategorized extras in a clearly labeled category.
+- [ ] Add compatibility guards/fallbacks for ROM-specific capabilities.
 
 ### Phase 4 — Validation
-- Build the Android app and resolve compile/resource errors.
-- Test Settings navigation, search, category rendering, and all affected controls.
-- Verify that settings persist across app restarts and that existing Rocket preferences are not reset.
-- Check unsupported features on non-MistOS Android behavior and test graceful fallback.
-- Run available CI checks; report exact run status and provide an APK only after a successful build/artifact is confirmed.
+- [x] Style check has passed for the initial dashboard implementation.
+- [ ] Complete CI build validation for the current combined dashboard and feature ports.
+- [ ] Test Settings navigation, search, category rendering, and all affected controls on-device.
+- [ ] Verify preference persistence and ensure existing Rocket preferences are not reset.
+- [ ] Test graceful fallback on non-MistOS Android devices.
+- [ ] Run the final manual release workflow and provide an APK only after a successful build/artifact is confirmed.
 
 ## Scope guardrails
 
