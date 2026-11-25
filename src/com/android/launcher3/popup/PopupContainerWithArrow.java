@@ -613,6 +613,9 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
             @Override
             public void onPreDragEnd(DropTarget.DragObject dragObject, boolean dragStarted) {
                 if (!updateIconUi) {
+                    if (mFocusModeController != null) {
+                        mFocusModeController.onPreDragEnded();
+                    }
                     return;
                 }
                 mOriginalIcon.setIconVisible(true);
@@ -628,6 +631,9 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
                         mOriginalIcon.setVisibility(VISIBLE);
                         mOriginalIcon.setTextVisibility(false);
                     }
+                }
+                if (mFocusModeController != null) {
+                    mFocusModeController.onPreDragEnded();
                 }
             }
         };
