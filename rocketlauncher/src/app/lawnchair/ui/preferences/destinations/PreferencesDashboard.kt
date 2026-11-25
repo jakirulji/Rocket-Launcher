@@ -354,7 +354,7 @@ fun PreferencesDashboard(
                     containerColor = Color(0xFFD5F1F0),
                     contentColor = Color(0xFF174D4B),
                     onClick = { onNavigate(Misc) },
-                    modifier = Modifier.weight(1f).height(144.dp),
+                    modifier = Modifier.weight(1f).height(132.dp),
                     shape = MistExpressiveShape.FLOWER,
                     selected = currentRoute is Misc,
                 )
@@ -393,6 +393,8 @@ fun PreferencesDashboard(
                     modifier = Modifier.weight(1f).height(136.dp),
                     selected = currentRoute is Smartspace,
                 )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 MistSettingsTile(
                     label = stringResource(R.string.search_bar_label),
                     description = stringResource(R.string.drawer_search_description),
@@ -403,8 +405,6 @@ fun PreferencesDashboard(
                     modifier = Modifier.weight(1f).height(136.dp),
                     selected = currentRoute is Search,
                 )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 MistSettingsTile(
                     label = stringResource(R.string.folders_label),
                     description = stringResource(R.string.folders_description),
@@ -415,6 +415,8 @@ fun PreferencesDashboard(
                     modifier = Modifier.weight(1f).height(136.dp),
                     selected = currentRoute is Folders,
                 )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 MistSettingsTile(
                     label = stringResource(R.string.gestures_label),
                     description = stringResource(R.string.gestures_description),
@@ -425,8 +427,6 @@ fun PreferencesDashboard(
                     modifier = Modifier.weight(1f).height(136.dp),
                     selected = currentRoute is Gestures,
                 )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 ExpandAndShrink(visible = LawnchairApp.isRecentsEnabled || BuildConfig.DEBUG) {
                     MistSettingsTile(
                         label = stringResource(R.string.quickstep_label),
@@ -439,6 +439,8 @@ fun PreferencesDashboard(
                         selected = currentRoute is Quickstep,
                     )
                 }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 MistSettingsTile(
                     label = stringResource(R.string.digital_wellbeing_title),
                     description = stringResource(R.string.digital_wellbeing_summary),
@@ -455,8 +457,6 @@ fun PreferencesDashboard(
                     },
                     modifier = Modifier.weight(1f).height(136.dp),
                 )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 MistSettingsTile(
                     label = stringResource(R.string.backup_and_restore_label),
                     description = stringResource(R.string.backup_and_restore_description),
@@ -467,6 +467,8 @@ fun PreferencesDashboard(
                     modifier = Modifier.weight(1f).height(136.dp),
                     selected = currentRoute is BackupAndRestore,
                 )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 MistSettingsTile(
                     label = stringResource(R.string.about_label),
                     description = aboutDescrption,
