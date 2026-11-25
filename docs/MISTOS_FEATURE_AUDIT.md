@@ -19,6 +19,9 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 | Status-bar visibility and dark icons | Home Screen | Existing |
 | Top shadow / system UI scrim | Home Screen | Existing |
 | Wallpaper scrolling and depth effect | Home Screen | Existing equivalents |
+| Short wallpaper parallax | Home Screen + WallpaperOffsetInterpolator | Ported: same minimum-page-span algorithm, now configurable |
+| Center wallpaper on a single page | Home Screen + WallpaperOffsetInterpolator | Ported: single-page zero-minimum-scroll behavior |
+| Wallpaper zooming | Home Screen + BaseDepthController | Ported: public WallpaperManager zoom is disabled by preference when off |
 | Minus-one feed | Home Screen | Existing |
 | App drawer grid, labels and row height | App Drawer | Existing |
 | App drawer scrollbar | App Drawer | Existing |
@@ -32,9 +35,6 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 ## Missing or not-yet-verified MistOS features
 
 ### Home Screen
-- Wallpaper zooming when opening App Drawer or Recents
-- Short wallpaper parallax for a small number of pages
-- Center wallpaper when only one page is used
 - Mist's extended Quickspace styling: clock style/font/colors, PSA, now playing, weather provider/city/text
 - Sleep-gesture haptic option parity
 
