@@ -602,7 +602,8 @@
     -->
     <string name="create_backup">Create backup</string>
     <string name="what_to_backup">What to back up</string>
-    <string name="backup_content_layout_and_settings">Layout and settings</string>
+    <string name="backup_content_layout_and_settings">Home screen, layout and all settings</string>
+    <string name="backup_content_always_included">Always included — every Home Settings value and launcher layout is saved and restored</string>
     <string name="backup_content_wallpaper">Wallpaper</string>
     <string name="backup_create_success">Backup created</string>
     <string name="backup_create_error">Failed to create backup</string>
