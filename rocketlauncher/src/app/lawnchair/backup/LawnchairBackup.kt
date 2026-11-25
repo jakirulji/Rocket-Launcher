@@ -46,15 +46,27 @@ class LawnchairBackup(
     var wallpaper: Bitmap? = null
 
     suspend fun readInfoAndPreview() {
+        var hasInfo = false
         var tmpScreenshot: Bitmap? = null
         var tmpWallpaper: Bitmap? = null
         readZip(
             mapOf(
-                INFO_FILE_NAME to { info = BackupInfo.newBuilder().mergeFrom(it).build() },
+                INFO_FILE_NAME to {
+                    info = BackupInfo.newBuilder().mergeFrom(it).build()
+                    hasInfo = true
+                },
                 SCREENSHOT_FILE_NAME to { tmpScreenshot = BitmapFactory.decodeStream(it) },
                 WALLPAPER_FILE_NAME to { tmpWallpaper = BitmapFactory.decodeStream(it) },
             ),
         )
+        if (!hasInfo || info.backupVersion !in 1..BACKUP_VERSION) {
+            throw IOException("Unsupported or invalid Rocket backup")
+        }
+        if (!info.contents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS) ||
+            info.previewWidth <= 0 || info.previewHeight <= 0
+        ) {
+            throw IOException("Backup does not contain a valid Home screen and settings snapshot")
+        }
         val size = max(info.previewWidth, info.previewHeight).coerceAtMost(4000)
         screenshot = tmpScreenshot?.scaleDownTo(size)
         wallpaper = tmpWallpaper?.scaleDownToDisplaySize(context)
@@ -107,11 +119,18 @@ class LawnchairBackup(
                 FileInputStream(it.fileDescriptor).use { input ->
                     ZipInputStream(input).use { zipIs ->
                         var hasLauncherDatabase = false
+                        var hasSettingsSnapshot = false
                         val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                         while (true) {
                             val entry = zipIs.nextEntry ?: break
                             if (entry.name == LAUNCHER_DB_FILE_NAME) {
                                 hasLauncherDatabase = true
+                            }
+                            if (entry.name == PREFS_FILE_NAME ||
+                                entry.name == PREFS_DB_FILE_NAME ||
+                                entry.name == PREFS_DATASTORE_FILE_NAME
+                            ) {
+                                hasSettingsSnapshot = true
                             }
                             if (entry.name.startsWith(CUSTOM_FONTS_PREFIX) ||
                                 entry.name.startsWith(WALLPAPER_HISTORY_PREFIX)
@@ -135,6 +154,9 @@ class LawnchairBackup(
                         }
                         if (!hasLauncherDatabase) {
                             throw IOException("Backup is missing the launcher layout database")
+                        }
+                        if (!hasSettingsSnapshot) {
+                            throw IOException("Backup is missing the launcher settings snapshot")
                         }
                     }
                 }
@@ -187,7 +209,7 @@ class LawnchairBackup(
     }
 
     companion object {
-        private const val BACKUP_VERSION = 2
+        private const val BACKUP_VERSION = 1
         private const val PREFS_FILE_NAME = "${LauncherFiles.SHARED_PREFERENCES_KEY}.xml"
         private const val PREFS_DB_FILE_NAME = "preferences"
         private const val PREFS_DATASTORE_FILE_NAME = "preferences.preferences_pb"
