@@ -25,6 +25,16 @@ import android.content.pm.LauncherApps
 import android.os.Process
 import android.provider.Settings
 import androidx.compose.foundation.background
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.RowScope
@@ -113,7 +123,7 @@ fun PreferencesDashboard(
     PreferenceLayout(
         label = stringResource(id = R.string.settings),
         modifier = modifier,
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         backArrowVisible = false,
         actions = { PreferencesOverflowMenu(currentRoute = currentRoute, onNavigate = onNavigate) },
     ) {
@@ -121,135 +131,263 @@ fun PreferencesDashboard(
 
         if (BuildConfig.APPLICATION_ID.contains("nightly") || BuildConfig.DEBUG) {
             PreferencesDebugWarning()
-            Spacer(modifier = Modifier.height(8.dp))
         }
 
         if (!context.isDefaultLauncher()) {
             PreferencesSetDefaultLauncherWarning()
-            Spacer(modifier = Modifier.height(8.dp))
         }
 
+        // MistOS expressive dashboard: large title, asymmetric first row, then paired tiles.
+        Text(
+            text = stringResource(id = R.string.settings),
+            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 4.dp),
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontSize = 40.sp,
+                lineHeight = 42.sp,
+                letterSpacing = (-0.4).sp,
+                fontWeight = FontWeight.Medium,
+            ),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
         val deckLayout = prefs2.deckLayout.getAdapter()
-        PreferenceGroup {
-            PreferenceCategory(
-                label = stringResource(R.string.general_label),
-                description = stringResource(R.string.general_description),
-                iconResource = R.drawable.ic_general,
-                onNavigate = { onNavigate(General) },
-                isSelected = currentRoute is General,
-            )
-
-            // Digital Wellbeing belongs on the actual Compose Home Settings dashboard.
-            PreferenceCategory(
-                label = stringResource(R.string.digital_wellbeing_title),
-                description = stringResource(R.string.digital_wellbeing_summary),
-                iconResource = R.drawable.ic_general,
-                onNavigate = {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity::class.java,
-                        ),
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                MistSettingsTile(
+                    label = stringResource(R.string.general_label),
+                    description = stringResource(R.string.icons),
+                    iconResource = R.drawable.ic_general,
+                    containerColor = Color(0xFFDCE8FF),
+                    contentColor = Color(0xFF183B70),
+                    onClick = { onNavigate(General) },
+                    modifier = Modifier.weight(1f).height(272.dp),
+                    large = true,
+                    selected = currentRoute is General,
+                )
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    MistSettingsTile(
+                        label = stringResource(R.string.home_screen_label),
+                        description = stringResource(R.string.home_screen_description),
+                        iconResource = R.drawable.ic_home_screen,
+                        containerColor = Color(0xFFFFE1CC),
+                        contentColor = Color(0xFF713A18),
+                        onClick = { onNavigate(HomeScreen) },
+                        modifier = Modifier.fillMaxWidth().height(132.dp),
+                        selected = currentRoute is HomeScreen,
                     )
-                },
-            )
-
-            PreferenceCategory(
-                label = stringResource(R.string.home_screen_label),
-                description = stringResource(R.string.home_screen_description),
-                iconResource = R.drawable.ic_home_screen,
-                onNavigate = { onNavigate(HomeScreen) },
-                isSelected = currentRoute is HomeScreen,
-            )
-
-            val isSmartspaceEnabled = prefs2.enableSmartspace.firstCached()
-            PreferenceCategory(
-                label = stringResource(id = R.string.smartspace_widget),
-                description = stringResource(R.string.smartspace_widget_description),
-                iconResource = if (isSmartspaceEnabled) R.drawable.ic_smartspace else R.drawable.ic_smartspace_off,
-                onNavigate = { onNavigate(Smartspace) },
-                isSelected = currentRoute is Smartspace,
-            )
-
-            PreferenceCategory(
-                label = stringResource(R.string.dock_label),
-                description = stringResource(R.string.dock_description),
-                iconResource = R.drawable.ic_dock,
-                onNavigate = { onNavigate(Dock) },
-                isSelected = currentRoute is Dock,
-            )
-
-            ExpandAndShrink(
-                visible = !deckLayout.state.value,
-            ) {
-                PreferenceCategory(
-                    label = stringResource(R.string.app_drawer_label),
-                    description = stringResource(R.string.app_drawer_description),
-                    iconResource = R.drawable.ic_apps,
-                    onNavigate = { onNavigate(AppDrawer) },
-                    isSelected = currentRoute is AppDrawer,
-                )
+                    ExpandAndShrink(visible = !deckLayout.state.value) {
+                        MistSettingsTile(
+                            label = stringResource(R.string.app_drawer_label),
+                            description = stringResource(R.string.app_drawer_description),
+                            iconResource = R.drawable.ic_apps,
+                            containerColor = Color(0xFFFFEFBF),
+                            contentColor = Color(0xFF634B00),
+                            onClick = { onNavigate(AppDrawer) },
+                            modifier = Modifier.fillMaxWidth().height(132.dp),
+                            selected = currentRoute is AppDrawer,
+                        )
+                    }
+                }
             }
 
-            PreferenceCategory(
-                label = stringResource(R.string.search_bar_label),
-                description = stringResource(R.string.drawer_search_description),
-                iconResource = R.drawable.ic_search,
-                onNavigate = { onNavigate(Search()) },
-                isSelected = currentRoute is Search,
-            )
-
-            PreferenceCategory(
-                label = stringResource(R.string.folders_label),
-                description = stringResource(R.string.folders_description),
-                iconResource = R.drawable.ic_folder,
-                onNavigate = { onNavigate(Folders) },
-                isSelected = currentRoute is Folders,
-            )
-
-            PreferenceCategory(
-                label = stringResource(id = R.string.gestures_label),
-                description = stringResource(R.string.gestures_description),
-                iconResource = R.drawable.ic_gestures,
-                onNavigate = { onNavigate(Gestures) },
-                isSelected = currentRoute is Gestures,
-            )
-
-            PreferenceCategory(
-                label = stringResource(id = R.string.recent_settings_label),
-                description = stringResource(id = R.string.recent_settings_description),
-                iconResource = R.drawable.ic_quickstep,
-                onNavigate = { onNavigate(Recent) },
-                isSelected = currentRoute is Recent,
-            )
-
-            ExpandAndShrink(
-                visible = LawnchairApp.isRecentsEnabled || BuildConfig.DEBUG,
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                PreferenceCategory(
-                    label = stringResource(id = R.string.quickstep_label),
-                    description = stringResource(id = R.string.quickstep_description),
+                MistSettingsTile(
+                    label = stringResource(R.string.recent_settings_label),
+                    description = stringResource(R.string.recent_settings_description),
                     iconResource = R.drawable.ic_quickstep,
-                    onNavigate = { onNavigate(Quickstep) },
-                    isSelected = currentRoute is Quickstep,
+                    containerColor = Color(0xFFFFDADD),
+                    contentColor = Color(0xFF762B35),
+                    onClick = { onNavigate(Recent) },
+                    modifier = Modifier.weight(1f).height(144.dp),
+                    selected = currentRoute is Recent,
+                )
+                MistSettingsTile(
+                    label = stringResource(R.string.dock_label),
+                    description = stringResource(R.string.dock_description),
+                    iconResource = R.drawable.ic_dock,
+                    containerColor = Color(0xFFD5F1F0),
+                    contentColor = Color(0xFF174D4B),
+                    onClick = { onNavigate(Dock) },
+                    modifier = Modifier.weight(1f).height(144.dp),
+                    selected = currentRoute is Dock,
                 )
             }
+        }
 
-            PreferenceCategory(
-                label = stringResource(R.string.backup_and_restore_label),
-                description = stringResource(R.string.backup_and_restore_description),
-                iconResource = R.drawable.backup_restore,
-                onNavigate = { onNavigate(BackupAndRestore) },
-                isSelected = currentRoute is BackupAndRestore,
-            )
+        Text(
+            text = stringResource(R.string.additional_features_label),
+            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 2.dp),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
 
-            PreferenceCategory(
-                label = stringResource(R.string.about_label),
-                description = aboutDescrption,
-                iconResource = R.drawable.ic_about,
-                onNavigate = { onNavigate(About) },
-                isSelected = currentRoute is About,
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MistSettingsTile(
+                    label = stringResource(R.string.smartspace_widget),
+                    description = stringResource(R.string.smartspace_widget_description),
+                    iconResource = if (prefs2.enableSmartspace.firstCached()) R.drawable.ic_smartspace else R.drawable.ic_smartspace_off,
+                    containerColor = Color(0xFFE9DFFF),
+                    contentColor = Color(0xFF49316D),
+                    onClick = { onNavigate(Smartspace) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is Smartspace,
+                )
+                MistSettingsTile(
+                    label = stringResource(R.string.search_bar_label),
+                    description = stringResource(R.string.drawer_search_description),
+                    iconResource = R.drawable.ic_search,
+                    containerColor = Color(0xFFDCEBFA),
+                    contentColor = Color(0xFF234768),
+                    onClick = { onNavigate(Search()) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is Search,
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MistSettingsTile(
+                    label = stringResource(R.string.folders_label),
+                    description = stringResource(R.string.folders_description),
+                    iconResource = R.drawable.ic_folder,
+                    containerColor = Color(0xFFE7E7F8),
+                    contentColor = Color(0xFF38385E),
+                    onClick = { onNavigate(Folders) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is Folders,
+                )
+                MistSettingsTile(
+                    label = stringResource(R.string.gestures_label),
+                    description = stringResource(R.string.gestures_description),
+                    iconResource = R.drawable.ic_gestures,
+                    containerColor = Color(0xFFFFE4EC),
+                    contentColor = Color(0xFF6E3046),
+                    onClick = { onNavigate(Gestures) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is Gestures,
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                ExpandAndShrink(visible = LawnchairApp.isRecentsEnabled || BuildConfig.DEBUG) {
+                    MistSettingsTile(
+                        label = stringResource(R.string.quickstep_label),
+                        description = stringResource(R.string.quickstep_description),
+                        iconResource = R.drawable.ic_quickstep,
+                        containerColor = Color(0xFFE0E8F8),
+                        contentColor = Color(0xFF334A70),
+                        onClick = { onNavigate(Quickstep) },
+                        modifier = Modifier.weight(1f).height(136.dp),
+                        selected = currentRoute is Quickstep,
+                    )
+                }
+                MistSettingsTile(
+                    label = stringResource(R.string.digital_wellbeing_title),
+                    description = stringResource(R.string.digital_wellbeing_summary),
+                    iconResource = R.drawable.ic_general,
+                    containerColor = Color(0xFFE2F0D9),
+                    contentColor = Color(0xFF34502B),
+                    onClick = {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                com.android.launcher3.wellbeing.DigitalWellbeingSettingsActivity::class.java,
+                            ),
+                        )
+                    },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MistSettingsTile(
+                    label = stringResource(R.string.backup_and_restore_label),
+                    description = stringResource(R.string.backup_and_restore_description),
+                    iconResource = R.drawable.backup_restore,
+                    containerColor = Color(0xFFFFE8C9),
+                    contentColor = Color(0xFF68451D),
+                    onClick = { onNavigate(BackupAndRestore) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is BackupAndRestore,
+                )
+                MistSettingsTile(
+                    label = stringResource(R.string.about_label),
+                    description = aboutDescrption,
+                    iconResource = R.drawable.ic_about,
+                    containerColor = Color(0xFFE5E5E5),
+                    contentColor = Color(0xFF414141),
+                    onClick = { onNavigate(About) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is About,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MistSettingsTile(
+    label: String,
+    description: String,
+    @androidx.annotation.DrawableRes iconResource: Int,
+    containerColor: Color,
+    contentColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    large: Boolean = false,
+    selected: Boolean = false,
+) {
+    Surface(
+        modifier = modifier.clickable(onClick = onClick),
+        shape = RoundedCornerShape(28.dp),
+        color = if (selected) containerColor.copy(alpha = 0.78f) else containerColor,
+        tonalElevation = if (selected) 4.dp else 0.dp,
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(if (large) 76.dp else 48.dp)
+                    .clip(RoundedCornerShape(if (large) 24.dp else 16.dp))
+                    .background(contentColor.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = painterResource(iconResource),
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(if (large) 36.dp else 24.dp),
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = contentColor,
+                maxLines = 2,
             )
+            if (description.isNotBlank()) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = contentColor.copy(alpha = 0.82f),
+                    maxLines = 2,
+                )
+            }
         }
     }
 }
