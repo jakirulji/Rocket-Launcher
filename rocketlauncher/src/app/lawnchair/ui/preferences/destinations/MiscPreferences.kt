@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import app.lawnchair.preferences.PreferenceAdapterImpl
 import app.lawnchair.ui.preferences.components.controls.ClickablePreference
+import app.lawnchair.ui.preferences.components.controls.SliderPreference
 import app.lawnchair.ui.preferences.components.controls.SwitchPreference
 import app.lawnchair.ui.preferences.components.layout.ExpandAndShrink
 import app.lawnchair.ui.preferences.components.layout.PreferenceGroup
@@ -38,6 +39,12 @@ fun MiscPreferences(
 ) {
     val context = LocalContext.current
     val isPhone = InvariantDeviceProfile.INSTANCE.get(context).deviceType == InvariantDeviceProfile.TYPE_PHONE
+    val blurDepthAdapter = remember {
+        PreferenceAdapterImpl(
+            get = { LauncherPrefs.BLUR_DEPTH.get(context) },
+            set = { LauncherPrefs.get(context).put(LauncherPrefs.BLUR_DEPTH.to(it)) },
+        )
+    }
     val fixedLandscapeAdapter = remember {
         PreferenceAdapterImpl(
             get = { LauncherPrefs.FIXED_LANDSCAPE_MODE.get(context) },
@@ -50,6 +57,13 @@ fun MiscPreferences(
         modifier = modifier,
     ) {
         PreferenceGroup(heading = stringResource(R.string.misc_label)) {
+            SliderPreference(
+                label = stringResource(R.string.background_blur_title),
+                adapter = blurDepthAdapter,
+                valueRange = 0..60,
+                step = 1,
+                showUnit = "dp",
+            )
             ExpandAndShrink(visible = isPhone) {
                 SwitchPreference(
                     adapter = fixedLandscapeAdapter,
