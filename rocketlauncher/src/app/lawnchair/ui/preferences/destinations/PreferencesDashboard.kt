@@ -108,6 +108,7 @@ import app.lawnchair.ui.preferences.navigation.Folders
 import app.lawnchair.ui.preferences.navigation.General
 import app.lawnchair.ui.preferences.navigation.Gestures
 import app.lawnchair.ui.preferences.navigation.HomeScreen
+import app.lawnchair.ui.preferences.navigation.Misc
 import app.lawnchair.ui.preferences.navigation.PreferenceRootRoute
 import app.lawnchair.ui.preferences.navigation.Quickstep
 import app.lawnchair.ui.preferences.navigation.Recent
@@ -205,6 +206,7 @@ fun PreferencesDashboard(
             DashboardSearchTarget(stringResource(R.string.app_drawer_label), "Drawer layout, hidden apps, grid and labels", AppDrawer),
             DashboardSearchTarget(stringResource(R.string.recent_settings_label), "Recent apps, screenshot, share and clear all", Recent),
             DashboardSearchTarget(stringResource(R.string.dock_label), "Dock layout, icons and background", Dock),
+            DashboardSearchTarget(stringResource(R.string.misc_label), "Landscape behavior and launcher maintenance", Misc),
             DashboardSearchTarget(stringResource(R.string.smartspace_widget), "At a glance and Smartspace widget", Smartspace),
             DashboardSearchTarget(stringResource(R.string.search_bar_label), "Search providers and search bar settings", Search()),
             DashboardSearchTarget(stringResource(R.string.folders_label), "Folder appearance and behavior", Folders),
@@ -330,15 +332,15 @@ fun PreferencesDashboard(
                     selected = currentRoute is Recent,
                 )
                 MistSettingsTile(
-                    label = stringResource(R.string.dock_label),
-                    description = stringResource(R.string.dock_description),
-                    iconResource = R.drawable.ic_dock,
+                    label = stringResource(R.string.misc_label),
+                    description = stringResource(R.string.misc_description),
+                    iconResource = R.drawable.ic_general,
                     containerColor = Color(0xFFD5F1F0),
                     contentColor = Color(0xFF174D4B),
-                    onClick = { onNavigate(Dock) },
+                    onClick = { onNavigate(Misc) },
                     modifier = Modifier.weight(1f).height(144.dp),
                     shape = MistExpressiveShape.FLOWER,
-                    selected = currentRoute is Dock,
+                    selected = currentRoute is Misc,
                 )
             }
         }
@@ -355,6 +357,16 @@ fun PreferencesDashboard(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                MistSettingsTile(
+                    label = stringResource(R.string.dock_label),
+                    description = stringResource(R.string.dock_description),
+                    iconResource = R.drawable.ic_dock,
+                    containerColor = Color(0xFFD5F1F0),
+                    contentColor = Color(0xFF174D4B),
+                    onClick = { onNavigate(Dock) },
+                    modifier = Modifier.weight(1f).height(136.dp),
+                    selected = currentRoute is Dock,
+                )
                 MistSettingsTile(
                     label = stringResource(R.string.smartspace_widget),
                     description = stringResource(R.string.smartspace_widget_description),
