@@ -48,6 +48,7 @@ import app.lawnchair.ui.preferences.components.layout.PreferenceLayout
 import app.lawnchair.ui.preferences.navigation.HomeScreenGrid
 import app.lawnchair.util.collectAsStateBlocking
 import com.android.launcher3.LauncherAppState
+import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.LauncherSettings
 import com.android.launcher3.R
 import com.android.launcher3.Utilities
@@ -67,6 +68,18 @@ fun HomeScreenPreferences(
     val prefs2 = preferenceManager2()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val shortParallaxAdapter = remember {
+        PreferenceAdapterImpl(
+            get = { LauncherPrefs.SHORT_PARALLAX.get(context) },
+            set = { LauncherPrefs.get(context).put(LauncherPrefs.SHORT_PARALLAX.to(it)) },
+        )
+    }
+    val singlePageCenterAdapter = remember {
+        PreferenceAdapterImpl(
+            get = { LauncherPrefs.SINGLE_PAGE_CENTER.get(context) },
+            set = { LauncherPrefs.get(context).put(LauncherPrefs.SINGLE_PAGE_CENTER.to(it)) },
+        )
+    }
     PreferenceLayout(
         label = stringResource(id = R.string.home_screen_label),
         backArrowVisible = !LocalIsExpandedScreen.current,
@@ -147,6 +160,16 @@ fun HomeScreenPreferences(
             SwitchPreference(
                 adapter = prefs2.showTopShadow.getAdapter(),
                 label = stringResource(id = R.string.show_sys_ui_scrim),
+            )
+            SwitchPreference(
+                adapter = shortParallaxAdapter,
+                label = stringResource(id = R.string.short_parallax_title),
+                description = stringResource(id = R.string.short_parallax_summary),
+            )
+            SwitchPreference(
+                adapter = singlePageCenterAdapter,
+                label = stringResource(id = R.string.single_page_center_title),
+                description = stringResource(id = R.string.single_page_center_summary),
             )
         }
         val columns by prefs.workspaceColumns.getAdapter()
