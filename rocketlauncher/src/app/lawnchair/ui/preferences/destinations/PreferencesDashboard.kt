@@ -27,6 +27,7 @@ import android.provider.Settings
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -64,6 +65,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -121,6 +123,7 @@ import com.android.launcher3.BuildConfig
 import com.android.launcher3.R
 import com.android.launcher3.util.MSDLPlayerWrapper
 import com.google.android.msdl.data.model.MSDLToken
+import kotlinx.coroutines.delay
 
 @Composable
 fun PreferencesDashboard(
@@ -175,7 +178,7 @@ fun PreferencesDashboard(
         // MistOS expressive dashboard: large title, asymmetric first row, then paired tiles.
         Text(
             text = stringResource(id = R.string.settings),
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 4.dp),
+            modifier = Modifier.then(mistEnter(0)).padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 4.dp),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontSize = 40.sp,
                 lineHeight = 38.sp,
@@ -187,6 +190,7 @@ fun PreferencesDashboard(
 
         Surface(
             modifier = Modifier
+                .then(mistEnter(40))
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .graphicsLayer(scaleX = searchScale, scaleY = searchScale)
@@ -482,6 +486,30 @@ fun PreferencesDashboard(
             }
         }
     }
+}
+
+@Composable
+private fun mistEnter(delayMillis: Long): Modifier {
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(delayMillis)
+        visible = true
+    }
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(durationMillis = 220),
+        label = "Mist settings enter alpha",
+    )
+    val translationY by animateDpAsState(
+        targetValue = if (visible) 0.dp else 48.dp,
+        animationSpec = spring(dampingRatio = 0.72f, stiffness = 380f),
+        label = "Mist settings enter translation",
+    )
+    val density = LocalDensity.current
+    return Modifier.graphicsLayer(
+        alpha = alpha,
+        translationY = with(density) { translationY.toPx() },
+    )
 }
 
 private data class DashboardSearchTarget(
