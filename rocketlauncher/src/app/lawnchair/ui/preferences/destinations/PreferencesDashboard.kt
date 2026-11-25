@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -65,6 +66,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -120,6 +122,8 @@ fun PreferencesDashboard(
     val context = LocalContext.current
     val prefs = preferenceManager()
     val prefs2 = preferenceManager2()
+    val scrollState = rememberScrollState()
+    val showCompactTitle = with(LocalDensity.current) { scrollState.value > 64.dp.roundToPx() }
 
     val aboutDescrption = if (prefs.hideVersionInfo.get()) {
         prefs.pseudonymVersion.get()
@@ -128,8 +132,10 @@ fun PreferencesDashboard(
     }
 
     PreferenceLayout(
-        label = stringResource(id = R.string.settings),
+        label = if (showCompactTitle) stringResource(id = R.string.settings) else "",
         modifier = modifier,
+        isExpandedScreen = true,
+        scrollState = scrollState,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         backArrowVisible = false,
         actions = { PreferencesOverflowMenu(currentRoute = currentRoute, onNavigate = onNavigate) },
