@@ -61,6 +61,7 @@ class LawnchairBackup(
     }
 
     suspend fun restore(selectedContents: Int) {
+        validateArchiveForRestore()
         val handlers = mutableMapOf<String, suspend (InputStream) -> Unit>()
         val contents = (selectedContents and info.contents) or INCLUDE_LAYOUT_AND_SETTINGS
         if (contents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
@@ -96,6 +97,49 @@ class LawnchairBackup(
 
         val dbController = ModelDbController(context)
         RestoreDbTask.performRestore(context, dbController)
+    }
+
+    private suspend fun validateArchiveForRestore() {
+        withContext(Dispatchers.IO) {
+            val pfd = context.contentResolver.openFileDescriptor(uri, "r")
+                ?: throw IOException("Unable to open backup file")
+            pfd.use {
+                FileInputStream(it.fileDescriptor).use { input ->
+                    ZipInputStream(input).use { zipIs ->
+                        var hasLauncherDatabase = false
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        while (true) {
+                            val entry = zipIs.nextEntry ?: break
+                            if (entry.name == LAUNCHER_DB_FILE_NAME) {
+                                hasLauncherDatabase = true
+                            }
+                            if (entry.name.startsWith(CUSTOM_FONTS_PREFIX) ||
+                                entry.name.startsWith(WALLPAPER_HISTORY_PREFIX)
+                            ) {
+                                val prefix = if (entry.name.startsWith(CUSTOM_FONTS_PREFIX)) {
+                                    CUSTOM_FONTS_PREFIX
+                                } else {
+                                    WALLPAPER_HISTORY_PREFIX
+                                }
+                                val fileName = entry.name.removePrefix(prefix)
+                                if (!entry.isDirectory &&
+                                    fileName != "__directory__" &&
+                                    (fileName.isBlank() || fileName.contains('/') || fileName.contains('\\'))
+                                ) {
+                                    throw IOException("Invalid backup asset path")
+                                }
+                            }
+                            while (zipIs.read(buffer) != -1) {
+                                // Consume every entry so ZipInputStream verifies its CRC before restore.
+                            }
+                        }
+                        if (!hasLauncherDatabase) {
+                            throw IOException("Backup is missing the launcher layout database")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun readZip(
@@ -184,13 +228,18 @@ class LawnchairBackup(
         @SuppressLint("MissingPermission")
         suspend fun create(context: Context, contents: Int, screenshotBitmap: Bitmap, fileUri: Uri) {
             // Flush app-owned preference and Room writes before taking a consistent snapshot.
-            context.getSharedPreferences(LauncherFiles.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
-                .edit()
-                .commit()
+            check(
+                context.getSharedPreferences(LauncherFiles.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
+                    .edit()
+                    .commit(),
+            ) { "Unable to flush launcher preferences before backup" }
             AppDatabase.INSTANCE.get(context).checkpoint()
             // Wait for the current DataStore snapshot to be readable from disk.
             app.lawnchair.preferences2.PreferenceManager2.getInstance(context).preferencesDataStore.data.first()
 
+            check(launcherDbFile(context, forRestore = false).isFile) {
+                "Launcher layout database is not ready for backup"
+            }
             val idp = LauncherAppState.getIDP(context)
             // Every Rocket backup always contains the complete launcher layout and settings.
             val backupContents = contents or INCLUDE_LAYOUT_AND_SETTINGS
