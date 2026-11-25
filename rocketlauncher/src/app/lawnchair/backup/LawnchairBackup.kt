@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.graphics.drawable.toBitmap
 import app.lawnchair.LawnchairProto.BackupInfo
+import app.lawnchair.data.AppDatabase
 import app.lawnchair.util.hasFlag
 import app.lawnchair.util.scaleDownTo
 import app.lawnchair.util.scaleDownToDisplaySize
@@ -25,6 +26,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.zip.ZipEntry
@@ -77,8 +79,16 @@ class LawnchairBackup(
                 wallpaperManager.setBitmap(BitmapFactory.decodeStream(it))
             }
         }
+        // Close the app-owned Room database before replacing its on-disk snapshot.
+        AppDatabase.INSTANCE.get(context).close()
         context.getDatabasePath(LAUNCHER_DB_FILE_NAME).parentFile?.deleteRecursively()
-        readZip(handlers)
+        readZip(
+            handlers,
+            mapOf(
+                CUSTOM_FONTS_PREFIX to customFontsDirectory(context),
+                WALLPAPER_HISTORY_PREFIX to wallpaperHistoryDirectory(context),
+            ),
+        )
         // Written after the zip has been extracted: the backed up preferences file is one of
         // the restored entries, so writing the grid state first would let it be overwritten.
         DeviceGridState(info.gridState).writeToPrefs(context, true)
@@ -87,7 +97,10 @@ class LawnchairBackup(
         RestoreDbTask.performRestore(context, dbController)
     }
 
-    private suspend fun readZip(handlers: Map<String, suspend (InputStream) -> Unit>) {
+    private suspend fun readZip(
+        handlers: Map<String, suspend (InputStream) -> Unit>,
+        assetDirectories: Map<String, File> = emptyMap(),
+    ) {
         withContext(Dispatchers.IO) {
             val pfd = context.contentResolver.openFileDescriptor(uri, "r")!!
             pfd.use {
@@ -97,7 +110,25 @@ class LawnchairBackup(
                         while (true) {
                             entry = zipIs.nextEntry
                             if (entry == null) break
-                            handlers[entry.name]?.invoke(zipIs)
+                            val assetDirectory = assetDirectories.entries.firstOrNull { (prefix, _) ->
+                                entry.name.startsWith(prefix)
+                            }
+                            if (assetDirectory != null && !entry.isDirectory) {
+                                val (prefix, directory) = assetDirectory
+                                val fileName = entry.name.removePrefix(prefix)
+                                if (fileName.isBlank() || fileName.contains('/') || fileName.contains('\\')) {
+                                    throw IOException("Invalid backup asset path")
+                                }
+                                val root = directory.canonicalFile
+                                val target = File(root, fileName).canonicalFile
+                                if (!target.path.startsWith(root.path + File.separator)) {
+                                    throw IOException("Backup asset path escapes destination")
+                                }
+                                target.parentFile?.mkdirs()
+                                target.outputStream().use { output -> zipIs.copyTo(output) }
+                            } else {
+                                handlers[entry.name]?.invoke(zipIs)
+                            }
                         }
                     }
                 }
@@ -114,6 +145,8 @@ class LawnchairBackup(
         const val INFO_FILE_NAME = "info.pb"
         const val WALLPAPER_FILE_NAME = "wallpaper.png"
         const val SCREENSHOT_FILE_NAME = "screenshot.png"
+        private const val CUSTOM_FONTS_PREFIX = "assets/customFonts/"
+        private const val WALLPAPER_HISTORY_PREFIX = "assets/wallpapers/"
         const val LAUNCHER_DB_FILE_NAME = "launcher.db"
         const val RESTORED_DB_FILE_NAME = "restored.db"
 
@@ -144,6 +177,14 @@ class LawnchairBackup(
 
         @SuppressLint("MissingPermission")
         suspend fun create(context: Context, contents: Int, screenshotBitmap: Bitmap, fileUri: Uri) {
+            // Flush app-owned preference and Room writes before taking a consistent snapshot.
+            context.getSharedPreferences(LauncherFiles.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
+                .edit()
+                .commit()
+            AppDatabase.INSTANCE.get(context).checkpoint()
+            // Wait for the current DataStore snapshot to be readable from disk.
+            app.lawnchair.preferences2.PreferenceManager2.getInstance(context).preferencesDataStore.data.first()
+
             val idp = LauncherAppState.getIDP(context)
             // Every Rocket backup always contains the complete launcher layout and settings.
             val backupContents = contents or INCLUDE_LAYOUT_AND_SETTINGS
@@ -182,6 +223,9 @@ class LawnchairBackup(
                             screenshotBitmap.compress(Bitmap.CompressFormat.PNG, 85, out)
                         }
 
+                        writeDirectoryToZip(out, customFontsDirectory(context), CUSTOM_FONTS_PREFIX)
+                        writeDirectoryToZip(out, wallpaperHistoryDirectory(context), WALLPAPER_HISTORY_PREFIX)
+
                         getFiles(context, forRestore = false).entries.forEach {
                             if (!it.value.exists()) return@forEach
                             out.putNextEntry(ZipEntry(it.key))
@@ -190,6 +234,20 @@ class LawnchairBackup(
                     }
                 }
             }
+        }
+
+        private fun customFontsDirectory(context: Context) = File(context.filesDir, "customFonts")
+
+        private fun wallpaperHistoryDirectory(context: Context) = File(context.filesDir, "wallpapers")
+
+        private fun writeDirectoryToZip(out: ZipOutputStream, directory: File, prefix: String) {
+            directory.listFiles()
+                ?.filter { it.isFile }
+                ?.forEach { file ->
+                    out.putNextEntry(ZipEntry(prefix + file.name))
+                    file.inputStream().use { input -> input.copyTo(out) }
+                    out.closeEntry()
+                }
         }
 
         private fun launcherDbFile(context: Context, forRestore: Boolean): File {
