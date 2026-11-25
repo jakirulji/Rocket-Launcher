@@ -302,6 +302,9 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField
         val FIXED_LANDSCAPE_MODE = backedUpItem(SettingsActivity.FIXED_LANDSCAPE_MODE, false)
 
+        @JvmField val SHORT_PARALLAX = backedUpItem("pref_short_parallax", false)
+        @JvmField val SINGLE_PAGE_CENTER = backedUpItem("pref_single_page_center", false)
+
         @JvmField
         val NON_FIXED_LANDSCAPE_GRID_NAME =
             ConstantItem(
