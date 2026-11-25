@@ -42,6 +42,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Build
@@ -123,6 +131,8 @@ fun PreferencesDashboard(
     val prefs = preferenceManager()
     val prefs2 = preferenceManager2()
     val scrollState = rememberScrollState()
+    var showSettingsSearch by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
     val showCompactTitle = with(LocalDensity.current) { scrollState.value > 64.dp.roundToPx() }
 
     val aboutDescrption = if (prefs.hideVersionInfo.get()) {
@@ -162,6 +172,95 @@ fun PreferencesDashboard(
             ),
             color = MaterialTheme.colorScheme.onSurface,
         )
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clickable { showSettingsSearch = true },
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+        ) {
+            Row(
+                modifier = Modifier.height(56.dp).padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.width(14.dp))
+                Text(
+                    text = stringResource(R.string.settings_search_hint),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+        }
+
+        val searchTargets = listOf(
+            DashboardSearchTarget(stringResource(R.string.icons_and_general_label), "Icon packs, shapes, themes and general options", General),
+            DashboardSearchTarget(stringResource(R.string.home_screen_label), "Wallpaper, grid, widgets, labels and home layout", HomeScreen),
+            DashboardSearchTarget(stringResource(R.string.app_drawer_label), "Drawer layout, hidden apps, grid and labels", AppDrawer),
+            DashboardSearchTarget(stringResource(R.string.recent_settings_label), "Recent apps, screenshot, share and clear all", Recent),
+            DashboardSearchTarget(stringResource(R.string.dock_label), "Dock layout, icons and background", Dock),
+            DashboardSearchTarget(stringResource(R.string.smartspace_widget), "At a glance and Smartspace widget", Smartspace),
+            DashboardSearchTarget(stringResource(R.string.search_bar_label), "Search providers and search bar settings", Search()),
+            DashboardSearchTarget(stringResource(R.string.folders_label), "Folder appearance and behavior", Folders),
+            DashboardSearchTarget(stringResource(R.string.gestures_label), "Launcher gesture actions", Gestures),
+            DashboardSearchTarget(stringResource(R.string.quickstep_label), "Taskbar and Quickstep options", Quickstep),
+            DashboardSearchTarget(stringResource(R.string.backup_and_restore_label), "Backup and restore launcher settings", BackupAndRestore),
+            DashboardSearchTarget(stringResource(R.string.about_label), aboutDescrption, About),
+        )
+        if (showSettingsSearch) {
+            val results = searchTargets.filter {
+                "${it.title} ${it.description}".contains(searchQuery.trim(), ignoreCase = true)
+            }
+            AlertDialog(
+                onDismissRequest = { showSettingsSearch = false },
+                title = { Text(stringResource(R.string.settings)) },
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            singleLine = true,
+                            placeholder = { Text(stringResource(R.string.settings_search_hint)) },
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        if (results.isEmpty()) {
+                            Text("No matching settings categories")
+                        } else {
+                            results.take(8).forEach { target ->
+                                TextButton(
+                                    onClick = {
+                                        onNavigate(target.route)
+                                        showSettingsSearch = false
+                                        searchQuery = ""
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Column(Modifier.fillMaxWidth()) {
+                                        Text(target.title, color = MaterialTheme.colorScheme.onSurface)
+                                        Text(
+                                            target.description,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            style = MaterialTheme.typography.bodySmall,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showSettingsSearch = false }) {
+                        Text("Close")
+                    }
+                },
+            )
+        }
 
         val deckLayout = prefs2.deckLayout.getAdapter()
         Column(
@@ -354,6 +453,12 @@ fun PreferencesDashboard(
         }
     }
 }
+
+private data class DashboardSearchTarget(
+    val title: String,
+    val description: String,
+    val route: PreferenceRootRoute,
+)
 
 @Composable
 private fun MistSettingsTile(
