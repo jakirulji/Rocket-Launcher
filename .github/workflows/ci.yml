@@ -55,7 +55,7 @@ jobs:
             echo "::error::Missing signing secrets. Configure KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD."
             exit 1
           fi
-          printf 'storePassword=%s\\nkeyAlias=%s\\nkeyPassword=%s\\nstoreFile=%s/key.jks\\n' "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" "$GITHUB_WORKSPACE" > keystore.properties
+          printf '%s\n' "storePassword=$KEYSTORE_PASSWORD" "keyAlias=$KEY_ALIAS" "keyPassword=$KEY_PASSWORD" "storeFile=$GITHUB_WORKSPACE/key.jks" > keystore.properties
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$GITHUB_WORKSPACE/key.jks"
       - name: Build signed Rocket Launcher release APK
         run: ./gradlew assembleLawnWithQuickstepGithubRelease
