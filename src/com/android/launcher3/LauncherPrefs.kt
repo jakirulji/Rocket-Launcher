@@ -304,6 +304,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
 
         @JvmField val SHORT_PARALLAX = backedUpItem("pref_short_parallax", false)
         @JvmField val SINGLE_PAGE_CENTER = backedUpItem("pref_single_page_center", false)
+        @JvmField val ALLOW_WALLPAPER_ZOOMING = backedUpItem("pref_allow_wallpaper_zooming", true)
 
         @JvmField
         val NON_FIXED_LANDSCAPE_GRID_NAME =
