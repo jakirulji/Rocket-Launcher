@@ -32,6 +32,7 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 | Recents translucent background and alpha | Recents | Existing equivalent |
 | Fixed landscape mode | Misc + Launcher.onResume | Ported for phone devices; preference now applies launcher orientation |
 | Background blur depth | Misc + BaseDepthController | Ported as a 0–60 dp control; apply with Restart Launcher |
+| Content suggestions shortcut | Misc | Ported conditionally when Google Device Personalization Services and its settings activity are available |
 | Overscroll / suggestions / restart | Existing Rocket settings and system flows | Needs exact route-by-route verification |
 
 ## Missing or not-yet-verified MistOS features
@@ -53,7 +54,7 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 - Per-app Recents privacy protection
 
 ### Miscellaneous
-- Trust Apps manager entry and behavior
+- Trust Apps manager entry and behavior (MistOS/Lineage-specific activity is absent from Rocket; intentionally not exposed as a dead control)
 - Any ROM-only behavior must be adapted to public Android APIs or clearly marked unsupported.
 
 ## Porting rules
