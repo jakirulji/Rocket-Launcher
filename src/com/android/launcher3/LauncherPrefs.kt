@@ -306,6 +306,7 @@ constructor(@ApplicationContext private val encryptedContext: Context) {
         @JvmField val SINGLE_PAGE_CENTER = backedUpItem("pref_single_page_center", false)
         @JvmField val ALLOW_WALLPAPER_ZOOMING = backedUpItem("pref_allow_wallpaper_zooming", true)
         @JvmField val FOCUS_MODE = backedUpItem("pref_focus_mode", true)
+        @JvmField val BLUR_DEPTH = backedUpItem("pref_blur_depth", 30)
 
         @JvmField
         val NON_FIXED_LANDSCAPE_GRID_NAME =
