@@ -60,11 +60,13 @@ jobs:
       - name: Build APK
         run: ./gradlew ${{ matrix.build-variant }}
       - name: Upload artifact
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.build-variant }}
-          path: build/outputs/apk/**/*.apk
+          path: |
+            **/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 14
 
   check-style:
     runs-on: ubuntu-latest
