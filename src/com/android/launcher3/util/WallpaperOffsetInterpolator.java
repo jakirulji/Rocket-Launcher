@@ -29,8 +29,6 @@ public class WallpaperOffsetInterpolator {
     private static final String TAG = "WPOffsetInterpolator";
     private static final int ANIMATION_DURATION = 250;
 
-    // Don't use all the wallpaper for parallax until you have at least this many pages
-    private static final int MIN_PARALLAX_PAGE_SPAN = 4;
 
     private final SimpleBroadcastReceiver mWallpaperChangeReceiver;
     private final Workspace<?> mWorkspace;
@@ -71,20 +69,28 @@ public class WallpaperOffsetInterpolator {
      *
      * TODO: do different behavior if it's  a live wallpaper?
      */
+    private int getMinimumScrollableScreensForParallax() {
+        return LauncherPrefs.SINGLE_PAGE_CENTER.get(mWorkspace.getContext()) ? 0 : 1;
+    }
+
+    private int getMinParallaxPageSpan() {
+        return LauncherPrefs.SHORT_PARALLAX.get(mWorkspace.getContext()) ? 1 : 4;
+    }
+
     private void wallpaperOffsetForScroll(int scroll, int numScrollableScreens, final int[] out) {
         out[1] = 1;
 
         // To match the default wallpaper behavior in the system, we default to either the left
         // or right edge on initialization
-        if (!prefs.getWallpaperScrolling().get() || mLockedToDefaultPage || numScrollableScreens <= 1) {
+        if (!prefs.getWallpaperScrolling().get() || mLockedToDefaultPage ||
+                numScrollableScreens <= getMinimumScrollableScreensForParallax()) {
             out[0] = mIsRtl ? 1 : 0;
             return;
         }
 
         // Distribute the wallpaper parallax over a minimum of MIN_PARALLAX_PAGE_SPAN workspace
         // screens, not including the custom screen, and empty screens (if > MIN_PARALLAX_PAGE_SPAN)
-        int numScreensForWallpaperParallax = mWallpaperIsLiveWallpaper ? numScrollableScreens :
-                        Math.max(MIN_PARALLAX_PAGE_SPAN, numScrollableScreens);
+        int numScreensForWallpaperParallax = getNumPagesForWallpaperParallax();
 
         // Offset by the custom screen
 
@@ -108,7 +114,10 @@ public class WallpaperOffsetInterpolator {
         int rightPageScrollX = mWorkspace.getScrollForPage(rightPageIndex);
         int scrollRange = rightPageScrollX - leftPageScrollX;
         if (scrollRange <= 0) {
-            out[0] = 0;
+            if (getMinimumScrollableScreensForParallax() == 0) {
+                out[0] = 1;
+                out[1] = 2;
+            }
             return;
         }
 
@@ -158,7 +167,7 @@ public class WallpaperOffsetInterpolator {
      */
     private int getNumPagesExcludingEmpty() {
         int numOfPages = mWorkspace.getChildCount();
-        if (numOfPages >= MIN_PARALLAX_PAGE_SPAN && mWorkspace.hasExtraEmptyScreens()) {
+        if (numOfPages >= getMinParallaxPageSpan() && mWorkspace.hasExtraEmptyScreens()) {
             return numOfPages - mWorkspace.getPanelCount();
         } else {
             return numOfPages;
@@ -187,7 +196,7 @@ public class WallpaperOffsetInterpolator {
         if (mWallpaperIsLiveWallpaper) {
             return mNumScreens;
         } else {
-            return Math.max(MIN_PARALLAX_PAGE_SPAN, mNumScreens);
+            return Math.max(getMinParallaxPageSpan(), mNumScreens);
         }
     }
 
