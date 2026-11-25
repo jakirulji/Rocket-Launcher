@@ -23,6 +23,7 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 | Center wallpaper on a single page | Home Screen + WallpaperOffsetInterpolator | Ported: single-page zero-minimum-scroll behavior |
 | Wallpaper zooming | Home Screen + BaseDepthController | Ported: public WallpaperManager zoom is disabled by preference when off |
 | Minus-one feed | Home Screen | Existing |
+| Smartspace providers, data-source toggles, date/time/calendar and time format | Smartspace | Existing Rocket implementation |
 | App drawer grid, labels and row height | App Drawer | Existing |
 | Focus Mode behind app long-press popup | App Drawer + PopupContainerWithArrow | Ported: live RenderEffect blur with scrim fallback and lifecycle cleanup |
 | App drawer scrollbar | App Drawer | Existing |
@@ -39,8 +40,9 @@ This audit compares MistOS's category preference XML/source with Rocket's curren
 
 ## Missing or not-yet-verified MistOS features
 
-### Home Screen
+### Home Screen / Smartspace
 - Mist's extended Quickspace styling: clock style/font/colors, PSA, now playing, weather provider/city/text
+- Rocket already has Smartspace provider selection, data-source toggles, calendar/date visibility, and time-format controls; the extended Mist-specific clock and weather controls are not yet ported
 - Sleep-gesture haptic option parity
 
 ### App Drawer
