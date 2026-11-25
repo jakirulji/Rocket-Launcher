@@ -59,8 +59,8 @@ class LawnchairBackup(
 
     suspend fun restore(selectedContents: Int) {
         val handlers = mutableMapOf<String, suspend (InputStream) -> Unit>()
-        val contents = selectedContents and info.contents
-        if (contents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
+        val contents = (selectedContents and info.contents) or INCLUDE_LAYOUT_AND_SETTINGS
+        if (backupContents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
             handlers.putAll(
                 getFiles(context, forRestore = true).mapValues { entry ->
                     {
@@ -71,7 +71,7 @@ class LawnchairBackup(
                 },
             )
         }
-        if (contents.hasFlag(INCLUDE_WALLPAPER)) {
+        if (backupContents.hasFlag(INCLUDE_WALLPAPER)) {
             handlers[WALLPAPER_FILE_NAME] = {
                 val wallpaperManager = WallpaperManager.getInstance(context)
                 wallpaperManager.setBitmap(BitmapFactory.decodeStream(it))
@@ -106,7 +106,7 @@ class LawnchairBackup(
     }
 
     companion object {
-        private const val BACKUP_VERSION = 1
+        private const val BACKUP_VERSION = 2
         private const val PREFS_FILE_NAME = "${LauncherFiles.SHARED_PREFERENCES_KEY}.xml"
         private const val PREFS_DB_FILE_NAME = "preferences"
         private const val PREFS_DATASTORE_FILE_NAME = "preferences.preferences_pb"
@@ -145,6 +145,8 @@ class LawnchairBackup(
         @SuppressLint("MissingPermission")
         suspend fun create(context: Context, contents: Int, screenshotBitmap: Bitmap, fileUri: Uri) {
             val idp = LauncherAppState.getIDP(context)
+            // Every Rocket backup always contains the complete launcher layout and settings.
+            val backupContents = contents or INCLUDE_LAYOUT_AND_SETTINGS
             val createdAt = Timestamp.newBuilder()
                 .setSeconds(System.currentTimeMillis() / 1000)
             val colorHints = WallpaperManagerCompat.INSTANCE.get(context).wallpaperColors?.colorHints ?: 0
@@ -153,7 +155,7 @@ class LawnchairBackup(
                 .setLawnchairVersion(BuildConfig.VERSION_CODE)
                 .setBackupVersion(BACKUP_VERSION)
                 .setCreatedAt(createdAt)
-                .setContents(contents)
+                .setContents(backupContents)
                 .setGridState(DeviceGridState(idp).toProtoMessage())
                 .setPreviewWidth(screenshotBitmap.width)
                 .setPreviewHeight(screenshotBitmap.height)
