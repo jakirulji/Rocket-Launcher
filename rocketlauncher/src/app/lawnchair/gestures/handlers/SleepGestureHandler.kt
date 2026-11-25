@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import app.lawnchair.LawnchairLauncher
+import app.lawnchair.lawnchairApp
 import app.lawnchair.preferences2.PreferenceManager2
 import app.lawnchair.util.requireSystemService
 import app.lawnchair.views.ComposeBottomSheet
@@ -66,12 +67,26 @@ class SleepGestureHandler(context: Context) : GestureHandler(context) {
     }
 }
 
+/**
+ * Some ROMs do not initialize fingerprint unlock consistently when the screen
+ * is locked through KEYCODE_POWER or DevicePolicyManager.lockNow(). If Rocket's
+ * Accessibility service is already enabled, use Android's lock-screen global
+ * action as a compatibility bridge; otherwise retain the selected method.
+ */
+private fun lockThroughAccessibilityIfAvailable(launcher: LawnchairLauncher): Boolean {
+    val app = launcher.lawnchairApp
+    return app.isAccessibilityServiceBound() &&
+        app.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
+}
+
 class SleepMethodRoot(context: Context) : SleepGestureHandler.SleepMethod(context) {
 
     override suspend fun isSupported() = Shell.getShell().isRoot
 
     override suspend fun sleep(launcher: LawnchairLauncher) {
-        Shell.cmd("input keyevent 26").exec()
+        if (!lockThroughAccessibilityIfAvailable(launcher)) {
+            Shell.cmd("input keyevent 26").exec()
+        }
     }
 }
 
@@ -112,13 +127,15 @@ class SleepMethodDeviceAdmin(context: Context) : SleepGestureHandler.SleepMethod
             }
             return
         }
-        devicePolicyManager.lockNow()
+        if (!lockThroughAccessibilityIfAvailable(launcher)) {
+            devicePolicyManager.lockNow()
+        }
     }
 
     class SleepDeviceAdmin : DeviceAdminReceiver() {
 
         override fun onDisableRequested(context: Context, intent: Intent): CharSequence {
-            return context.getString(R.string.dt2s_admin_warning)
+            return context.getString(R.string.dt2ts_admin_warning)
         }
     }
 }
