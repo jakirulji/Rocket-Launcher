@@ -167,7 +167,7 @@ fun PreferencesDashboard(
             modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 4.dp),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontSize = 40.sp,
-                lineHeight = 42.sp,
+                lineHeight = 38.sp,
                 letterSpacing = (-0.4).sp,
                 fontWeight = FontWeight.Medium,
             ),
