@@ -135,10 +135,9 @@ public class BaseDepthController {
             } else {
                 mCrossWindowBlursEnabled = false;
             }
-            mMaxBlurRadius = activity.getResources().getDimensionPixelSize(
-                    R.dimen.max_depth_blur_radius_enhanced);
+            mMaxBlurRadius = Utilities.dpToPx(LauncherPrefs.BLUR_DEPTH.get(activity), activity);
         } else {
-            mMaxBlurRadius = activity.getResources().getInteger(R.integer.max_depth_blur_radius);
+            mMaxBlurRadius = Utilities.dpToPx(LauncherPrefs.BLUR_DEPTH.get(activity), activity);
         }
         mWallpaperManager = activity.getSystemService(WallpaperManager.class);
 
