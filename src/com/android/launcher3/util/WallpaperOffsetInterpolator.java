@@ -17,6 +17,7 @@ import app.lawnchair.preferences.PreferenceManager;
 import androidx.annotation.AnyThread;
 
 import com.android.app.animation.Interpolators;
+import com.android.launcher3.LauncherPrefChangeListener;
 import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.Workspace;
@@ -44,6 +45,8 @@ public class WallpaperOffsetInterpolator {
     private int mNumScreens;
 
     private PreferenceManager prefs;
+    private boolean mWallpaperPreferenceListenerRegistered;
+    private final LauncherPrefChangeListener mWallpaperPreferenceListener = key -> syncWithScroll();
 
     public WallpaperOffsetInterpolator(Workspace<?> workspace) {
         mWorkspace = workspace;
@@ -89,8 +92,8 @@ public class WallpaperOffsetInterpolator {
             return;
         }
 
-        // Distribute the wallpaper parallax over a minimum of MIN_PARALLAX_PAGE_SPAN workspace
-        // screens, not including the custom screen, and empty screens (if > MIN_PARALLAX_PAGE_SPAN)
+        // Distribute wallpaper parallax over the configured minimum page span, excluding the
+        // custom screen and any extra empty screens.
         int numScreensForWallpaperParallax = getNumPagesForWallpaperParallax();
 
         // Offset by the custom screen
@@ -220,6 +223,17 @@ public class WallpaperOffsetInterpolator {
             mWallpaperChangeReceiver.register(ACTION_WALLPAPER_CHANGED);
             onWallpaperChanged();
             mRegistered = true;
+        }
+        if (mWindowToken == null && mWallpaperPreferenceListenerRegistered) {
+            LauncherPrefs.get(mWorkspace.getContext()).removeListener(
+                    mWallpaperPreferenceListener, LauncherPrefs.SHORT_PARALLAX,
+                    LauncherPrefs.SINGLE_PAGE_CENTER);
+            mWallpaperPreferenceListenerRegistered = false;
+        } else if (mWindowToken != null && !mWallpaperPreferenceListenerRegistered) {
+            LauncherPrefs.get(mWorkspace.getContext()).addListener(
+                    mWallpaperPreferenceListener, LauncherPrefs.SHORT_PARALLAX,
+                    LauncherPrefs.SINGLE_PAGE_CENTER);
+            mWallpaperPreferenceListenerRegistered = true;
         }
     }
 
