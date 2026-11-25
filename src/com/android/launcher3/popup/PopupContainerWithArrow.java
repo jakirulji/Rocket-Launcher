@@ -97,6 +97,7 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
     private final float mShortcutHeight;
 
     private BubbleTextView mOriginalIcon;
+    private FocusModeController mFocusModeController;
     private int mContainerWidth;
 
     private ViewGroup mWidgetContainer;
@@ -282,6 +283,7 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
             int deepShortcutCount, List<SystemShortcut> systemShortcuts) {
 
         mOriginalIcon = originalIcon;
+        mFocusModeController = FocusModeController.createIfApplicable(getContext(), originalIcon);
         mContainerWidth = getResources().getDimensionPixelSize(R.dimen.bg_popup_item_width);
 
         if (deepShortcutCount > 0) {
@@ -636,6 +638,9 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
 
     @Override
     public void onDragStart(DropTarget.DragObject dragObject, DragOptions options) {
+        if (mFocusModeController != null) {
+            mFocusModeController.onDragStarted();
+        }
         // Either the original icon or one of the shortcuts was dragged.
         // Hide the container, but don't remove it yet because that interferes with touch events.
         mDeferContainerRemoval = true;
@@ -658,7 +663,18 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
     }
 
     @Override
+    protected void onCreateOpenAnimation(AnimatorSet anim) {
+        super.onCreateOpenAnimation(anim);
+        if (mFocusModeController != null) {
+            mFocusModeController.onOpen(this, anim);
+        }
+    }
+
+    @Override
     protected void onCreateCloseAnimation(AnimatorSet anim) {
+        if (mFocusModeController != null) {
+            mFocusModeController.onClose(anim);
+        }
         // Animate original icon's text back in.
         anim.play(mOriginalIcon.createTextAlphaAnimator(true /* fadeIn */));
         mOriginalIcon.setForceHideDot(false);
@@ -667,6 +683,10 @@ public class PopupContainerWithArrow<T extends Context & ActivityContext>
     @Override
     protected void closeComplete() {
         super.closeComplete();
+        if (mFocusModeController != null) {
+            mFocusModeController.release();
+            mFocusModeController = null;
+        }
         if (mActivityContext.getDragController() != null) {
             mActivityContext.getDragController().removeDragListener(this);
         }
