@@ -60,7 +60,7 @@ class LawnchairBackup(
     suspend fun restore(selectedContents: Int) {
         val handlers = mutableMapOf<String, suspend (InputStream) -> Unit>()
         val contents = (selectedContents and info.contents) or INCLUDE_LAYOUT_AND_SETTINGS
-        if (backupContents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
+        if (contents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
             handlers.putAll(
                 getFiles(context, forRestore = true).mapValues { entry ->
                     {
@@ -169,7 +169,7 @@ class LawnchairBackup(
                         out.putNextEntry(ZipEntry(INFO_FILE_NAME))
                         info.writeTo(out)
 
-                        if (contents.hasFlag(INCLUDE_WALLPAPER)) {
+                        if (backupContents.hasFlag(INCLUDE_WALLPAPER)) {
                             val wallpaperManager = WallpaperManager.getInstance(context)
                             val wallpaperBitmap = wallpaperManager.drawable?.toBitmap()
                             if (wallpaperBitmap != null) {
@@ -177,7 +177,7 @@ class LawnchairBackup(
                                 wallpaperBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
                             }
                         }
-                        if (contents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
+                        if (backupContents.hasFlag(INCLUDE_LAYOUT_AND_SETTINGS)) {
                             out.putNextEntry(ZipEntry(SCREENSHOT_FILE_NAME))
                             screenshotBitmap.compress(Bitmap.CompressFormat.PNG, 85, out)
                         }
