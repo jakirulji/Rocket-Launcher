@@ -80,6 +80,12 @@ fun HomeScreenPreferences(
             set = { LauncherPrefs.get(context).put(LauncherPrefs.SINGLE_PAGE_CENTER.to(it)) },
         )
     }
+    val wallpaperZoomAdapter = remember {
+        PreferenceAdapterImpl(
+            get = { LauncherPrefs.ALLOW_WALLPAPER_ZOOMING.get(context) },
+            set = { LauncherPrefs.get(context).put(LauncherPrefs.ALLOW_WALLPAPER_ZOOMING.to(it)) },
+        )
+    }
     PreferenceLayout(
         label = stringResource(id = R.string.home_screen_label),
         backArrowVisible = !LocalIsExpandedScreen.current,
@@ -171,6 +177,13 @@ fun HomeScreenPreferences(
                 label = stringResource(id = R.string.single_page_center_title),
                 description = stringResource(id = R.string.single_page_center_summary),
             )
+            ExpandAndShrink(visible = Utilities.ATLEAST_R) {
+                SwitchPreference(
+                    adapter = wallpaperZoomAdapter,
+                    label = stringResource(id = R.string.allow_wallpaper_zooming),
+                    description = stringResource(id = R.string.allow_wallpaper_zooming_summary),
+                )
+            }
         }
         val columns by prefs.workspaceColumns.getAdapter()
         val rows by prefs.workspaceRows.getAdapter()
