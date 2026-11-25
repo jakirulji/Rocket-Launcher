@@ -34,6 +34,7 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import kotlin.math.max
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class LawnchairBackup(
@@ -73,7 +74,7 @@ class LawnchairBackup(
                 },
             )
         }
-        if (backupContents.hasFlag(INCLUDE_WALLPAPER)) {
+        if (contents.hasFlag(INCLUDE_WALLPAPER)) {
             handlers[WALLPAPER_FILE_NAME] = {
                 val wallpaperManager = WallpaperManager.getInstance(context)
                 wallpaperManager.setBitmap(BitmapFactory.decodeStream(it))
@@ -116,6 +117,11 @@ class LawnchairBackup(
                             if (assetDirectory != null && !entry.isDirectory) {
                                 val (prefix, directory) = assetDirectory
                                 val fileName = entry.name.removePrefix(prefix)
+                                if (fileName == "__directory__") {
+                                    directory.deleteRecursively()
+                                    directory.mkdirs()
+                                    continue
+                                }
                                 if (fileName.isBlank() || fileName.contains('/') || fileName.contains('\\')) {
                                     throw IOException("Invalid backup asset path")
                                 }
@@ -241,6 +247,8 @@ class LawnchairBackup(
         private fun wallpaperHistoryDirectory(context: Context) = File(context.filesDir, "wallpapers")
 
         private fun writeDirectoryToZip(out: ZipOutputStream, directory: File, prefix: String) {
+            out.putNextEntry(ZipEntry(prefix + "__directory__"))
+            out.closeEntry()
             directory.listFiles()
                 ?.filter { it.isFile }
                 ?.forEach { file ->
