@@ -26,12 +26,11 @@ on:
   workflow_dispatch:
   workflow_call:
 
-
 jobs:
-  build-debug-apk:
-    strategy:
-      matrix:
-        build-variant: [ assembleLawnWithQuickstepGithubDebug, assembleLawnWithQuickstepPlayDebug ]
+  build-release-apk:
+    # Normal pushes/PRs do not produce APK artifacts. Request a signed APK by
+    # manually dispatching this workflow, or by using [build-release] in a commit.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[build-release]'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -44,7 +43,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
         with:
           cache-encryption-key: Da25KUVSE5jbGds2zXmfXw==
-      - name: Write sign info
+      - name: Write release signing key
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -55,16 +54,15 @@ jobs:
             echo "::error::Missing signing secrets. Configure KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD."
             exit 1
           fi
-          printf 'storePassword=%s\nkeyAlias=%s\nkeyPassword=%s\nstoreFile=%s/key.jks\n' "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" "$GITHUB_WORKSPACE" > keystore.properties
+          printf 'storePassword=%s\\nkeyAlias=%s\\nkeyPassword=%s\\nstoreFile=%s/key.jks\\n' "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" "$GITHUB_WORKSPACE" > keystore.properties
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$GITHUB_WORKSPACE/key.jks"
-      - name: Build APK
-        run: ./gradlew ${{ matrix.build-variant }}
-      - name: Upload artifact
+      - name: Build signed Rocket Launcher release APK
+        run: ./gradlew assembleLawnWithQuickstepGithubRelease
+      - name: Upload signed release APK
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.build-variant }}
-          path: |
-            **/build/outputs/apk/**/*.apk
+          name: Rocket-Launcher-signed-release
+          path: '**/build/outputs/apk/**/Rocket Launcher.apk'
           if-no-files-found: error
           retention-days: 14
 
@@ -84,7 +82,7 @@ jobs:
   send-notifications:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'LawnchairLauncher'
-    needs: build-debug-apk
+    needs: build-release-apk
     steps:
       - uses: actions/checkout@v7
         with:
@@ -100,9 +98,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v8
         with:
-          pattern: assembleLawnWith*
-          merge-multiple: true
-          path: artifacts/debug-apk
+          name: Rocket-Launcher-signed-release
+          path: artifacts/release-apk
       - name: Send notifications
         run: python ci.py
         env:
@@ -110,14 +107,14 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_CI_BOT_TOKEN }}
           TELEGRAM_CI_CHANNEL_ID: ${{ secrets.TELEGRAM_CI_CHANNEL_ID }}
           TELEGRAM_TEAM_GROUP_ID: ${{ secrets.NOTIFY_CHANNEL_ID }}
-          ARTIFACT_DIRECTORY: artifacts/debug-apk
+          ARTIFACT_DIRECTORY: artifacts/release-apk
           GITHUB_REF: ${{ github.ref }}
           ACTION: internal_notifications
 
   crowdin-auto-merge:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'lawnchair-bot' && github.event.pull_request.title == 'New Crowdin translations by Github Action'
-    needs: build-debug-apk
+    needs: build-release-apk
     steps:
       - env:
           GH_TOKEN: ${{ secrets.LAWNCHAIR_BOT_TOKEN }}
@@ -129,17 +126,16 @@ jobs:
   # Status check that is required in branch protection rules.
   final-status:
     needs:
-      - build-debug-apk
+      - build-release-apk
       - check-style
     runs-on: ubuntu-slim
     if: always()
     steps:
       - name: Check
         run: |
-          results=$(tr -d '\n' <<< '${{ toJSON(needs.*.result) }}')
-          if ! grep -q -v -E '(failure|cancelled)' <<< "$results"; then
+          results=$(tr -d '\\n' <<< '${{ toJSON(needs.*.result) }}')
+          if grep -q -E '(failure|cancelled)' <<< "$results"; then
             echo "One or more required jobs failed"
             exit 1
           fi
           echo "All required jobs completed successfully."
-
