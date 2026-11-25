@@ -1077,4 +1077,6 @@
 
     <string name="please_wait">Please wait…</string>
     <string name="additional_features_label">Additional features</string>
+    <string name="icons_and_general_label">Icons &amp; General</string>
+    <string name="icons_and_general_description">Icon packs, shapes, themes and general launcher options</string>
 </resources>
