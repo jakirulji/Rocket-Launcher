@@ -1088,4 +1088,11 @@
     <string name="allow_wallpaper_zooming_summary">Zoom the wallpaper when opening the app drawer or recent apps</string>
     <string name="focus_mode_title">Focus mode</string>
     <string name="focus_mode_summary">Blur the app drawer behind an app’s long-press menu</string>
+    <string name="misc_label">Misc</string>
+    <string name="misc_description">System behavior and launcher maintenance</string>
+    <string name="fixed_landscape_mode_title">Fixed landscape mode</string>
+    <string name="fixed_landscape_mode_summary">Keep the launcher in landscape orientation</string>
+    <string name="restart_launcher_label">Restart launcher</string>
+    <string name="restart_launcher_summary">Restart Rocket Launcher to refresh its current state</string>
+    <string name="restart_launcher_confirmation">Restart the launcher now? Your home-screen layout and settings will remain saved.</string>
 </resources>
