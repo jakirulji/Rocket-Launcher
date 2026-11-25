@@ -276,7 +276,10 @@ fun PreferencesDashboard(
                 "${it.title} ${it.description} ${it.keywords}".contains(normalizedQuery, ignoreCase = true)
             }
             AlertDialog(
-                onDismissRequest = { showSettingsSearch = false; searchQuery = "" },
+                onDismissRequest = {
+                    showSettingsSearch = false
+                    searchQuery = ""
+                },
                 title = { Text(stringResource(R.string.settings)) },
                 text = {
                     Column {
