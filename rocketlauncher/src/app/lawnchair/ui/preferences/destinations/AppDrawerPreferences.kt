@@ -30,12 +30,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.lawnchair.preferences.PreferenceAdapter
+import app.lawnchair.preferences.PreferenceAdapterImpl
 import app.lawnchair.preferences.getAdapter
 import app.lawnchair.preferences.preferenceManager
 import app.lawnchair.preferences2.preferenceManager2
@@ -53,6 +55,7 @@ import app.lawnchair.ui.preferences.components.layout.PreferenceLayout
 import app.lawnchair.ui.preferences.navigation.AppDrawerHiddenApps
 import app.lawnchair.ui.preferences.navigation.Predictions
 import com.android.launcher3.InvariantDeviceProfile
+import com.android.launcher3.LauncherPrefs
 import com.android.launcher3.R
 
 object AppDrawerRoutes {
@@ -66,6 +69,12 @@ fun AppDrawerPreferences(
     val prefs = preferenceManager()
     val prefs2 = preferenceManager2()
     val context = LocalContext.current
+    val focusModeAdapter = remember {
+        PreferenceAdapterImpl(
+            get = { LauncherPrefs.FOCUS_MODE.get(context) },
+            set = { LauncherPrefs.get(context).put(LauncherPrefs.FOCUS_MODE.to(it)) },
+        )
+    }
     val resources = context.resources
     val isFoldable = InvariantDeviceProfile.deviceType == InvariantDeviceProfile.TYPE_MULTI_DISPLAY
 
@@ -209,6 +218,11 @@ fun AppDrawerPreferences(
             SwitchPreference(
                 label = stringResource(id = R.string.pref_all_apps_show_scrollbar_title),
                 adapter = prefs2.showScrollbar.getAdapter(),
+            )
+            SwitchPreference(
+                label = stringResource(id = R.string.focus_mode_title),
+                description = stringResource(id = R.string.focus_mode_summary),
+                adapter = focusModeAdapter,
             )
         }
     }
