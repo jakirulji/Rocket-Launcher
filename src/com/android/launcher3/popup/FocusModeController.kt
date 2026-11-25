@@ -215,7 +215,8 @@ private constructor(private val launcher: Launcher, private val icon: BubbleText
             canvas.translate(iconPos[0], iconPos[1])
             canvas.scale(scale, scale)
             // Only the icon is kept; the app label is left out, as the popup replaces it.
-            val iconBottom = icon.paddingTop + icon.getIconHeight()
+            val iconHeight = icon.icon?.intrinsicHeight ?: 0
+            val iconBottom = icon.paddingTop + iconHeight
             if (iconBottom > 0) canvas.clipRect(0, 0, icon.width, iconBottom)
             icon.draw(canvas)
             canvas.restoreToCount(count)
