@@ -195,7 +195,6 @@ fun HomeScreenPreferences(
         PreferenceGroup(heading = stringResource(id = R.string.overscroll_effect)) {
             SliderPreference(
                 label = stringResource(id = R.string.overscroll_strength),
-                description = stringResource(id = R.string.overscroll_strength_summary),
                 adapter = overscrollDampingAdapter,
                 step = 0.01f,
                 valueRange = 0.02f..0.20f,
