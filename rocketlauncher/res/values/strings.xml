@@ -1080,4 +1080,8 @@
     <string name="icons_and_general_label">Icons &amp; General</string>
     <string name="icons_and_general_description">Icon packs, shapes, themes and general launcher options</string>
     <string name="settings_search_hint">Search settings</string>
+    <string name="short_parallax_title">Short wallpaper parallax</string>
+    <string name="short_parallax_summary">Use full wallpaper movement even with only a few home-screen pages</string>
+    <string name="single_page_center_title">Center wallpaper on a single page</string>
+    <string name="single_page_center_summary">Center the wallpaper when only one home-screen page is used</string>
 </resources>
