@@ -282,6 +282,7 @@ fun PreferencesDashboard(
                     onClick = { onNavigate(General) },
                     modifier = Modifier.weight(1f).height(272.dp),
                     shape = MistExpressiveShape.COOKIE,
+                    large = true,
                     selected = currentRoute is General,
                 )
                 Column(
@@ -481,13 +482,18 @@ private fun MistSettingsTile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: MistExpressiveShape = MistExpressiveShape.CIRCLE,
+    large: Boolean = false,
     selected: Boolean = false,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
         targetValue = if (pressed) 0.95f else 1f,
-        animationSpec = spring(dampingRatio = 0.9f, stiffness = 1400f),
+        animationSpec = if (pressed) {
+            spring(dampingRatio = 0.9f, stiffness = 1400f)
+        } else {
+            spring(dampingRatio = 0.62f, stiffness = 380f)
+        },
         label = "Mist tile press scale",
     )
     val cornerRadius by animateDpAsState(
@@ -517,20 +523,20 @@ private fun MistSettingsTile(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
             Box(
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(if (large) 76.dp else 48.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 MistExpressiveGlyph(
                     shape = shape,
                     color = contentColor,
-                    size = 48.dp,
+                    size = if (large) 76.dp else 48.dp,
                 )
                 Icon(
                     painter = painterResource(iconResource),
                     contentDescription = null,
                     tint = containerColor,
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(if (large) 36.dp else 24.dp)
                         .graphicsLayer(rotationZ = glyphRotation),
                 )
             }
