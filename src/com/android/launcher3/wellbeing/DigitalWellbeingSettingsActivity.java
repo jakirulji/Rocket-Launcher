@@ -107,7 +107,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         status.setPadding(dp(11), dp(8), dp(12), dp(8));
         status.setBackground(rounded(Color.rgb(48, 105, 82), dp(30)));
         TextView statusDot = text("●", 10, ACCENT, true);
-        status.addView(statusDot, margins(0, 0, 7, 0));
+        status.addView(statusDot, wrapMargins(0, 0, 7, 0));
         TextView statusText = text("A more intentional digital routine", 12,
                 Color.rgb(224, 241, 232), true);
         status.addView(statusText);
@@ -281,7 +281,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         copy.addView(title);
         TextView detail = text(subtitle, 12, MUTED, false);
         detail.setLineSpacing(dp(2), 1f);
-        copy.addView(detail, margins(0, 3, 5, 0));
+        copy.addView(detail, wrapMargins(0, 3, 5, 0));
         row.addView(copy, new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
@@ -295,7 +295,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
                 new int[][] { new int[] { android.R.attr.state_checked }, new int[] {} },
                 new int[] { ACCENT_DARK, Color.rgb(69, 81, 86) }));
         if (listener != null) toggle.setOnCheckedChangeListener(listener);
-        row.addView(toggle, margins(10, 0, 0, 0));
+        row.addView(toggle, wrapMargins(10, 0, 0, 0));
         parent.addView(row, margins(0, 4, 0, 4));
         return toggle;
     }
@@ -309,7 +309,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         LinearLayout details = new LinearLayout(this);
         details.setOrientation(LinearLayout.VERTICAL);
         details.addView(copy);
-        details.addView(text(subtitle, 12, MUTED, false), margins(0, 3, 0, 0));
+        details.addView(text(subtitle, 12, MUTED, false), wrapMargins(0, 3, 0, 0));
         row.addView(details, new LinearLayout.LayoutParams(0, -2, 1f));
         TextView arrow = text("›", 27, ACCENT, false);
         arrow.setGravity(Gravity.CENTER);
@@ -457,7 +457,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         return params;
     }
 
-    private int dp(int value) {
+    private LinearLayout.LayoutParams wrapMargins(int left, int top, int right, int bottom) {\n        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(\n                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);\n        params.setMargins(left, top, right, bottom);\n        return params;\n    }\n\n    private int dp(int value) {
         return Math.round(value * getResources().getDisplayMetrics().density);
     }
 }
