@@ -457,7 +457,14 @@ public class DigitalWellbeingSettingsActivity extends Activity {
         return params;
     }
 
-    private LinearLayout.LayoutParams wrapMargins(int left, int top, int right, int bottom) {\n        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(\n                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);\n        params.setMargins(left, top, right, bottom);\n        return params;\n    }\n\n    private int dp(int value) {
+    private LinearLayout.LayoutParams wrapMargins(int left, int top, int right, int bottom) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(left, top, right, bottom);
+        return params;
+    }
+
+    private int dp(int value) {
         return Math.round(value * getResources().getDisplayMetrics().density);
     }
 }
