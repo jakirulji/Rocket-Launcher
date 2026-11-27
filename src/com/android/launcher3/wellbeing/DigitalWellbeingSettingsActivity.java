@@ -349,8 +349,7 @@ public class DigitalWellbeingSettingsActivity extends Activity {
             row.setPadding(0, dp(7), 0, dp(7));
 
             ImageView icon = new ImageView(this);
-            try { icon.setImageDrawable(pm.getApplicationIcon(info)); }
-            catch (PackageManager.NameNotFoundException ignored) {}
+            icon.setImageDrawable(pm.getApplicationIcon(info));
             row.addView(icon, new LinearLayout.LayoutParams(dp(36), dp(36)));
 
             TextView label = text(pm.getApplicationLabel(info).toString(), 13, TEXT, false);
